@@ -251,20 +251,28 @@ $result = $result2->fetch_assoc();
 
                   
           <li class="sidebar-item">
-                            <a
-                              class="sidebar-link waves-effect waves-dark sidebar-link"
-                              href="planos"
-                              aria-expanded="false"
-                              ><i class="mdi mdi-square-inc-cash"></i
-                              ><span class="hide-menu">Afiliados</span></a
-                            >
-                        </li>
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="planos"
+                aria-expanded="false"
+                ><i class="mdi mdi-square-inc-cash"></i
+                ><span class="hide-menu">Afiliados</span></a
+              >
+          </li>
                       
-         
+          <li class="sidebar-item">
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="./saques-afiliados"
+                aria-expanded="false"
+                ><i class="mdi mdi-square-inc-cash"></i
+                ><span class="hide-menu">Saques de Afiliados</span></a
+              >
+          </li>
       
          
       
-            <li class="sidebar-item p-3">
+          <li class="sidebar-item p-3">
             <a
               href="https://wa.me/5581994298684?text=Preciso+de+suporte+com+o+painel+adm"
               target="_blank"
