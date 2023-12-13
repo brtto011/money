@@ -97,15 +97,7 @@
     
     
     
-    <script>
-    
-    function redirecionar() {
-        window.location.href = '../deposito';
-    }
-
-
-    setTimeout(redirecionar, 40000);
-</script>
+  
 
 
 
