@@ -1,3 +1,17 @@
+
+<?php
+session_start();
+
+// Verificar se a sessão existe
+if (!isset($_SESSION['emailadm'])) {
+    // Sessão não existe, redirecionar para outra página
+    header("Location: ../login");
+    exit();
+}
+
+?>
+
+
 <?php
 include './bd.php'; ?>
 
