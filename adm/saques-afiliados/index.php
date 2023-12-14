@@ -456,9 +456,9 @@ if (!isset($_SESSION['emailadm'])) {
             });
 
             // Inicializar DataTables após a conclusão da chamada AJAX
-            $('#user-table').DataTable({
-              ordering: false
-            });
+            // $('#user-table').DataTable({
+            //   ordering: false
+            // });
           },
           error: function () {
             console.log('Erro ao obter dados do servidor.');
