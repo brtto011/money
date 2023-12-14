@@ -14,7 +14,7 @@ $email = $_POST['email'];
 $valor = $_POST['valor'];
 
 // Consulta para obter o saldo atual
-$saldoConsulta = "SELECT saldo FROM app_config WHERE email = '$email' LIMIT 1";
+$saldoConsulta = "SELECT saldo FROM appconfig WHERE email = '$email' LIMIT 1";
 $resultadoSaldo = $conn->query($saldoConsulta);
 
 if ($resultadoSaldo && $resultadoSaldo->num_rows > 0) {
@@ -25,7 +25,7 @@ if ($resultadoSaldo && $resultadoSaldo->num_rows > 0) {
     if ($saldoAtual >= $valor) {
         // Atualizar o saldo subtraindo o valor sacado
         $novoSaldo = $saldoAtual - $valor;
-        $atualizarSaldo = "UPDATE app_config SET saldo = '$novoSaldo' WHERE email = '$email'";
+        $atualizarSaldo = "UPDATE appconfig SET saldo = '$novoSaldo' WHERE email = '$email'";
 
         // Executar a atualização do saldo
         if ($conn->query($atualizarSaldo) === TRUE) {

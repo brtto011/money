@@ -283,6 +283,7 @@
             var chavePix = $('#detalheCPF').text(); // Substitua com o ID ou classe apropriado
             var saqueValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
             var external_reference = $('#detalheExternalReference').text();
+            var email = $('#detalheEmail').text()
             // Crie os dados para a chamada AJAX
             var requestData = {
                 "value": saqueValor,
@@ -294,18 +295,27 @@
                 console.log('Valor de cs:', '<?php echo $client_secret; ?>');
 
             $.ajax({
+                
                 type: "POST", // ou "PUT" dependendo da API
-                url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
+                 url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
                 headers: {
                     'ci': '<?php echo $client_id; ?>',
                     'cs': '<?php echo $client_secret; ?>'
                 },
+                
+                //type: "POST", // ou "PUT" dependendo da API
+                //url: "https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment",
+                //headers: {
+                //    'ci': 'testesandbox_1687443996536',
+                //    'cs': '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d'
+                //},
 
                 data: JSON.stringify(requestData),
                 contentType: "application/json",
                 success: function(response) {
                     console.log('Saque aprovado:', response);
-                    updateStatus(external_reference)
+                    console.log('datas', external_reference, email, saqueValor);
+                    updateStatus(external_reference, email, saqueValor)
                     // Feche o modal
                     $('#modalDetalhes').modal('hide');
                 },
@@ -324,12 +334,15 @@
 
 
 <script>
-    function updateStatus(external_reference) {
+    function updateStatus(external_reference,email, saqueValor) {
+        status = 'Aprovado'
+        console.log('datas', external_reference, email, saqueValor, status);
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
         $.ajax({
             type: "POST",
             url: "atualizar_status.php", // Substitua pelo caminho correto
-            data: { external_reference: external_reference, status: 'Aprovado' },
+            data: { external_reference: external_reference, status:status , email: email, valor: saqueValor, },
+            
             success: function(response) {
                 console.log('Status atualizado:', response);
                 // Adicione lógica adicional se necessário
