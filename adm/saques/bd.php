@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obter dados da tabela
-$sql = "SELECT email, externalreference, valor, status FROM saques";
+$sql = "SELECT email, externalreference, valor, status, cpf FROM saques";
 $result = $conn->query($sql);
 
 // Verificar se a consulta foi bem-sucedida
