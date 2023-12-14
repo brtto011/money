@@ -96,8 +96,45 @@ if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
 $conn->close();
 ?>
 
+<?php
+include '../conectarbanco.php';
+
+$conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+$email = $_SESSION['email'];
+
+// Use uma instrução preparada para evitar injeção de SQL
+$sql = "SELECT status FROM saques WHERE email = ? AND status = 'Aguardando Aprovação'";
+$stmt = $conn->prepare($sql);
+
+if ($stmt) {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $SaqueStatus = $stmt->get_result();
+    
+    if ($SaqueStatus->num_rows > 0) {
+        // Existe pelo menos um saque com status "Aguardando Aprovação"
+        $SaqueStatus = trim("fila");
+    } else {
+        // Não há saques pendentes de aprovação
+        echo "aprovado";
+    }
+
+    $stmt->close();
+} else {
+    echo "Erro na preparação da instrução SQL.";
+}
+
+$conn->close();
+?>
 
 
+<script></script>
 
 
 <!DOCTYPE html>
@@ -287,7 +324,10 @@ $conn->close();
 <div class="">
 
 
-<input type="submit" value="Sacar via PIX" id="pixgenerator" class="primary-button w-button"><br><br>
+<input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'depositar'; ?>" id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
+
+
+
 
 </div>
 </form>
