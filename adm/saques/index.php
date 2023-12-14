@@ -283,9 +283,6 @@
             var chavePix = $('#detalheCPF').text(); // Substitua com o ID ou classe apropriado
             var saqueValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
             var external_reference = $('#detalheExternalReference').text();
-            
-            var emailsaque = $('#detalheEmail').text();
-            
             // Crie os dados para a chamada AJAX
             var requestData = {
                 "value": saqueValor,
@@ -308,7 +305,7 @@
                 contentType: "application/json",
                 success: function(response) {
                     console.log('Saque aprovado:', response);
-                    updateStatus(external_reference, emailsaque, saqueValor)
+                    updateStatus(external_reference)
                     // Feche o modal
                     $('#modalDetalhes').modal('hide');
                 },
@@ -323,12 +320,12 @@
 
 
 <script>
-    function updateStatus(external_reference, emailsaque, saqueValor) {
+    function updateStatus(external_reference) {
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
         $.ajax({
             type: "POST",
             url: "atualizar_status.php", // Substitua pelo caminho correto
-            data: { external_reference: external_reference, status: 'Aprovado', email: emailsaque, valor: saqueValor },
+            data: { external_reference: external_reference, status: 'Aprovado' },
             success: function(response) {
                 console.log('Status atualizado:', response);
                 // Adicione lógica adicional se necessário
