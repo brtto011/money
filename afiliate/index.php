@@ -137,7 +137,7 @@ if (isset($_SESSION['email'])) {
   $stmt->fetch();
   $stmt->close();
   
-  $getLinkQuery = "SELECT IFNULL(revenue_share * (SELECT sum(percas) FROM appconfig WHERE afiliado = (SELECT id from appconfig WHERE email = ? LIMIT 1) AND status_primeiro_deposito = 1) / 100, 0) FROM app";
+  $getLinkQuery = "SELECT IFNULL(revenue_share * (SELECT sum(depositou) FROM appconfig WHERE afiliado = (SELECT id from appconfig WHERE email = ? LIMIT 1) AND status_primeiro_deposito = 1) / 100, 0) FROM app";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
   $stmt->execute();
