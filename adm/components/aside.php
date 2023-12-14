@@ -48,16 +48,17 @@
               ><i class="mdi mdi-cash"></i
               ><span class="hide-menu">Saques</span></a
             >
-          </li>
-                 <li class="sidebar-item">
+            </li>
+
+            <li class="sidebar-item">
               <a
-                class="sidebar-link waves-effect waves-dark sidebar-link"
-                href="../saques-afiliados"
-                aria-expanded="false"
-                ><i class="mdi mdi-square-inc-cash"></i
-                ><span class="hide-menu">Saques de Afiliados</span></a
+              class="sidebar-link waves-effect waves-dark sidebar-link"
+              href="../saques-afiliados"
+              aria-expanded="false"
+              ><i class="mdi mdi-square-inc-cash"></i
+              ><span class="hide-menu">Saques de Afiliados</span></a
               >
-          </li>
+            </li>
             
           
            <li class="sidebar-item">
