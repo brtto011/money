@@ -315,7 +315,13 @@
                 }
             });
         });
+        $('#btnFechar').on('click', function() {
+          // Feche o modal
+          $('#modalDetalhes').modal('hide');
+        });
   });
+
+  
 </script>
 
 
