@@ -27,6 +27,7 @@ if (isset($_GET['msg'])) {
             die("Erro na conexão com o banco de dados: " . $conn->connect_error);
         }
 
+        // Atualizar o saldo
         $saldoQuery = "SELECT saldo FROM appconfig WHERE email = '$email'";
         $saldoResult = $conn->query($saldoQuery);
 
@@ -46,10 +47,54 @@ if (isset($_GET['msg'])) {
             echo "Erro ao obter o saldo: " . $conn->error;
         }
 
+        // Fechar a conexão após usar
         $conn->close();
     }
 }
+
 ?>
+
+<?php
+
+
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+
+if ($email) {
+    // Obtenha o valor atual de perdas
+    $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+    
+    if ($conn->connect_error) {
+        die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+    }
+
+    $percasQuery = "SELECT percas FROM appconfig WHERE email = '$email'";
+    $percasResult = $conn->query($percasQuery);
+
+    if ($percasResult) {
+        $row1 = $percasResult->fetch_assoc();
+        $percasAtual = $row1['percas'];
+
+        // Calcule o novo valor de percas
+        $percas = floatval($percasAtual) + floatval($bet);
+
+        // Atualize o valor de percas no banco de dados
+        $updatePercasQuery = "UPDATE appconfig SET percas = $percas WHERE email = '$email'";
+        $updatePercasResult = $conn->query($updatePercasQuery);
+
+        if (!$updatePercasResult) {
+            echo "Erro ao atualizar percas: " . $conn->error;
+        } 
+    } else {
+        echo "Erro ao obter percas: " . $conn->error;
+    }
+
+    // Fechar a conexão após usar
+    $conn->close();
+} else {
+    echo "Email não está definido.";
+}
+?>
+
 
 
 <?php
