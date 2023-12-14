@@ -26,6 +26,79 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
 
+<?php
+
+session_start();
+
+// Inicie a conexão com o banco de dados
+include './../conectarbanco.php';
+
+$conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+// Verificar a conexão
+if ($conn->connect_error) {
+    die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+}
+
+// Recupere o email da sessão
+if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_SESSION['email'];
+    $externalreference = isset($_SESSION['externalReference']) ? $_SESSION['externalReference'] : uniqid();
+    $CPF = $_POST['withdrawCPF'];
+    $valor = $_POST['withdrawValue'];
+    $status = 'Aguardando Aprovação';
+
+    // Consulta de saldo
+    $saldoConsulta = "SELECT saldo FROM appconfig WHERE email = '$email' LIMIT 1";
+    $resultadoSaldo = $conn->query($saldoConsulta);
+
+    if ($resultadoSaldo) {
+        // Verifique se a consulta foi bem-sucedida
+        if ($resultadoSaldo->num_rows > 0) {
+            $rowSaldo = $resultadoSaldo->fetch_assoc();
+            $saldoDisponivel = $rowSaldo['saldo'];
+
+            // Verifica se o saldo é suficiente
+            if ($saldoDisponivel >= $valor) {
+                // Consulta de inserção usando declaração preparada
+                $sql = "INSERT INTO saques (email, valor, status, externalreference, CPF) VALUES (?, ?, ?, ?, ?)";
+                
+                // Preparar e executar a instrução SQL
+                $stmt = $conn->prepare($sql);
+
+                if ($stmt) {
+                    $stmt->bind_param("sssss", $email, $valor, $status, $externalreference, $CPF);
+                    $stmt->execute();
+                    
+                    // Verificar se a inserção foi bem-sucedida
+                    if ($stmt->affected_rows > 0) {
+                        echo "Saque registrado com sucesso.";
+                    } else {
+                        echo "Erro ao registrar o saque: " . $stmt->error;
+                    }
+
+                    $stmt->close();
+                } else {
+                    echo "Erro na preparação da instrução SQL: " . $conn->error;
+                }
+            } else {
+                echo "Saldo insuficiente.";
+            }
+        } else {
+            echo "Nenhum saldo encontrado para o usuário.";
+        }
+    } else {
+        echo "Erro ao executar a consulta de saldo: " . $conn->error;
+    }
+}
+
+// Feche a conexão com o banco de dados
+$conn->close();
+?>
+
+
+
+
 
 <!DOCTYPE html>
 
@@ -195,7 +268,7 @@ $conn->close();
 <h2>Saque</h2>
 <p>PIX: saques instantâneos com muita praticidade. <br>
 </p>
-<form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form">
+<form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm">
 <div class="properties">
 <h4 class="rarity-heading">Nome do destinatário:</h4>
 <div class="rarity-row roboto-type2">
@@ -207,7 +280,8 @@ $conn->close();
 </div>
 <h4 class=" rarity-heading">Valor para saque</h4>
 <div class="rarity-row roboto-type2">
-<input type="number" data-name="Valor de saque" min="0.00" max="0.00" name="withdrawValue" id="withdrawValue" value="0.00" placeholder="Sem pontos, virgulas ou centavos" pattern="[0-9]" step="1" onkeypress="if (!window.__cfRLUnblockHandlers) return false; return !(event.charCode == 46)" required="" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input" disabled="">
+<input type="number" data-name="Valor de saque" min="0.00" max="" name="withdrawValue" id="withdrawValue" value="0.00" placeholder="Sem pontos, virgulas ou centavos" pattern="[0-9]" step="1" onkeypress="" required="" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input">
+
 </div>
 </div>
 <div class="">
@@ -276,9 +350,27 @@ PIX.</p>
 </div>
 <div class="follow-test">contato@<?= $nomeUnico ?>.net</div>
 </div>
+<!--
+<script>
+document.getElementById('solicitarSaqueForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita o envio padrão do formulário
 
-
-
+    // Use AJAX para enviar os dados do formulário
+    $.ajax({
+        type: 'POST',
+        url: 'solicitar_saque.php',
+        data: $('#solicitarSaqueForm').serialize(), // Serializa os dados do formulário
+        success: function(response) {
+            // Atualiza o conteúdo da página com a resposta
+            $('#conteudoDaPagina').html(response); // Substitua 'conteudoDaPagina' pelo ID ou seletor apropriado
+        },
+        error: function(error) {
+            console.error('Erro na solicitação AJAX: ' + error);
+        }
+    });
+});
+</script>
+-->
 
 
 

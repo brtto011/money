@@ -114,6 +114,62 @@
           </div>
         </nav>
       </header>
+      <?php
+        session_start();
+    
+        function make_request($url, $payload, $method = 'POST')
+        {
+          global $client_id, $client_secret;
+    
+          $headers = array(
+            "Content-Type: application/json",
+            "ci: $client_id",
+            "cs: $client_secret"
+          );
+    
+          $ch = curl_init($url);
+    
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+          $result = curl_exec($ch);
+          curl_close($ch);
+          return $result;
+        }
+    ?>
+     <?php
+        // Conectar ao banco de dados
+        include './../../conectarbanco.php';
+        
+        $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+        
+        // Verificar a conexão
+        if ($conn->connect_error) {
+            die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+        }
+        
+        // Obtém as credenciais do gateway
+        $client_id = '';
+        $client_secret = '';
+        
+        $sql = "SELECT client_id, client_secret FROM gateway";
+        $result = $conn->query($sql);
+        if ($result) {
+            $row = $result->fetch_assoc();
+            if ($row) {
+                $client_id = $row['client_id'];
+                $client_secret = $row['client_secret'];
+            }
+        } else {
+            // Tratar caso ocorra um erro na consulta
+        }
+        
+        $conn->close();
+    
+    ?>
+    
     <!-- ==========    MENU    =================== -->
     <?php include '../components/aside.php' ?>
    
@@ -127,15 +183,40 @@
             <tr>
               <th>Email</th>
               <th>Cod. Referencia</th>
+              <th>Chave PIX</th>
               <th>Valor</th>
               <th>Status</th>
-             
+              <th>Ações</th>
+            
             </tr>
           </thead>
           <tbody id="table-body">
             <!-- Dados da tabela serão inseridos aqui -->
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Detalhes -->
+<div class="modal fade" id="modalDetalhes" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDetalhesLabel">Confirmar Saque </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Cód. Referência:</strong> <span id="detalheExternalReference"></span></p>
+        <p><strong>Email:</strong> <span id="detalheEmail"></span></p>
+        <p><strong>Pix:</strong> <span id="detalheCPF"></span></p>
+        <p><strong>Valor:</strong> <span id="detalheValor"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnFechar">CANCELAR</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmar">CONFIRMAR</button>
       </div>
     </div>
   </div>
@@ -153,27 +234,112 @@
 
         // Inserir dados na tabela
         data.forEach(function(row) {
+          var statusClass = row.status === 'Aprovado' ? 'text-success' : 'text-danger';
           var newRow = "<tr>" +
             "<td>" + row.email + "</td>" +
             "<td>" + row.externalreference + "</td>" +
+            "<td>" + row.cpf + "</td>" +
             "<td>" + row.valor + "</td>" +
-            "<td>" + row.status + "</td>" +
-            "</tr>";
+            "<td class='" + statusClass + "'>" + row.status + "</td>";
+        
+          // Adicionar coluna extra com botão "Aprovar" quando o status for "Aguardando Aprovação"
+          if (row.status === 'Aguardando Aprovação') {
+            newRow += "<td><button class='aprovar-btn' data-toggle='modal' data-target='#aprovarModal' " +
+              "data-email='" + row.email + "' data-externalreference='" + row.externalreference + "' data-nome='" + row.nome + "' data-cpf='" + row.cpf + "' data-valor='" + row.valor + "'>Aprovar</button></td>";
+          } else {
+            newRow += "<td></td>"; // Coluna vazia para outros status
+          }
+        
+          newRow += "</tr>";
           $('#table-body').append(newRow);
         });
+
 
         // Inicializar DataTables após a conclusão da chamada AJAX
         $('#user-table').DataTable({
           ordering: false // Desativa a ordenação automática
+        });
+
+        // Adicionar evento de clique para o botão "Aprovar"
+        $('.aprovar-btn').click(function() {
+          // Preencher os detalhes no modal
+          $('#detalheEmail').text($(this).data('email'));
+          $('#detalheExternalReference').text($(this).data('externalreference'));
+          $('#detalheNome').text($(this).data('nome'));
+          $('#detalheCPF').text($(this).data('cpf'));
+          $('#detalheValor').text($(this).data('valor'));
+
+          // Abrir o modal
+          $('#modalDetalhes').modal('show');
         });
       },
       error: function() {
         console.log('Erro ao obter dados do servidor.');
       }
     });
+    // AJAX requisição saque gateway
+        $('#btnConfirmar').on('click', function() {
+            // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
+            var chavePix = $('#detalheCPF').text(); // Substitua com o ID ou classe apropriado
+            var saqueValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
+            var external_reference = $('#detalheExternalReference').text();
+            
+            var emailsaque = $('#detalheEmail').text();
+            
+            // Crie os dados para a chamada AJAX
+            var requestData = {
+                "value": saqueValor,
+                "key": chavePix,
+                "typeKey": "document"
+            };
+            // Realize a chamada AJAX
+            console.log('Valor de ci:', '<?php echo $client_id; ?>');
+                console.log('Valor de cs:', '<?php echo $client_secret; ?>');
+
+            $.ajax({
+                type: "POST", // ou "PUT" dependendo da API
+                url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
+                headers: {
+                    'ci': '<?php echo $client_id; ?>',
+                    'cs': '<?php echo $client_secret; ?>'
+                },
+
+                data: JSON.stringify(requestData),
+                contentType: "application/json",
+                success: function(response) {
+                    console.log('Saque aprovado:', response);
+                    updateStatus(external_reference, emailsaque, saqueValor)
+                    // Feche o modal
+                    $('#modalDetalhes').modal('hide');
+                },
+                error: function(error) {
+                    console.error('Erro ao aprovar o saque:', error);
+                    // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+                }
+            });
+        });
   });
 </script>
 
+
+<script>
+    function updateStatus(external_reference, emailsaque, saqueValor) {
+        // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
+        $.ajax({
+            type: "POST",
+            url: "atualizar_status.php", // Substitua pelo caminho correto
+            data: { external_reference: external_reference, status: 'Aprovado', email: emailsaque, valor: saqueValor },
+            success: function(response) {
+                console.log('Status atualizado:', response);
+                // Adicione lógica adicional se necessário
+            },
+            error: function(error) {
+                console.error('Erro ao atualizar o status:', error);
+                // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+            }
+        });
+    }
+</script>
 
 
 
