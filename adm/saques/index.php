@@ -320,8 +320,6 @@
           $('#modalDetalhes').modal('hide');
         });
   });
-
-  
 </script>
 
 
