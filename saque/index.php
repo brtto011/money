@@ -120,10 +120,7 @@ if ($stmt) {
     if ($SaqueStatus->num_rows > 0) {
         // Existe pelo menos um saque com status "Aguardando Aprovação"
         $SaqueStatus = trim("fila");
-    } else {
-        // Não há saques pendentes de aprovação
-        echo "aprovado";
-    }
+    } else 
 
     $stmt->close();
 } else {
