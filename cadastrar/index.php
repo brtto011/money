@@ -83,7 +83,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $senha = validateForm($_POST["senha"]);
     $telefone = validateForm($_POST["telefone_confirmation"]);
     $leadAff = isset($_POST['lead_aff']) ? validateForm($_POST['lead_aff']) : '';
-
+    $utmSource = isset($_POST['utm_source']) ? validateForm($_POST['utm_source']) : '';
+    $utmMedium = isset($_POST['utm_medium']) ? validateForm($_POST['utm_medium']) : '';
+    $utmCampaign = isset($_POST['utm_campaign']) ? validateForm($_POST['utm_campaign']) : '';
+    
     // Verificar se o e-mail já existe
     if (emailExists($email, $conn)) {
         $errorMessage = "Já existe uma conta com esse e-mail.";
@@ -115,10 +118,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $afiliado = isset($_GET['aff']) ? $_GET['aff'] : '';
         
         // Inserir dados no banco de dados
-        $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado) 
-                        VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)";
+        $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado, utm_source, utm_medium, utm_campaign)  
+                        VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("isssissiiss", $nextId, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado);
+        $stmt->bind_param("isssissiisssss", $nextId, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado, $utmSource,$utmMedium, $utmCampaign);
 
         if ($stmt->execute()) {
             // Definir o email como uma variável de sessão
@@ -355,6 +358,10 @@ if (!empty($errorMessage)) {
   <input type="password" class="large-input-field w-input" maxlength="256" name="password_confirmation" data-name="password" placeholder="Confirme sua senha" id="myInput" required>
   
    <input type="hidden" name="lead_aff" id="lead_aff" value="">
+   
+   <input type="hidden" name="utm_source" id="utm_source" value="">
+   <input type="hidden" name="utm_medium" id="utm_medium" value="">
+   <input type="hidden" name="utm_campaign" id="utm_campaign" value="">
   </div>
   <br>
   
@@ -383,9 +390,22 @@ if (!empty($errorMessage)) {
           // Obtenha os parâmetros da URL
           const urlParams = new URLSearchParams(window.location.search);
           const leadAff = urlParams.get('aff');
-  
+          const utmSource = urlParams.get('utm_source');
+          const utmMedium = urlParams.get('utm_medium');
+          const utmCampaign = urlParams.get('utm_campaign');
+            console.log('leadAff', leadAff);
+            console.log('utm source', utmSource);
+            console.log('utm medium', utmMedium);
+            console.log('utm utm_campaign', utmCampaign);
+          
           // Atualize o valor do campo oculto 'lead_aff'
           document.getElementById('lead_aff').value = leadAff;
+          // Atualize o valor do campo oculto 'utm_source'
+          document.getElementById('utm_source').value = utmSource;
+          // Atualize o valor do campo oculto 'utm_medium'
+          document.getElementById('utm_medium').value = utmMedium;
+          // Atualize o valor do campo oculto 'utm_campaign'
+          document.getElementById('utm_campaign').value = utmCampaign;
       });
   
   
