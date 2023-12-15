@@ -279,7 +279,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           ?>
   
   
-  <a href="../recovery">
+  <a href="recovery.php">
   <p>Esqueceu sua senha? Clique aqui <br>
   </p>
   </a>
