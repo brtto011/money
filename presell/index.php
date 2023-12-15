@@ -178,7 +178,7 @@ $saldo = 10
                     <?php echo $jogo_demo; ?> tentativas!
                 </p>
 
-                <form data-name="" id="auth" method="post" aria-label="Form" action="jogoteste">
+                <form data-name="" id="auth" method="post" aria-label="Form" action="jogodemo">
                     <div class="">
                         <?php if ($jogo_demo > 0): ?>
                             <input type="submit" value="Iniciar Jogo" class="botao-jogar"><br><br>
