@@ -347,12 +347,19 @@ if (!isset($_SESSION['emailadm'])) {
 
             $.ajax({
                 
-                
+                //gateway de teste
+                // type: "POST", // ou "PUT" dependendo da API
+                // url: "https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment",
+                // headers: {
+                //    'ci': 'testesandbox_1687443996536',
+                //    'cs': '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d'
+                // },
+
                 type: "POST", // ou "PUT" dependendo da API
-                url: "https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment",
+                url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
                 headers: {
-                   'ci': 'testesandbox_1687443996536',
-                   'cs': '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d'
+                   'ci': '<?php echo $client_id; ?>',
+                   'cs': '<?php echo $client_secret; ?>'
                 },
 
                 data: JSON.stringify(requestData),
