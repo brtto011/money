@@ -221,6 +221,30 @@ if (!isset($_SESSION['emailadm'])) {
   </div>
 </div>
 
+<!-- Modal Rejeitar -->
+<div class="modal fade" id="modalRejeitar" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDetalhesLabel">Rejeitar Saque de Afiliado</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Email:</strong> <span id="rejeitarEmail"></span></p>
+        <p><strong>Nome:</strong> <span id="rejeitarNome"></span></p>
+        <p><strong>Pix:</strong> <span id="rejeitarPix"></span></p>
+        <p><strong>Valor:</strong> <span id="rejeitarValor"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnFechar">CANCELAR</button>
+        <button type="button" class="btn btn-danger" id="btnRejeitar">Rejeitar Saque</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
     
 </script>
@@ -244,6 +268,13 @@ if (!isset($_SESSION['emailadm'])) {
         newRow += `<button class='btn-aprovar' data-toggle='modal' data-target='#modalDetalhes' 
                       data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
                       data-valor='${row.valor}'>Aprovar</button>`;
+      }
+      
+      if (row.status === 'Aguardando Aprovação') {
+      // Adiciona o botão "Rejeitar"
+        newRow += `<button class='btn-rejeitar' data-toggle='modal' data-target='#modalRejeitar' 
+                      data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
+                      data-valor='${row.valor}'>Rejeitar</button>`;
       }
 
       newRow += '</td></tr>';
@@ -277,6 +308,23 @@ if (!isset($_SESSION['emailadm'])) {
 
           // Exiba o modal
           $('#modalDetalhes').modal('show');
+        });
+        
+        // Adicione um evento de clique para o botão Rejeitar
+        $(document).on('click', '.btn-rejeitar', function() {
+          var email = $(this).data('email');
+          var nome = $(this).data('nome');
+          var pix = $(this).data('pix');
+          var valor = $(this).data('valor');
+
+          // Preencha os detalhes no modal
+          $('#rejeitarEmail').text(email);
+          $('#rejeitarNome').text(nome);
+          $('#rejeitarPix').text(pix);
+          $('#rejeitarValor').text(valor);
+
+          // Exiba o modal
+          $('#modalRejetar').modal('show');
         });
 
         // Adicione um evento de clique para o botão Confirmar no modal
@@ -321,12 +369,27 @@ if (!isset($_SESSION['emailadm'])) {
                 }
             });
         });
+        
+        
+        // Adicione um evento de clique para o botão Rejeitar no modal
+        $('#btnRejeitar').on('click', function() {
+            // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
+            var afiliadoPix = $('#rejeitarPix').text(); // Substitua com o ID ou classe apropriado
+            var email = $('#rejeitarEmail').text();
+        
+            // Chame a função para atualizar o status "Rejeitado"
+            updateStatusRejeitar(afiliadoPix, email);
+        
+            // Feche o modal
+            $('#modalRejeitar').modal('hide');
+        });
 
 
+        
         // Adicione um evento de clique para o botão Fechar no modal
         $('#btnFechar').on('click', function() {
           // Feche o modal
-          $('#modalDetalhes').modal('hide');
+          $('#modalRejeitar').modal('hide');
         });
 
         // Inicializar DataTables após a conclusão da chamada AJAX
@@ -362,6 +425,27 @@ if (!isset($_SESSION['emailadm'])) {
 </script>
 
 
+<script>
+    function updateStatusRejeitar(afiliadoPix, email,) {
+        // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
+        console.log('update status', email, afiliadoPix)
+        $.ajax({
+            type: "POST",
+            url: "atualizar_status_rejeitar.php", // Substitua pelo caminho correto
+            data: { pix: afiliadoPix, status: 'Rejeitado', email: email },
+            success: function(response) {
+                console.log('Status atualizado:', response);
+                // Adicione lógica adicional se necessário
+            },
+            error: function(error) {
+                console.error('Erro ao atualizar o status:', error);
+                // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+            }
+        });
+    }
+</script>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
@@ -377,25 +461,35 @@ if (!isset($_SESSION['emailadm'])) {
         // Função para adicionar linha à tabela
         function addTableRow(row) {
           var statusClass = (row.status === 'Aguardando Aprovação') ? 'text-danger' : 'text-success';
-
+        
           var newRow = `<tr>
-        <td>${row.email}</td>
-        <td>${row.nome}</td>
-        <td>${row.pix}</td>
-        <td>${row.valor}</td>
-        <td class='${statusClass}'>${row.status}</td>
-        <td>`;
-
+            <td>${row.email}</td>
+            <td>${row.nome}</td>
+            <td>${row.pix}</td>
+            <td>${row.valor}</td>
+            <td class='${statusClass}'>${row.status}</td>
+            <td>`;
+        
           if (row.status === 'Aguardando Aprovação') {
             newRow += `<button class='btn-aprovar' data-toggle='modal' data-target='#modalDetalhes' 
-                      data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                      data-valor='${row.valor}'>Aprovar</button>`;
+                          data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
+                          data-valor='${row.valor}'>Aprovar</button> `;
+        
+            
           }
-
+          
+          if (row.status === 'Aguardando Aprovação') {
+          // Adiciona o botão "Rejeitar"
+            newRow += `<button class='btn-rejeitar' data-toggle='modal' data-target='#modalRejeitar' 
+                          data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
+                          data-valor='${row.valor}'>Rejeitar</button>`;
+          }
+          
           newRow += '</td></tr>';
-
+        
           $('#table-body').append(newRow);
         }
+
 
         // Use AJAX para buscar dados do arquivo PHP
         $.ajax({
@@ -424,6 +518,24 @@ if (!isset($_SESSION['emailadm'])) {
               // Exiba o modal
               $('#modalDetalhes').modal('show');
             });
+            
+            // Adicione um evento de clique para o botão Rejeitar
+            $(document).on('click', '.btn-rejeitar', function () {
+              var email = $(this).data('email');
+              var nome = $(this).data('nome');
+              var pix = $(this).data('pix');
+              var valor = $(this).data('valor');
+
+              // Preencha os detalhes no modal
+              $('#rejeitarEmail').text(email);
+              $('#rejeitarNome').text(nome);
+              $('#rejeitarPix').text(pix);
+              $('#rejeitarValor').text(valor);
+
+              // Exiba o modal
+              $('#modalRejeitar').modal('show');
+            });
+
 
             // Adicione um evento de clique para o botão Confirmar no modal
             $('#btnConfirmar').on('click', function () {
@@ -453,11 +565,48 @@ if (!isset($_SESSION['emailadm'])) {
               // Feche o modal após o envio da solicitação
               $('#modalDetalhes').modal('hide');
             });
+            
+            
+            // Adicione um evento de clique para o botão Confirmar no modal
+            $('#btnRejeitar').on('click', function () {
+              // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
+              var afiliadoEmail = $('#detalheEmail').text();
+              var afiliadoPix = $('#detalhePix').text();
+              var afiliadoValor = parseFloat($('#detalheValor').text());
+
+              // Exemplo de envio de solicitação AJAX para o servidor PHP
+              $.ajax({
+                url: 'bd.php',
+                method: 'POST',
+                data: {
+                  afiliadoEmail: afiliadoEmail,
+                  afiliadoPix: afiliadoPix,
+                  afiliadoValor: afiliadoValor
+                },
+                success: function (response) {
+                  console.log('Resposta do servidor:', response);
+                  // Faça algo com a resposta se necessário
+                },
+                error: function (error) {
+                  console.log('Erro ao enviar solicitação ao servidor PHP.');
+                }
+              });
+
+              // Feche o modal após o envio da solicitação
+              $('#modalRejeitar').modal('hide');
+            });
+            
 
             // Adicione um evento de clique para o botão Fechar no modal
             $('#btnFechar').on('click', function () {
               // Feche o modal
               $('#modalDetalhes').modal('hide');
+            });
+            
+            // Adicione um evento de clique para o botão Fechar no modal
+            $('#btnFechar').on('click', function () {
+              // Feche o modal
+              $('#modalRejeitar').modal('hide');
             });
 
             // Inicializar DataTables após a conclusão da chamada AJAX
