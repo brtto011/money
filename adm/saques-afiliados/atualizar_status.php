@@ -14,18 +14,17 @@ $pix = $_POST['pix'];
 $status = $_POST['status'];
 
 // Consulta para obter o saldo atual
-$saldoConsulta = "SELECT saldo_comissao FROM appconfig WHERE email = '$email' LIMIT 1";
+$saldoConsulta = "SELECT saldo_comissao FROM appconfig WHERE email = '$email'";
 $resultadoSaldo = $conn->query($saldoConsulta);
 
-if ($resultadoSaldo && $resultadoSaldo->num_rows > 0) {
+if ($resultadoSaldo > 0) {
     $rowSaldo = $resultadoSaldo->fetch_assoc();
-    $saldoAtual = $rowSaldo['saldo'];
-    
+    $saldoAtual = $rowSaldo['saldo_comissao'];
     // Verificar se há saldo suficiente antes de atualizar o status
     if ($saldoAtual >= $valor){
         
         $novoSaldo = $saldoAtual - $valor;
-        $atualizarSaldo = "UPDATE appconfig SET saldo = '$novoSaldo' WHERE email = '$email'";
+        $atualizarSaldo = "UPDATE appconfig SET saldo_comissao = '$novoSaldo' WHERE email = '$email'";
         
         // Executar a atualização do saldo
         if ($conn->query($atualizarSaldo) === TRUE) {
