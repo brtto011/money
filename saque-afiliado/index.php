@@ -56,7 +56,8 @@ if (isset($_SESSION['email'])) {
 
     // Consulta para obter o saldo de comissão associado ao email na tabela appconfig
     $consulta_saldo = "SELECT saldo_comissao FROM appconfig WHERE email = '$email'";
-
+    $consulta_status = "SELECT status FROM saque_afiliado WHERE email = '$email'";
+    $resultado_status = $conn->query($consulta_status);
     // Execute a consulta
     $resultado_saldo = $conn->query($consulta_saldo);
 
@@ -71,30 +72,44 @@ if (isset($_SESSION['email'])) {
             $nome_destinatario = $_POST['withdrawName']; // Supondo que os dados sejam enviados por um formulário POST
             $pix = $_POST['withdrawCPF']; // Supondo que os dados sejam enviados por um formulário POST
             $valor_disponivel = $saldo;
-            $status = 'Aguardando Aprovação';
+            
 
             // Consulta de inserção
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (!empty($nome_destinatario) && !empty($pix)) {
                     // Verifique se o valor do saque é maior que zero e menor ou igual ao saldo disponível
                     $valor_saque = floatval($valor_disponivel);
-                    if ($valor_saque > 0 && $valor_saque <= $saldo) {
-                        $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status)
-                                                  VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, '$status')";
-
-                        // Execute a consulta de inserção
-                        if ($conn->query($consulta_inserir_saque)) {
-                            // Atualize o saldo para zero na tabela appconfig
-                            $atualizar_saldo = "UPDATE appconfig SET saldo_comissao = 0 WHERE email = '$email'";
-                            $conn->query($atualizar_saldo);
-
-                            $mensagem_saque_ok = "Saque registrado com sucesso!";
-                        } else {
-                            $mensagem_saque_erro = "Erro ao registrar saque: " . $conn->error;
-                        }
+                    
+                    $row_status = $resultado_status->fetch_assoc();
+                    $status = trim($row_status['status']);
+                    
+                    if ($status == 'Aguardando Aprovação') {
+                        echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
                     } else {
-                        $mensagem_saque_erro = "Valor de saque inválido ou saldo insuficiente.";
+                        
+                        if ($valor_saque > 0 && $valor_saque <= $saldo) {
+                            $status = 'Aguardando Aprovação';
+                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status)
+                                                      VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, '$status')";
+    
+                            // Execute a consulta de inserção
+                            // if ($conn->query($consulta_inserir_saque)) {
+                            //   // Atualize o saldo para zero na tabela appconfig
+                            //   $atualizar_saldo = "UPDATE appconfig SET saldo_comissao = 0 WHERE email = '$email'";
+                            //   $conn->query($atualizar_saldo);
+                            
+                            //   $mensagem_saque_ok = "Saque registrado com sucesso!";
+                            // } else {
+                            //   $mensagem_saque_erro = "Erro ao registrar saque: " . $conn->error;
+                            // }
+                            echo"solicitado";
+                        } else {
+                            $mensagem_saque_erro = "Valor de saque inválido ou saldo insuficiente.";
+                        }
+                    
                     }
+                    
+                    
                 } else {
                     $mensagem_saque_erro = "Campos nome_destinatario e pix são obrigatórios.";
                 }

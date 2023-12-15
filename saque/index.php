@@ -60,30 +60,31 @@ if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Verifica se o saldo é suficiente
             if ($saldoDisponivel >= $valor) {
-                // Consulta de inserção usando declaração preparada
-                $sql = "INSERT INTO saques (email, valor, status, externalreference, CPF) VALUES (?, ?, ?, ?, ?)";
-                
-                // Preparar e executar a instrução SQL
-                $stmt = $conn->prepare($sql);
-
-                if ($stmt) {
-                    $stmt->bind_param("sssss", $email, $valor, $status, $externalreference, $CPF);
-                    $stmt->execute();
-                    
-                    // Verificar se a inserção foi bem-sucedida
-                    if ($stmt->affected_rows > 0) {
-                        echo "Saque registrado com sucesso.";
-                    } else {
-                        echo "Erro ao registrar o saque: " . $stmt->error;
-                    }
-
-                    $stmt->close();
-                } else {
-                    echo "Erro na preparação da instrução SQL: " . $conn->error;
-                }
+              // Consulta de inserção usando declaração preparada
+              $sql = "INSERT INTO saques (email, valor, status, externalreference, CPF) VALUES (?, ?, ?, ?, ?)";
+              
+              // Preparar e executar a instrução SQL
+              $stmt = $conn->prepare($sql);
+          
+              if ($stmt) {
+                  $stmt->bind_param("sssss", $email, $valor, $status, $externalreference, $CPF);
+                  $stmt->execute();
+                  
+                  // Verificar se a inserção foi bem-sucedida
+                  if ($stmt->affected_rows > 0) {
+                      echo "Saque registrado com sucesso.";
+                  } else {
+                      echo "Erro ao registrar o saque: " . $stmt->error;
+                  }
+          
+                  $stmt->close();
+              } else {
+                  echo "Erro na preparação da instrução SQL: " . $conn->error;
+              }
             } else {
-                echo "Saldo insuficiente.";
-            }
+                // Saldo insuficiente, exiba um alerta
+                echo "<script>alert('Saldo insuficiente.');</script>";
+            }          
         } else {
             echo "Nenhum saldo encontrado para o usuário.";
         }
@@ -321,7 +322,7 @@ $conn->close();
 <div class="">
 
 
-<input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'depositar'; ?>" id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
+<input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'Sacar'; ?>" id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
 
 
 

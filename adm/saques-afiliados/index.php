@@ -284,6 +284,8 @@ if (!isset($_SESSION['emailadm'])) {
             // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
             var afiliadoPix = $('#detalhePix').text(); // Substitua com o ID ou classe apropriado
             var afiliadoValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
+            var email = $('#detalheEmail').text();
+            var valor = $('#detalheValor').text();
             
             // Crie os dados para a chamada AJAX
             var requestData = {
@@ -296,18 +298,20 @@ if (!isset($_SESSION['emailadm'])) {
                 console.log('Valor de cs:', '<?php echo $client_secret; ?>');
 
             $.ajax({
+                
+                
                 type: "POST", // ou "PUT" dependendo da API
-                url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
+                url: "https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment",
                 headers: {
-                    'ci': '<?php echo $client_id; ?>',
-                    'cs': '<?php echo $client_secret; ?>'
+                   'ci': 'testesandbox_1687443996536',
+                   'cs': '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d'
                 },
 
                 data: JSON.stringify(requestData),
                 contentType: "application/json",
                 success: function(response) {
                     console.log('Saque aprovado:', response);
-                    updateStatus(afiliadoPix)
+                    updateStatus(afiliadoPix, email, valor)
                     // Feche o modal
                     $('#modalDetalhes').modal('hide');
                 },
@@ -338,12 +342,13 @@ if (!isset($_SESSION['emailadm'])) {
 </script>
 
 <script>
-    function updateStatus(afiliadoPix) {
+    function updateStatus(afiliadoPix, email, valor) {
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
+        console.log('update status', email, valor, afiliadoPix)
         $.ajax({
             type: "POST",
             url: "atualizar_status.php", // Substitua pelo caminho correto
-            data: { pix: afiliadoPix, status: 'Aprovado' },
+            data: { pix: afiliadoPix, status: 'Aprovado', email: email, valor: valor },
             success: function(response) {
                 console.log('Status atualizado:', response);
                 // Adicione lógica adicional se necessário
