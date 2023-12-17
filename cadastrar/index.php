@@ -1,4 +1,58 @@
+
+
+
 <?php
+include '../conectarbanco.php';
+
+$conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+$sql = "SELECT nome_unico, nome_um, nome_dois FROM app";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+
+    $row = $result->fetch_assoc();
+
+
+    $nomeUnico = $row['nome_unico'];
+    $nomeUm = $row['nome_um'];
+    $nomeDois = $row['nome_dois'];
+
+} else {
+    return false;
+}
+
+$conn->close();
+?>
+
+<?php
+$baseUrl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$baseUrl .= "://".$_SERVER['HTTP_HOST'];
+
+
+$staticPart = '/cadastrar/?aff=';
+
+$callbackUrl = $baseUrl . $staticPart;
+
+
+
+echo '<script>';
+echo 'console.log("Callback URL:", ' . json_encode($callbackUrl) . ');'; // Adicione esta linha para depurar
+echo 'var callbackUrl = ' . json_encode($callbackUrl) . ';';
+echo '</script>';
+?>
+
+
+
+<?php
+ini_set('display_errors',1);
+ini_set('display_startup_erros',1);
+error_reporting(E_ALL);
+
 session_start();
 
 // Função para validar os dados do formulário
@@ -18,40 +72,53 @@ if ($conn->connect_error) {
     die("Erro na conexão com o banco de dados: " . $conn->connect_error);
 }
 
+function getParamFromUrl($url, $paramName){
+    parse_str(parse_url($url, PHP_URL_QUERY), $op);
+    return array_key_exists($paramName, $op) ? $op[$paramName] : '';
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar e obter os dados do formulário
     $email = validateForm($_POST["email"]);
     $senha = validateForm($_POST["senha"]);
     $telefone = validateForm($_POST["telefone_confirmation"]);
     $leadAff = isset($_POST['lead_aff']) ? validateForm($_POST['lead_aff']) : '';
-    $utmSource = isset($_POST['utm_source']) ? validateForm($_POST['utm_source']) : '';
-    $utmMedium = isset($_POST['utm_medium']) ? validateForm($_POST['utm_medium']) : '';
-    $utmCampaign = isset($_POST['utm_campaign']) ? validateForm($_POST['utm_campaign']) : '';
-    
 
+    // Verificar se o e-mail já existe
     if (emailExists($email, $conn)) {
         $errorMessage = "Já existe uma conta com esse e-mail.";
     } else {
+        // Obter o próximo ID disponível
+        $getNextIdQuery = "SELECT MAX(id) AS max_id FROM appconfig";
+        $nextIdResult = $conn->query($getNextIdQuery);
+        $nextIdRow = $nextIdResult->fetch_assoc();
+        $nextId = $nextIdRow['max_id'] + 1;
+
+        // Verificar se o ID já existe e, se existir, obter o próximo ID disponível
+        while (idExists($nextId, $conn)) {
+            $nextId++;
+        }
+
         $saldo = 0;
-        $jogo_demo = 2;
         $plano = 20; // Valor fixo para a coluna plano
         $saldo_comissao = 0; // Valor fixo para a coluna saldo_comissao
+        $cpa= 0; // Valor fixo para o cpa unico
+        
 
         // Construir o link de afiliado
-        $linkAfiliado = "../cadastrar/?aff=";
+        $linkAfiliado = $callbackUrl . $nextId;
 
+        // Obter a data e hora atual no fuso horário de São Paulo
         $dataCadastro = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
         $dataCadastroFormatada = $dataCadastro->format('d-m-Y H:i');
-
-        // Obter um ID único
-        $nextId = uniqid();
-
+        
+        $afiliado = isset($_GET['aff']) ? $_GET['aff'] : '';
+        
         // Inserir dados no banco de dados
-        $insertQuery = "INSERT INTO appconfig (id, email, senha, telefone, saldo, jogo_demo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, utm_source, utm_medium, utm_campaign) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?)";
-
+        $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado) 
+                        VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("ssssissiisssss", $nextId, $email, $senha, $telefone, $saldo, $jogo_demo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $utmSource,$utmMedium, $utmCampaign);
+        $stmt->bind_param("isssissiiss", $nextId, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado);
 
         if ($stmt->execute()) {
             // Definir o email como uma variável de sessão
@@ -65,10 +132,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $stmt->close();
+        $nextIdResult->close();
     }
 }
 
-$conn->close();
+
+
+// Função para verificar se um ID já existe na tabela
+function idExists($id, $conn) {
+    $checkIdQuery = "SELECT id FROM appconfig WHERE id = ?";
+    $checkIdStmt = $conn->prepare($checkIdQuery);
+    $checkIdStmt->bind_param("i", $id);
+    $checkIdStmt->execute();
+    $checkIdStmt->store_result();
+    $exists = $checkIdStmt->num_rows > 0;
+    $checkIdStmt->close();
+    return $exists;
+}
 
 // Função para verificar se um e-mail já existe na tabela
 function emailExists($email, $conn) {
@@ -81,63 +161,31 @@ function emailExists($email, $conn) {
     $checkEmailStmt->close();
     return $exists;
 }
+$conn->close();
 ?>
 
 
 
 <!DOCTYPE html>
 
-<html lang="pt-br" class="w-mod-js wf-spacemono-n4-active wf-spacemono-n7-active wf-active w-mod-ix"><head>
-    <!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2731501603665645');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=2731501603665645&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '689791573256217');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=689791573256217&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>.wf-force-outline-none[tabindex="-1"]:focus{outline:none;}</style>
+<html lang="pt-br" class="w-mod-js wf-spacemono-n4-active wf-spacemono-n7-active wf-active w-mod-ix"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>.wf-force-outline-none[tabindex="-1"]:focus{outline:none;}</style>
 <meta charset="pt-br">
-<title>SubwayPay 🌊</title>
+<title><?= $nomeUnico ?> 🌊</title>
 <meta property="og:image" content="../img/logo.png">
 
-<meta content="SubwayPay 🌊" property="og:title">
+
+<meta content="<?= $nomeUnico ?> 🌊" property="og:title">
 
 <meta name="twitter:image" content="../img/logo.png">
-<meta content="SubwayPay 🌊" property="twitter:title">
+<meta content="<?= $nomeUnico ?> 🌊" property="twitter:title">
 
 <meta property="og:type" content="website">
 <meta content="summary_large_image" name="twitter:card">
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <link href="arquivos/page.css" rel="stylesheet" type="text/css">
 <script src="arquivos/webfont.js" type="text/javascript"></script>
+
+
 
 <script type="text/javascript">
                 WebFont.load({
@@ -150,7 +198,6 @@ src="https://www.facebook.com/tr?id=689791573256217&ev=PageView&noscript=1"
 
 
 
-
 <link rel="apple-touch-icon" sizes="180x180" href="../img/logo.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../img/logo.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../img/logo.png">
@@ -158,66 +205,9 @@ src="https://www.facebook.com/tr?id=689791573256217&ev=PageView&noscript=1"
 
 <link rel="icon" type="image/x-icon" href="../img/logo.png">
 
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '311189245234114');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=311189245234114&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '895000851961790');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=895000851961790&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '852624766643006');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=852624766643006&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-
-
-
-
-
+<?php 
+    include '../pixels.php';
+?>
 
 
 </head>
@@ -234,7 +224,7 @@ src="https://www.facebook.com/tr?id=852624766643006&ev=PageView&noscript=1"
 <a href="../" aria-current="page" class="brand w-nav-brand" aria-label="home">
 <img src="arquivos/l2.png" loading="lazy" height="28" alt="" class="image-6">
 
-<div class="nav-link logo">SubwayPay</div>
+<div class="nav-link logo"><?= $nomeUnico ?></div>
 </a>
 <nav role="navigation" class="nav-menu w-nav-menu">
 <a href="../login/" class="nav-link w-nav-link" style="max-width: 940px;">Jogar</a>
@@ -342,7 +332,7 @@ if (!empty($errorMessage)) {
 
 
 
-<form method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+<form method="POST" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
   
 
 
@@ -354,7 +344,7 @@ if (!empty($errorMessage)) {
   </div>
   <h4 class="rarity-heading">Telefone</h4>
   <div class="rarity-row roboto-type2">
-      <input type="tel" class="large-input-field w-input" maxlength="20" name="telefone_confirmation" placeholder="Telefone" id="telefone_confirmation" required>
+      <input type="tel" class="large-input-field w-input" maxlength="20" name="telefone_confirmation" placeholder="Seu telefone" id="telefone_confirmation" required>
   </div>
   <h4 class="rarity-heading">Senha</h4>
   <div class="rarity-row roboto-type2">
@@ -365,9 +355,6 @@ if (!empty($errorMessage)) {
   <input type="password" class="large-input-field w-input" maxlength="256" name="password_confirmation" data-name="password" placeholder="Confirme sua senha" id="myInput" required>
   
    <input type="hidden" name="lead_aff" id="lead_aff" value="">
-   <input type="hidden" name="utm_source" id="utm_source" value="">
-   <input type="hidden" name="utm_medium" id="utm_medium" value="">
-   <input type="hidden" name="utm_campaign" id="utm_campaign" value="">
   </div>
   <br>
   
@@ -392,26 +379,14 @@ if (!empty($errorMessage)) {
   
   
   <script>
-      
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtenha os parâmetros da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const leadAff = urlParams.get('aff');
-        const utmSource = urlParams.get('utm_source');
-        const utmMedium = urlParams.get('utm_medium');
-        const utmCampaign = urlParams.get('utm_campaign');
-    
-        // Ajuste dos valores de UTM conforme o modelo do Facebook
-        const facebookUTMSource = utmSource ? `{{${utmSource}}}` : '';
-        const facebookUTMMedium = utmMedium ? `{{${utmMedium}}}` : '';
-        const facebookUTMCampaign = utmCampaign ? `{{${utmCampaign}}}` : '';
-    
-        // Atualize os valores dos campos ocultos
-        document.getElementById('lead_aff').value = leadAff;
-        document.getElementById('utm_source').value = facebookUTMSource;
-        document.getElementById('utm_medium').value = facebookUTMMedium;
-        document.getElementById('utm_campaign').value = facebookUTMCampaign;
-    });
+      document.addEventListener('DOMContentLoaded', function () {
+          // Obtenha os parâmetros da URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const leadAff = urlParams.get('aff');
+  
+          // Atualize o valor do campo oculto 'lead_aff'
+          document.getElementById('lead_aff').value = leadAff;
+      });
   
   
   </script>
@@ -472,20 +447,17 @@ if (!empty($errorMessage)) {
   </script>
 
 <div class="footer-section wf-section">
-<div class="domo-text">SUBWAY <br>
+<div class="domo-text"><?= $nomeUm ?> <br>
 </div>
-<div class="domo-text purple">PAY <br>
+<div class="domo-text purple"><?= $nomeDois ?> <br>
 </div>
-<div class="follow-test">© Copyright xlk Limited, with registered
-offices at
-Dr. M.L. King
-Boulevard 117, accredited by license GLH-16289876512. </div>
+<div class="follow-test">© Copyright </div>
 <div class="follow-test">
 <a href="../legal">
 <strong class="bold-white-link">Termos de uso</strong>
 </a>
 </div>
-<div class="follow-test">contato@subwaypay.cloud</div>
+<div class="follow-test">contato@<?= $nomeUnico ?>.cloud</div>
 </div>
 
 
