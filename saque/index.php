@@ -26,6 +26,8 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
 
+
+
 <?php
 
 session_start();
@@ -40,6 +42,15 @@ if ($conn->connect_error) {
     die("Erro na conexão com o banco de dados: " . $conn->connect_error);
 }
 
+
+  $getLinkQuery = "SELECT saques_min FROM app";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->execute();
+  $stmt->bind_result($saques_min);
+  $stmt->fetch();
+  $stmt->close();
+  
+
 // Recupere o email da sessão
 if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_SESSION['email'];
@@ -47,6 +58,8 @@ if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
     $CPF = $_POST['withdrawCPF'];
     $valor = $_POST['withdrawValue'];
     $status = 'Aguardando Aprovação';
+    
+    
 
     // Consulta de saldo
     $saldoConsulta = "SELECT saldo FROM appconfig WHERE email = '$email' LIMIT 1";
@@ -303,6 +316,10 @@ $conn->close();
 <h2>Saque</h2>
 <p>PIX: saques instantâneos com muita praticidade. <br>
 </p>
+<br>
+
+<h4>Saque Minimo: R$ <?= $saques_min ?> <br>
+</h4>
 <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm">
 <div class="properties">
 <h4 class="rarity-heading">Nome do destinatário:</h4>
