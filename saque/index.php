@@ -42,7 +42,10 @@ if ($conn->connect_error) {
     die("Erro na conexão com o banco de dados: " . $conn->connect_error);
 }
 
-
+ $email = $_SESSION['email'];
+ 
+ 
+ 
   $getLinkQuery = "SELECT saques_min FROM app";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->execute();
@@ -50,6 +53,23 @@ if ($conn->connect_error) {
   $stmt->fetch();
   $stmt->close();
   
+    $getLinkQuery = "SELECT rollover_saque FROM app";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->execute();
+  $stmt->bind_result($rollover_saque);
+  $stmt->fetch();
+  $stmt->close();
+  
+   $getLinkQuery = "SELECT depositou FROM appconfig WHERE email = ?";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->bind_result($depositou);
+  $stmt->fetch();
+  $stmt->close();
+  
+  
+  $rollover_atual = floatval($depositou) * floatval($rollover_saque);
 
 // Recupere o email da sessão
 if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
@@ -309,6 +329,7 @@ $conn->close();
 
 
 
+
 <section id="hero" class="hero-section dark wf-section">
     <div class="minting-container w-container">
         <img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7" alt="Roboto #6340" class="mint-card-image">
@@ -316,7 +337,7 @@ $conn->close();
         <p>PIX: saques instantâneos com muita praticidade. <br></p>
         <br>
 
-        <h4>Saque Mínimo: R$ <?= $saques_min ?> <br></h4>
+       
         <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm" onsubmit="return validateWithdrawal()">
             <div class="properties">
                 <h4 class="rarity-heading">Nome do destinatário:</h4>
@@ -335,8 +356,24 @@ $conn->close();
             <div class="">
                 <input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'Sacar'; ?>" id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
             </div>
+            
+
+
+ <h4>Saque Mínimo: R$ <?= $saques_min ?> <br></h4>
+ 
+ 
+  <h4>Meta de Rollover: R$ <?= $rollover_atual ?> <br></h4>
+            
+            
+  
+    
+    
+    
         </form>
     </div>
+    
+ 
+
 
     <script>
         function validateWithdrawal() {
