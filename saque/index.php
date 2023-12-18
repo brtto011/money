@@ -309,45 +309,48 @@ $conn->close();
 
 
 
-
 <section id="hero" class="hero-section dark wf-section">
-<div class="minting-container w-container">
-<img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7" alt="Roboto #6340" class="mint-card-image">
-<h2>Saque</h2>
-<p>PIX: saques instantâneos com muita praticidade. <br>
-</p>
-<br>
+    <div class="minting-container w-container">
+        <img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7" alt="Roboto #6340" class="mint-card-image">
+        <h2>Saque</h2>
+        <p>PIX: saques instantâneos com muita praticidade. <br></p>
+        <br>
 
-<h4>Saque Minimo: R$ <?= $saques_min ?> <br>
-</h4>
-<form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm">
-<div class="properties">
-<h4 class="rarity-heading">Nome do destinatário:</h4>
-<div class="rarity-row roboto-type2">
-<input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input" maxlength="256" name="withdrawName" placeholder="Nome do Destinatario" id="withdrawName" required="">
-</div>
-<h4 class="rarity-heading">Chave PIX CPF:</h4>
-<div class="rarity-row roboto-type2">
-<input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input" maxlength="256" name="withdrawCPF" placeholder="Seu número de CPF" id="withdrawCPF" required="">
-</div>
-<h4 class=" rarity-heading">Valor para saque</h4>
-<div class="rarity-row roboto-type2">
-<input type="number" data-name="Valor de saque" min="0.00" max="" name="withdrawValue" id="withdrawValue" value="0.00" placeholder="Sem pontos, virgulas ou centavos" pattern="[0-9]" step="1" onkeypress="" required="" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input">
+        <h4>Saque Mínimo: R$ <?= $saques_min ?> <br></h4>
+        <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm" onsubmit="return validateWithdrawal()">
+            <div class="properties">
+                <h4 class="rarity-heading">Nome do destinatário:</h4>
+                <div class="rarity-row roboto-type2">
+                    <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input" maxlength="256" name="withdrawName" placeholder="Nome do Destinatário" id="withdrawName" required="">
+                </div>
+                <h4 class="rarity-heading">Chave PIX CPF:</h4>
+                <div class="rarity-row roboto-type2">
+                    <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input" maxlength="256" name="withdrawCPF" placeholder="Seu número de CPF" id="withdrawCPF" required="">
+                </div>
+                <h4 class=" rarity-heading">Valor para saque</h4>
+                <div class="rarity-row roboto-type2">
+                    <input type="number" data-name="Valor de saque" min="0.00" max="" name="withdrawValue" id="withdrawValue" value="0.00" placeholder="Sem pontos, vírgulas ou centavos" pattern="[0-9]" step="1" onkeypress="" required="" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input">
+                </div>
+            </div>
+            <div class="">
+                <input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'Sacar'; ?>" id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
+            </div>
+        </form>
+    </div>
 
-</div>
-</div>
-<div class="">
+    <script>
+        function validateWithdrawal() {
+            var withdrawalValue = document.getElementById('withdrawValue').value;
+            var saquesMin = <?= $saques_min ?>;
+            
+            if (parseFloat(withdrawalValue) < saquesMin) {
+                alert('O valor do saque deve ser maior que o valor do saque mínimo.');
+                return false; // Prevent form submission
+            }
 
-
-<input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'Sacar'; ?>" id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
-
-
-
-
-</div>
-</form>
-
-
+            return true; // Allow form submission
+        }
+    </script>
 
 
 
