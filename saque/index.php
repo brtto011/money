@@ -85,7 +85,7 @@ if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
                   
                   // Verificar se a inserção foi bem-sucedida
                   if ($stmt->affected_rows > 0) {
-                      echo "Saque registrado com sucesso.";
+                     echo '<script>alert("Saque Solicitado com sucesso.");</script>';
                   } else {
                       echo "Erro ao registrar o saque: " . $stmt->error;
                   }
