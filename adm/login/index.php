@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows == 1) {
         // Login bem-sucedido
-        $_SESSION['emailadm'] = $email;
+        $_SESSION['emailadm-378287423bkdfjhbb71ihudb'] = $email;
         header("Location: ../");
         exit();
     } else {

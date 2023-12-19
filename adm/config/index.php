@@ -1,3 +1,19 @@
+
+
+<?php
+session_start();
+
+// Verificar se a sessão existe
+if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
+    // Sessão não existe, redirecionar para outra página
+    header("Location: ../login");
+    exit();
+}
+
+?>
+
+
+
 <?php
 include './../../conectarbanco.php';
 

@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    if (!isset($_SESSION['emailadm'])) {
+    if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         header("Location: ../login");
         exit();
     }
