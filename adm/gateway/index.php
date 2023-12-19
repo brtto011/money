@@ -169,10 +169,7 @@ include './bd.php'; ?>
             outline: none;
           }
           
-          #atual-title {
-            margin-top: 25px;
-            margin-left: 5px;
-          }
+
           
         </style>
 
@@ -182,15 +179,13 @@ include './bd.php'; ?>
             <div class="card-id" id="card-gateway">
               <p id="card-title"><strong>Client ID</strong></p>
               <input id="input-id" class="input-id" type="text" placeholder="Digite seu Client ID...">
-              <h5 id="atual-title">Client ID atual:</h5>
-              <input id="atual-id" class="input-id" type="text" disabled placeholder="<?php echo $client_id; ?>">
+             
             </div>
 
             <div class="card-secret" id="card-gateway">
               <p id="card-title"><strong>Client Secret</strong></p>
               <input id="input-secret" class="input-secret" type="text" placeholder="Digite seu Client Secret...">
-              <h5 id="atual-title">Client Secret atual:</h5>
-              <input id="atual-secret" class="input-secret" type="text" disabled placeholder="<?php echo $client_secret; ?>">
+             
             </div>
 
             <div class="button-container">
