@@ -2,7 +2,7 @@
 try{
 session_start();
 
-if (!isset($_SESSION['emailadm'])) {
+if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
     header("Location: ../login");
     exit();
 }
@@ -73,10 +73,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 } else {
@@ -84,10 +84,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }
@@ -99,10 +99,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 } else {
@@ -110,10 +110,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }
@@ -125,10 +125,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 } else {
@@ -136,10 +136,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }
@@ -151,10 +151,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.phpm");
                         exit();
                     }
                 } else {
@@ -162,10 +162,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }
@@ -177,10 +177,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 } else {
@@ -188,10 +188,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }
@@ -203,10 +203,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 } else {
@@ -214,10 +214,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }
@@ -229,10 +229,10 @@ if ($error) {
                     $result_update = $conn->query($sql_update);
                     
                     if ($result_update === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 } else {
@@ -240,10 +240,10 @@ if ($error) {
                     $result_insert = $conn->query($sql_insert);
                     
                     if ($result_insert === TRUE) {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     } else {
-                        header("Location: /adm");
+                        header("Location: index.php");
                         exit();
                     }
                 }

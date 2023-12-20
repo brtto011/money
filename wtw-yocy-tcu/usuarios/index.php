@@ -303,7 +303,7 @@ function saveFile(blob, filename) {
       </div>
       <div class="modal-body">
         <!-- Campos de input para edição -->
-        <form id="editForm" action="/adm/usuarios/update.php" method="post">
+        <form id="editForm" action="update.php" method="post">
             <label for="editEmail">Email:</label>
             <input type="text" class="form-control" id="editEmail" name="email" >
     

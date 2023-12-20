@@ -588,7 +588,7 @@ $result = $result2->fetch_assoc();
             </h1>
             <h5 class="text-white">Depósito Mínimo</h5>
             <h7 class="text-white">R$:</h7>
-            <form action="/adm/processos.php?opcao=depositoMin" method="post" id="editForm3">  
+            <form action="processos.php?opcao=depositoMin" method="post" id="editForm3">  
                 <input type="text" class="form-control custom-input" value="<?php echo $result['deposito_min'] ?>" id="valorApostaMax" placeholder="Digite o valor" name="valor" required>
                 <br>
                 <br>
@@ -649,7 +649,7 @@ if ($conn->connect_error) {
             </h1>
             <h5 class="text-white">Saque Mínimo</h5>
             <h7 class="text-white">R$:</h7>
-            <form action="/adm/processos.php?opcao=saqueMin" method="post" id="editForm3">  
+            <form action="processos.php?opcao=saqueMin" method="post" id="editForm3">  
                 <input type="text" class="form-control custom-input" value="<?php echo $result['saques_min'] ?>" id="valorSaqueMin"   placeholder="Digite o valor" name="valor" required>
                 <br>
                 <br>
@@ -668,7 +668,7 @@ if ($conn->connect_error) {
         </h1>
         <h5 class="text-white">Aposta Máxima</h5>
         <h7 class="text-white">R$:</h7>
-        <form action="/adm/processos.php?opcao=apostaMax" method="post" id="editForm3">  
+        <form action="processos.php?opcao=apostaMax" method="post" id="editForm3">  
                 <input type="text" class="form-control custom-input" value="<?php echo $result['aposta_max'] ?>" id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
                 <br>
                 <br>
@@ -686,7 +686,7 @@ if ($conn->connect_error) {
             </h1>
             <h5 class="text-white">Dificuldade do Jogo</h5>
             <h7 class="text-white">Velocidade</h7>
-            <form action="/adm/processos.php?opcao=dificuldadeJogo"  method="post" id="editForm3">  
+            <form action="processos.php?opcao=dificuldadeJogo"  method="post" id="editForm3">  
                 <!-- Adicione o campo de dropdown aqui -->
                 <select  name="valor" class="form-select custom-input" aria-label="Escolha a dificuldade">
                     <option <?php echo ($result['dificuldade_jogo'] == 'facil') ? 'selected' : ''; ?> value="facil">Fácil</option>
@@ -709,7 +709,7 @@ if ($conn->connect_error) {
         </h1>
         <h5 class="text-white">Aposta Mínima</h5>
         <h7 class="text-white">R$:</h7>
-        <form action="/adm/processos.php?opcao=apostaMin" method="post" id="editForm3">  
+        <form action="processos.php?opcao=apostaMin" method="post" id="editForm3">  
             <input type="text" class="form-control custom-input" value="<?php echo $result['aposta_min'] ?>" id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
             <br>
             <br>
@@ -728,7 +728,7 @@ if ($conn->connect_error) {
         </h1>
         <h5 class="text-white">Rollover do Saque</h5>
         <h7 class="text-white">X</h7>
-        <form action="/adm/processos.php?opcao=rolloverSaque" method="post" id="editForm3">  
+        <form action="processos.php?opcao=rolloverSaque" method="post" id="editForm3">  
             <input type="text" class="form-control custom-input" value="<?php echo $result['rollover_saque'] ?>" id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
             <br>
             <br>
@@ -747,7 +747,7 @@ if ($conn->connect_error) {
         </h1>
         <h5 class="text-white">Taxa de Saque</h5>
         <h7 class="text-white">R%</h7>
-        <form action="/adm/processos.php?opcao=taxaSaque" method="post" id="editForm3">  
+        <form action="processos.php?opcao=taxaSaque" method="post" id="editForm3">  
             <input type="text" class="form-control custom-input" value="<?php echo $result['taxa_saque'] ?>" id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
             <br>
             <br>
