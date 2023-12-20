@@ -179,6 +179,8 @@ include './bd.php'; ?>
             <div class="card-id" id="card-gateway">
               <p id="card-title"><strong>Client ID</strong></p>
               <input id="input-id" class="input-id" type="text" placeholder="Digite seu Client ID...">
+              <h5 id="atual-title">Client ID atual:</h5>
+              <input id="atual-id" class="input-id" type="text" disabled placeholder="<?php echo $client_id; ?>">
              
             </div>
 
