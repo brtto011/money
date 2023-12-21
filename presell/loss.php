@@ -206,7 +206,7 @@ if (isset($_GET['msg'])) {
                 <p>Para aproveitar o seu Bônus você precisa criar sua conta e depósitar um valor minimo. #ficadica!</p>
                 <strong style="margin-top: 20px"> ⬇️ Clique no Botão Abaixo</strong>
 
-                <a href="/cadastrar/" class="cadastro-btn">CADASTRAR</a>
+                <a href="../cadastrar/" class="cadastro-btn">CADASTRAR</a>
 
                 <style>
                     .win-warn {
