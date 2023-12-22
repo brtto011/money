@@ -273,6 +273,7 @@ function saveFile(blob, filename) {
             <tr>
                 <th>Data / Hora</th>
               <th>Email</th>
+              <th>Telefone</th>
               <th>Cod. Referencia</th>
               <th>Valor</th>
               <th>Status</th>
@@ -450,6 +451,7 @@ function saveFile(blob, filename) {
                     dataTable.row.add([
                         row.data,
                         row.email,
+                        row.telefone, 
                         row.externalreference,
                         row.valor,
                         row.status

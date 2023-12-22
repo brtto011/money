@@ -11,22 +11,24 @@ if ($conn->connect_error) {
 // Verificar se o parâmetro status está presente
 $status = isset($_GET['status']) ? $_GET['status'] : null;
 
-// Consulta SQL para obter dados da tabela
-$sql = "SELECT email, externalreference, valor, status, data FROM confirmar_deposito";
+// Consulta SQL para obter dados da tabela confirmar_deposito com join na tabela appconfig
+$sql = "SELECT cd.email, ac.telefone, cd.externalreference, cd.valor, cd.status, cd.data 
+        FROM confirmar_deposito cd
+        LEFT JOIN appconfig ac ON cd.email = ac.email";
 
 // Adicionar cláusula WHERE se o parâmetro status estiver presente
 if (!empty($status)) {
     // Use prepared statement para evitar injeção de SQL
-    $sql .= " WHERE status = ?";
+    $sql .= " WHERE cd.status = ?";
 }
 
 // Adicionar ORDER BY para ordenar pela coluna "data" em ordem descendente
 $sql .= " ORDER BY 
             CASE 
-                WHEN data IS NULL THEN 1  -- Coloca registros com data vazia por último
+                WHEN cd.data IS NULL THEN 1  -- Coloca registros com data vazia por último
                 ELSE 0
             END,
-            STR_TO_DATE(data, '%H:%i:%s') DESC";
+            STR_TO_DATE(cd.data, '%H:%i:%s') DESC";
 
 // Use prepared statement se o parâmetro status estiver presente
 if (!empty($status)) {
