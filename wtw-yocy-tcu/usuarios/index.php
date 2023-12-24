@@ -167,7 +167,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         <div class="row">
             <div class="col-md-12 col-lg-4 col-xlg-3">
                 <div class="card card-hover">
-                    <div class="box bg-danger text-center">
+                    <div class="box bg-info text-center">
                         <h1 class="font-light text-white" id="valorUsuarios1">0</h1>
                         <h4 class="text-white">Total de cadastros</h4>
                     </div>
@@ -175,7 +175,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             </div>
             <div class="col-md-12 col-lg-4 col-xlg-3">
                 <div class="card card-hover">
-                    <div class="box bg-danger text-center">
+                    <div class="box bg-info text-center">
                         <h1 class="font-light text-white" id="valorUsuarios2">0</h1>
                         <h4 class="text-white">Total de cadastros nas últimas 24 horas</h4>
                     </div>
@@ -185,10 +185,10 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 
         <div class="row">
             <div class="col-md-2 mb-3">
-                <button class="btn btn-success" id="exportCsvBtn">Exportar CSV</button>
+                <button class="btn btn-info" id="exportCsvBtn">Exportar CSV</button>
             </div>
             <div class="col-md-3 mb-3">
-                <button class="btn btn-success" id="modalTotalAff">Total de depósitos por afiliado</button>
+                <button class="btn btn-info" id="modalTotalAff">Total de depósitos por afiliado</button>
             </div>
         </div>
 </div>
@@ -325,8 +325,8 @@ function saveFile(blob, filename) {
 
         
       <div class="table-responsive">
-        <h5>Filtrar por link de afiliado</h5>
-        <input type="text" id="leadAffInput" placeholder="Filtrar por afiliado">
+        <h5>Filtrar leads linkados a afiliado</h5>
+        <input type="text" id="leadAffInput" placeholder="Digite o ID do afiliado">
         <br>
         <table id="user-table" class="table table-striped table-bordered">
           <thead>
@@ -378,8 +378,8 @@ function saveFile(blob, filename) {
             <label for="editLinkAfiliado">Link Afiliado:</label>
             <input type="text" class="form-control" id="editLinkAfiliado" name="linkafiliado" >
     
-            <label for="editPlano">Revenue Share (%):</label>
-            <input type="text" class="form-control" id="editPlano" name="plano" >
+             <!--<label for="editPlano">Revenue Share (%):</label>-->
+             <!--<input type="text" class="form-control" id="editPlano" name="plano" >-->
             
             <!-- <select  name="plano" class="form-select custom-input" aria-label="Escolha a dificuldade">
                 <option value="bronze">Bronze</option>
@@ -387,13 +387,13 @@ function saveFile(blob, filename) {
                 <option value="platina">Platina</option>
             </select>-->
     
-            <label for="editBloqueado">Bloqueado:</label>
-            <input type="checkbox" id="editBloqueado" name="bloqueado" >
+             <!--<label for="editBloqueado">Bloqueado:</label>-->
+             <!--<input type="checkbox" id="editBloqueado" name="bloqueado" >-->
             
             <br/>
             
-            <label for="editSaldoComissao">Saldo Comissao:</label>
-            <input type="text" class="form-control" id="editSaldoComissao" name="saldo_comissao" >
+             <!--<label for="editSaldoComissao">Saldo Comissao:</label>-->
+             <!--<input type="text" class="form-control" id="editSaldoComissao" name="saldo_comissao" >-->
     
             <!-- <label for="editPerdas">Perdas:</label>-->
             <!-- <input type="text" class="form-control" id="editPerdas" name="percas" >-->
@@ -401,14 +401,14 @@ function saveFile(blob, filename) {
             <!-- <label for="editGanhos">Ganhos:</label>-->
             <!-- <input type="text" class="form-control" id="editGanhos" name="ganhos" >-->
     
-            <label for="editCpa">Cpa:</label>
-            <input type="text" class="form-control" id="editCpa" name="cpa" >
+            <!--<label for="editCpa">Cpa:</label>
+           <!-- <input type="text" class="form-control" id="editCpa" name="cpa" >-->
     
-            <label for="editCpaFake">Chance do Afiliado Receber CPA (%):</label>
-            <input type="text" class="form-control" id="editCpaFake" name="cpafake" >
+            <!--<label for="editCpaFake">Chance do Afiliado Receber CPA (%):</label>-->
+            <!--<input type="text" class="form-control" id="editCpaFake" name="cpafake" >-->
     
-            <label for="editComissaoFake">Porcentagem de Rev. Share Falso (%):</label>
-            <input type="text" class="form-control" id="editComissaoFake" name="comissaofake" >
+            <!--<label for="editComissaoFake">Porcentagem de Rev. Share Falso (%):</label>-->
+            <!--<input type="text" class="form-control" id="editComissaoFake" name="comissaofake" >-->
 
             <input type="hidden" id="editUserId" name="id">
 
