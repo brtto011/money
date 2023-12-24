@@ -236,119 +236,107 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
   </div>
 </div>
 
+<!-- Inclua o jQuery antes do seu código JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <script>
-  $(document).ready(function() {
+$(document).ready(function() {
     // Use AJAX para buscar dados do arquivo PHP
     $.ajax({
-      url: 'bd.php',
-      method: 'GET',
-      success: function(data) {
-        // Limpar o corpo da tabela
-        $('#table-body').empty();
+        url: 'bd.php',
+        method: 'GET',
+        success: function(data) {
+            // Limpar o corpo da tabela
+            $('#table-body').empty();
 
-        // Inserir dados na tabela
-        data.forEach(function(row) {
-          var statusClass = row.status === 'Aprovado' ? 'text-success' : 'text-danger';
-          var newRow = "<tr>" +
-            "<td>" + row.email + "</td>" +
-            "<td>" + row.externalreference + "</td>" +
-            "<td>" + row.cpf + "</td>" +
-            "<td>" + row.valor + "</td>" +
-            "<td class='" + statusClass + "'>" + row.status + "</td>";
-        
-          // Adicionar coluna extra com botão "Aprovar" quando o status for "Aguardando Aprovação"
-          if (row.status === 'Aguardando Aprovação') {
-            newRow += "<td><button class='aprovar-btn' data-toggle='modal' data-target='#aprovarModal' " +
-              "data-email='" + row.email + "' data-externalreference='" + row.externalreference + "' data-nome='" + row.nome + "' data-cpf='" + row.cpf + "' data-valor='" + row.valor + "'>Aprovar</button></td>";
-          } else {
-            newRow += "<td></td>"; // Coluna vazia para outros status
-          }
-        
-          newRow += "</tr>";
-          $('#table-body').append(newRow);
-        });
+            // Inserir dados na tabela
+            data.forEach(function(row) {
+                var statusClass = row.status === 'Aprovado' ? 'text-success' : 'text-danger';
+                var newRow = "<tr>" +
+                    "<td>" + row.email + "</td>" +
+                    "<td>" + row.externalreference + "</td>" +
+                    "<td>" + row.cpf + "</td>" +
+                    "<td>" + row.valor + "</td>" +
+                    "<td class='" + statusClass + "'>" + row.status + "</td>";
 
-
-        // Inicializar DataTables após a conclusão da chamada AJAX
-        $('#user-table').DataTable({
-          ordering: false // Desativa a ordenação automática
-        });
-
-        // Adicionar evento de clique para o botão "Aprovar"
-        $('.aprovar-btn').click(function() {
-          // Preencher os detalhes no modal
-          $('#detalheEmail').text($(this).data('email'));
-          $('#detalheExternalReference').text($(this).data('externalreference'));
-          $('#detalheNome').text($(this).data('nome'));
-          $('#detalheCPF').text($(this).data('cpf'));
-          $('#detalheValor').text($(this).data('valor'));
-
-          // Abrir o modal
-          $('#modalDetalhes').modal('show');
-        });
-      },
-      error: function() {
-        console.log('Erro ao obter dados do servidor.');
-      }
-    });
-    // AJAX requisição saque gateway
-        $('#btnConfirmar').on('click', function() {
-            // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
-            var chavePix = $('#detalheCPF').text(); // Substitua com o ID ou classe apropriado
-            var saqueValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
-            var external_reference = $('#detalheExternalReference').text();
-            var email = $('#detalheEmail').text()
-            // Crie os dados para a chamada AJAX
-            var requestData = {
-                "value": saqueValor,
-                "key": chavePix,
-                "typeKey": "document"
-            };
-            // Realize a chamada AJAX
-            console.log('Valor de ci:', '<?php echo $client_id; ?>');
-                console.log('Valor de cs:', '<?php echo $client_secret; ?>');
-
-            $.ajax({
-                
-                type: "POST", // ou "PUT" dependendo da API
-                 url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
-                headers: {
-                    'ci': '<?php echo $client_id; ?>',
-                    'cs': '<?php echo $client_secret; ?>'
-                },
-                
-                //type: "POST", // ou "PUT" dependendo da API
-                //url: "https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment",
-                //headers: {
-                //    'ci': 'testesandbox_1687443996536',
-                //    'cs': '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d'
-                //},
-
-                data: JSON.stringify(requestData),
-                contentType: "application/json",
-                success: function(response) {
-                    console.log('Saque aprovado:', response);
-                    console.log('datas', external_reference, email, saqueValor);
-                    updateStatus(external_reference, email, saqueValor)
-                    // Feche o modal
-                    $('#modalDetalhes').modal('hide');
-                },
-                error: function(error) {
-                    console.error('Erro ao aprovar o saque:', error);
-                    // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+                // Adicionar coluna extra com botão "Aprovar" quando o status for "Aguardando Aprovação"
+                if (row.status === 'Aguardando Aprovação') {
+                    newRow += "<td><button class='aprovar-btn' data-toggle='modal' data-target='#aprovarModal' " +
+                        "data-email='" + row.email + "' data-externalreference='" + row.externalreference + "' data-nome='" + row.nome + "' data-cpf='" + row.cpf + "' data-valor='" + row.valor + "'>Aprovar</button></td>";
+                } else {
+                    newRow += "<td></td>"; // Coluna vazia para outros status
                 }
+
+                newRow += "</tr>";
+                $('#table-body').append(newRow);
             });
-        });
-        $('#btnFechar').on('click', function() {
-          // Feche o modal
-          $('#modalDetalhes').modal('hide');
-        });
-  });
-</script>
 
+            // Inicializar DataTables após a conclusão da chamada AJAX
+            $('#user-table').DataTable({
+                ordering: false // Desativa a ordenação automática
+            });
 
-<script>
-    function updateStatus(external_reference,email, saqueValor) {
+            // Adicionar evento de clique para o botão "Aprovar"
+            $('.aprovar-btn').click(function() {
+                // Preencher os detalhes no modal
+                $('#detalheEmail').text($(this).data('email'));
+                $('#detalheExternalReference').text($(this).data('externalreference'));
+                $('#detalheNome').text($(this).data('nome'));
+                $('#detalheCPF').text($(this).data('cpf'));
+                $('#detalheValor').text($(this).data('valor'));
+
+                // Abrir o modal
+                $('#modalDetalhes').modal('show');
+            });
+        },
+        error: function() {
+            console.log('Erro ao obter dados do servidor.');
+        }
+    });
+
+    // Adicionar evento de clique para o botão "Confirmar" no modal
+    $('#btnConfirmar').on('click', function() {
+        // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
+        var chavePix = $('#detalheCPF').text(); // Substitua com o ID ou classe apropriado
+        var saqueValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
+        var external_reference = $('#detalheExternalReference').text();
+        var email = $('#detalheEmail').text();
+
+        // Crie os dados para a chamada AJAX
+        var requestData = {
+            "value": saqueValor,
+            "key": chavePix,
+            "typeKey": "document"
+        };
+
+        // Realize a chamada AJAX para aprovar o saque no arquivo PHP
+        $.ajax({
+            type: "POST",
+            url: "aprovar_saque.php", // Substitua com o nome do seu arquivo PHP
+            data: {
+                requestData: JSON.stringify(requestData),
+                external_reference: external_reference,
+                email: email
+            },
+            success: function(response) {
+                console.log('Saque aprovado:', response);
+                updateStatus(external_reference, email, saqueValor);
+                // Feche o modal
+                $('#modalDetalhes').modal('hide');
+            },
+            error: function(error) {
+                console.error('Erro ao aprovar o saque:', error);
+                // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+            }
+        });
+    });
+
+    $('#btnFechar').on('click', function() {
+        // Feche o modal
+        $('#modalDetalhes').modal('hide');
+    });
+
+       function updateStatus(external_reference,email, saqueValor) {
         status = 'Aprovado'
         console.log('datas', external_reference, email, saqueValor, status);
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
@@ -367,7 +355,11 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             }
         });
     }
+});
 </script>
+
+
+
 
 
 

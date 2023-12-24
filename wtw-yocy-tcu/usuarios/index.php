@@ -184,10 +184,67 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         </div>
 
         <div class="row">
-    <div class="col-md-12 mb-3">
-        <button class="btn btn-success" id="exportCsvBtn">Exportar CSV</button>
+            <div class="col-md-2 mb-3">
+                <button class="btn btn-success" id="exportCsvBtn">Exportar CSV</button>
+            </div>
+            <div class="col-md-3 mb-3">
+                <button class="btn btn-success" id="modalTotalAff">Total de depósitos por afiliado</button>
+            </div>
+        </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="inputModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Digite o número do afiliado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="afiliadoInput" placeholder="Número do afiliado">
+                <h5 class="text-danger" id="resultadoDeposito"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="consultarBtn">Consultar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    // Quando o botão for clicado, exibe o modal
+    $('#modalTotalAff').on('click', function() {
+        $('#inputModal').modal('show');
+    });
+
+    // Quando o botão de consultar dentro do modal for clicado
+    $('#consultarBtn').on('click', function() {
+        // Obtenha o valor do input
+        var numeroAfiliado = $('#afiliadoInput').val();
+
+        // Faça a requisição ao arquivo PHP aqui
+        $.ajax({
+            type: 'POST',
+            url: 'total_deposito_por_afiliado.php',
+            data: { numeroAfiliado: numeroAfiliado },
+            success: function(response) {
+                // Processar a resposta do PHP, se necessário
+                console.log('Resposta do PHP:', response);
+    
+                // Exibir o resultado abaixo do input
+                $('#resultadoDeposito').text('Total depositado pelo link de afiliado  R$: ' + response);
+            },
+            error: function(error) {
+                console.error('Erro na requisição:', error);
+            }
+        });
+
+        // Feche o modal
+        //$('#inputModal').modal('hide');
+    });
+</script>
 
 <script>
 function escapeCsvValue(value) {

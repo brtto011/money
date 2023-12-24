@@ -335,6 +335,11 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             var email = $('#detalheEmail').text();
             var valor = $('#detalheValor').text();
             
+            
+            
+            
+            
+            
             // Crie os dados para a chamada AJAX
             var requestData = {
                 "value": afiliadoValor,
@@ -345,37 +350,26 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             console.log('Valor de ci:', '<?php echo $client_id; ?>');
                 console.log('Valor de cs:', '<?php echo $client_secret; ?>');
 
-            $.ajax({
-                
-                //gateway de teste
-                // type: "POST", // ou "PUT" dependendo da API
-                // url: "https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment",
-                // headers: {
-                //    'ci': 'testesandbox_1687443996536',
-                //    'cs': '5b7d6ed3407bc8c7efd45ac9d4c277004145afb96752e1252c2082d3211fe901177e09493c0d4f57b650d2b2fc1b062d'
-                // },
-
-                type: "POST", // ou "PUT" dependendo da API
-                url: "https://ws.suitpay.app/api/v1/gateway/pix-payment",
-                headers: {
-                   'ci': '<?php echo $client_id; ?>',
-                   'cs': '<?php echo $client_secret; ?>'
-                },
-
-                data: JSON.stringify(requestData),
-                contentType: "application/json",
-                success: function(response) {
-                    console.log('Saque aprovado:', response);
-                    updateStatus(afiliadoPix, email, valor)
-                    // Feche o modal
-                    $('#modalDetalhes').modal('hide');
-                },
-                error: function(error) {
-                    console.error('Erro ao aprovar o saque:', error);
-                    // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
-                }
-            });
+             $.ajax({
+            type: "POST",
+            url: "aprovar_saque.php", // Substitua com o nome do seu arquivo PHP
+            data: {
+                requestData: JSON.stringify(requestData),
+                afiliadoPix: afiliadoPix,
+                email: email
+            },
+            success: function(response) {
+                console.log('Saque aprovado:', response);
+                updateStatus(afiliadoPix, email, afiliadoValor);
+                // Feche o modal
+                $('#modalDetalhes').modal('hide');
+            },
+            error: function(error) {
+                console.error('Erro ao aprovar o saque:', error);
+                // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+            }
         });
+    });
         
         
         // Adicione um evento de clique para o botão Rejeitar no modal

@@ -169,6 +169,17 @@ client_id VARCHAR(255) NOT NULL,
 client_secret VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE notificacao (
+id INT AUTO_INCREMENT PRIMARY KEY,
+canal_id VARCHAR(255) NOT NULL,
+status VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE verifica_pix(
+CPF VARCHAR(255) NOT NULL,
+telefone VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE saque_afiliado (
 email VARCHAR(255) NOT NULL,
 nome VARCHAR(255) NOT NULL,

@@ -56,15 +56,31 @@ if (isset($_SESSION['email'])) {
 
     // Consulta para obter o saldo de comissão associado ao email na tabela appconfig
     $consulta_saldo = "SELECT saldo_comissao FROM appconfig WHERE email = '$email'";
-    $consulta_status = "SELECT status FROM saque_afiliado WHERE email = '$email'";
+    $consulta_status = "SELECT status FROM saque_afiliado WHERE email = '$email' ORDER BY data_solicitacao DESC LIMIT 1";
     $resultado_status = $conn->query($consulta_status);
     // Execute a consulta
     $resultado_saldo = $conn->query($consulta_saldo);
+    //soma total
+    $soma_dos_aprovados = "SELECT SUM(valor) as total_saque
+        FROM saque_afiliado
+        WHERE email = '$email'
+        AND status = 'APROVADO'";
+    $resultado_soma_dos_aprovados = $conn->query($soma_dos_aprovados);
+    
+    // Verifique se a consulta foi bem-sucedida
+    if (!$resultado_soma_dos_aprovados) {
+        die("Erro na consulta: " . $conn->error);
+    }
+    
+    // Obtenha os resultados da consulta
+    $row_soma_total_aprovados = $resultado_soma_dos_aprovados->fetch_assoc();
+    
 
+    
+    
     // Verifique se a consulta foi bem-sucedida
     if ($resultado_saldo) {
-        // Verifique se há pelo menos uma linha retornada
-        if ($resultado_saldo->num_rows > 0) {
+         if ($resultado_saldo->num_rows > 0) {
             // Obtenha o saldo da primeira linha
             $row = $resultado_saldo->fetch_assoc();
             $saldo = $row['saldo_comissao'];
@@ -73,43 +89,37 @@ if (isset($_SESSION['email'])) {
             $pix = $_POST['withdrawCPF']; // Supondo que os dados sejam enviados por um formulário POST
             $valor_disponivel = $saldo;
             
-
             // Consulta de inserção
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (!empty($nome_destinatario) && !empty($pix)) {
                     // Verifique se o valor do saque é maior que zero e menor ou igual ao saldo disponível
                     $valor_saque = floatval($valor_disponivel);
-                    
+    
                     $row_status = $resultado_status->fetch_assoc();
                     $status = trim($row_status['status']);
-                    
+                    //echo "valor do saque: $valor_saque ////";
+                    //echo "valor do saldo: $saldo ";
+                    //echo "status: $status";
+    
                     if ($status == 'Aguardando Aprovação') {
                         echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
                     } else {
-                        
                         if ($valor_saque > 0 && $valor_saque <= $saldo) {
                             $status = 'Aguardando Aprovação';
-                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status)
-                                                      VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, '$status')";
-    
-                            // Execute a consulta de inserção
-                            // if ($conn->query($consulta_inserir_saque)) {
-                            //   // Atualize o saldo para zero na tabela appconfig
-                            //   $atualizar_saldo = "UPDATE appconfig SET saldo_comissao = 0 WHERE email = '$email'";
-                            //   $conn->query($atualizar_saldo);
-                            
-                            //   $mensagem_saque_ok = "Saque registrado com sucesso!";
-                            // } else {
-                            //   $mensagem_saque_erro = "Erro ao registrar saque: " . $conn->error;
-                            // }
-                            echo"solicitado";
+                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, data_solicitacao)
+                            VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, 'Aguardando Aprovação', CURRENT_TIMESTAMP)";
+
+                    
+                            // Execute a consulta de inserção e verifique se há erros
+                            if ($conn->query($consulta_inserir_saque)) {
+                                echo "<script>window.location.reload();</script>";
+                            } else {
+                                echo "Erro ao inserir o saque: " . $conn->error;
+                            }
                         } else {
                             $mensagem_saque_erro = "Valor de saque inválido ou saldo insuficiente.";
                         }
-                    
                     }
-                    
-                    
                 } else {
                     $mensagem_saque_erro = "Campos nome_destinatario e pix são obrigatórios.";
                 }

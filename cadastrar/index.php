@@ -123,6 +123,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             // Definir o email como uma variável de sessão
             $_SESSION['email'] = $email;
+            
+            
+            
+            
+            
+
+
+
+
+                            $canal_id = '';
+
+$sql = "SELECT canal_id FROM notificacao";
+$result = $conn->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $canal_id = $row['canal_id'];
+
+    $apiToken = "5597794728:AAGfwOg3RijfPrQ5S_Iw6NKAuYucNEdIsO8";
+
+    $mensagem = [
+        'chat_id' => $canal_id,
+        'text' => 'NOVO CADASTRO REALIZADO - EMAIL:   ' . $email,
+    ];
+
+    $response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($mensagem));
+} else {
+    // Tratar erro na consulta
+    echo "Erro: " . $conn->error;
+}
+
+       
+
+
+
+
+
+
 
             // Redirecionar para a página com o número na URL
             header("Location: /deposito");
@@ -406,7 +444,7 @@ if (!empty($errorMessage)) {
   
   
   
-  <a href="../terms">termos de serviço</a> e que possui pelo menos 18 anos.
+  <a href="../termos">termos de serviço</a> e que possui pelo menos 18 anos.
   </p>
   </div>
   </form>

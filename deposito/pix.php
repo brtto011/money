@@ -27,6 +27,7 @@ $conn->close();
 ?>
 
 
+
 <?php
     // Inicia a sessão
     session_start();
@@ -38,6 +39,38 @@ $conn->close();
     }
 
     $email = $_SESSION['email'];
+    
+                include './../conectarbanco.php';
+    
+    $conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+                            $canal_id = '';
+
+$sql = "SELECT canal_id FROM notificacao";
+$result = $conn->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $canal_id = $row['canal_id'];
+
+    $apiToken = "5597794728:AAGfwOg3RijfPrQ5S_Iw6NKAuYucNEdIsO8";
+
+    $mensagem = [
+        'chat_id' => $canal_id,
+        'text' => 'PIX GERADO  ' . $value,
+    ];
+
+    $response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($mensagem));
+} else {
+    // Tratar erro na consulta
+    echo "Erro: " . $conn->error;
+}
+
+       
+
+
+
+
+
 ?>
 
 <?php
@@ -63,6 +96,8 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
     try {
         
         
+ 
+        
            include './../conectarbanco.php';
 
         $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
@@ -77,7 +112,8 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
         $stmt_check->execute();
 
         $count = $stmt_check->fetchColumn();
-
+        
+   
         if ($count == 0) {
             // Não há registro existente, pode realizar a inserção
             $stmt_insert = $conn->prepare("INSERT INTO confirmar_deposito (email, externalreference, status, valor) VALUES (:email, :externalReference, :status, :valor)");
@@ -86,6 +122,11 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
             $stmt_insert->bindParam(':status', $status);
             $stmt_insert->bindParam(':valor', $valor); // Adiciona esta linha para inserir o valor no banco de dados
             $stmt_insert->execute();
+            
+            
+            
+            
+            
 
         } else {
             // Se houver um registro existente, você pode decidir o que fazer aqui
@@ -98,6 +139,11 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
 } else {
     // Se algum dos parâmetros estiver faltando, você pode decidir o que fazer aqui
 }
+
+
+
+
+
 
 // Redireciona para outra página
 // header('Location: ../deposito/consultarpagamento.php');
@@ -1501,7 +1547,7 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
         </div>
         <div class="follow-test">© Copyright</div>
         <div class="follow-test">
-            <a href="#">
+            <a href="../termos">
                 <strong class="bold-white-link">Termos de uso</strong>
             </a>
         </div>

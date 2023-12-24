@@ -330,7 +330,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="follow-test">© Copyright</div>
             <div class="follow-test">
-                <a href="../terms">
+                <a href="../termos">
                     <strong class="bold-white-link">Termos de uso</strong>
                 </a>
             </div>

@@ -32,7 +32,14 @@ if ($resultadoSaldo > 0) {
             $sql = "UPDATE saque_afiliado SET status = '$status' WHERE pix = '$pix'";
             
             if ($conn->query($sql) === TRUE) {
-                echo "Status atualizado com sucesso";
+                // Atualizar a coluna 'sacou' na tabela 'appconfig'
+                $atualizarSacou = "UPDATE appconfig SET sacou = sacou + '$valor' WHERE email = '$email'";
+                
+                if ($conn->query($atualizarSacou) === TRUE) {
+                    echo "Status atualizado com sucesso. Saldo deduzido e 'sacou' atualizado.";
+                } else {
+                    echo "Erro ao atualizar 'sacou': " . $conn->error;
+                }
             } else {
                 echo "Erro ao atualizar o status: " . $conn->error;
             }

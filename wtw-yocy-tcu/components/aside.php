@@ -101,6 +101,20 @@
                               ><span class="hide-menu">Afiliados</span></a
                             >
                         </li>
+                        
+                        
+                          <li class="sidebar-item">
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="../notificacao"
+                aria-expanded="false"
+                ><i class="mdi mdi-near-me"></i
+                ><span class="hide-menu">Notificações </span></a
+              >
+          </li>
+          
+          
+          
         
         
             <li class="sidebar-item p-3">

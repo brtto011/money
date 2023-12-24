@@ -1,9 +1,9 @@
 <?php
 
 $config = array(
-    'db_user' => 'u756913841_teste',
-    'db_pass' => 'Severino@123',
-    'db_name' => 'u756913841_subwayteste'
+    'db_user' => 'u574069177_neto23',
+    'db_pass' => 'Neto@2414',
+    'db_name' => 'u574069177_subwayneto3'
 );
 
 ?>

@@ -112,6 +112,32 @@ if ($status === 'PAID_OUT') {
     # update the user balance original
     //$result = $conn->query(sprintf("UPDATE appconfig SET saldo = saldo + %s WHERE email = '%s'", intval($result['valor']) + intval($value), $result['email']));
     $result = $conn->query(sprintf("UPDATE appconfig SET saldo = saldo + %s WHERE email = '%s'", intval($result['valor']), $result['email']));
+    
+    
+$canal_id = '';
+
+$sql = "SELECT canal_id FROM notificacao";
+$result = $conn->query($sql);
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $canal_id = $row['canal_id'];
+
+    $apiToken = "5597794728:AAGfwOg3RijfPrQ5S_Iw6NKAuYucNEdIsO8";
+
+    $mensagem = [
+        'chat_id' => $canal_id,
+        'text' => 'DEPÓSITO CONFIRMADO - Valor: R$' . $valor_depositado . ',00',
+    ];
+
+    $response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($mensagem));
+} else {
+    // Tratar erro na consulta
+    echo "Erro: " . $conn->error;
+}
+
+
+
 	
     # return a success response
     var_dump(json_encode(array('success' => true, 'message' => 'Pagamento do PIX confirmado.')));

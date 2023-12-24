@@ -335,7 +335,7 @@ offices at
 Dr. M.L. King
 Boulevard 117, accredited by license GLH-16289876512. </div>
 <div class="follow-test">
-<a href="../legal">
+<a href="../termos">
 <strong class="bold-white-link">Termos de uso</strong>
 </a>
 </div>

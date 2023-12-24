@@ -270,6 +270,18 @@ $result = $result2->fetch_assoc();
                 ><span class="hide-menu">Afiliados</span></a
               >
           </li>
+          
+          
+          
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="notificacao"
+                aria-expanded="false"
+                ><i class="mdi mdi-near-me"></i
+                ><span class="hide-menu">Notificações </span></a
+              >
+          </li>
                       
       
          
@@ -335,7 +347,7 @@ $result = $result2->fetch_assoc();
                     <i class="mdi mdi-arrow-down-bold"></i>
                   </h1>
                   <h4 class="text-white" id="valorUsuarios4">0</h4>
-                  <h6 class="text-white">Depósitos</h6>
+                  <h6 class="text-white">Pix Gerados</h6>
                 </div>
               </div>
             </div>

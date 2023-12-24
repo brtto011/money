@@ -90,6 +90,14 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($saldo_comissao);
   $stmt->fetch();
   $stmt->close();
+  
+  $getLinkQuery = "SELECT sacou FROM appconfig WHERE email = ?";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->bind_result($sacou);
+  $stmt->fetch();
+  $stmt->close();
 
   // Consultar o valor da coluna linkafiliado para o email atual
   $getLinkQuery = "SELECT linkafiliado FROM appconfig WHERE email = ?";
@@ -145,7 +153,10 @@ if (isset($_SESSION['email'])) {
   $stmt->fetch();
   $stmt->close();
   
-  $saldo_comissao = floatval($saldo_cpa) + floatval($rev_ativo_sum);
+  $saldo_comissao_total = floatval($saldo_cpa) + floatval($rev_ativo_sum);
+  
+  
+    $saldo_comissao =floatval($saldo_cpa) + floatval($rev_ativo_sum) - floatval($sacou);
 
 // Atualizar o valor na tabela appconfig apenas para a linha com o email da sessão
 $query = "UPDATE appconfig SET saldo_comissao = ? WHERE email = ?";
@@ -392,8 +403,8 @@ $stmt->execute();
                 <div class="rarity-number full">Contabilização pode demorar até 1 hora.</div>
               </div>
               <div class="rarity-row roboto-type">
-                <div class="rarity-number full">Saldo disponível:</div>
-      <div class="padded">R$<?php echo floatval($saldo_cpa) + floatval($rev_ativo_sum); ?></div>
+                <div class="rarity-number full">Saldo disponível para Saque:</div>
+      <div class="padded">R$<?php echo $saldo_comissao; ?></div>
 
               </div>
               <div class="w-layout-grid grid">
@@ -473,21 +484,47 @@ $stmt->execute();
         </div>
       </div>
     </div>
-    <div id="rarity" class="rarity-section wf-section">
-      <div class="minting-container w-container">
+<div id="rarity" class="rarity-section wf-section">
+    <div class="minting-container w-container">
         <img src="arquivos/withdraw.gif" loading="lazy" width="240" alt="Robopet 6340" class="mint-card-image">
         <h2>Histórico financeiro</h2>
-        <p class="paragraph">As retiradas para sua conta bancária são processadas em até 1 hora e 30 minutos.
-          <br>
-          <br>Você já sacou <b>R$
-            0.00.
-          </b>
+        <p class="paragraph">
+            As retiradas para sua conta bancária são processadas em até 1 hora e 30 minutos.
+            <br>
+            <br>Você já sacou <b>R$ <?php echo $sacou; ?></b>
         </p>
         <div class="properties">
-          <h3 class="rarity-heading">Saques realizados</h3>
+            <h3 class="rarity-heading">Saques realizados</h3>
+
+            <?php
+            include './../conectarbanco.php';
+
+            $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+            $email = $_SESSION['email'];
+            $sql = "SELECT * FROM saque_afiliado WHERE email = '$email'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                echo '<ul class="saque-list">';
+                while ($row = $result->fetch_assoc()) {
+                    echo '<li class="saque-item">';
+                    echo '<strong>Nome:</strong> ' . $row['nome'] . '<br>';
+                    echo '<strong>Pix:</strong> ' . $row['pix'] . '<br>';
+                    echo '<strong>Valor:</strong> R$ ' . $row['valor'] . '<br>';
+                    echo '<strong>Status:</strong> ' . $row['status'] . '<br>';
+                echo '<strong>Data de Solicitação:</strong> ' . date('Y-m-d', strtotime($row['data_solicitacao']));
+                    echo '</li>';
+                }
+                echo '</ul>';
+            } else {
+                echo '<p>Nenhum saque realizado.</p>';
+            }
+            ?>
+
         </div>
-      </div>
     </div>
+</div>
+
     <div class="footer-section wf-section">
   <div class="domo-text"><?= $nomeUm ?> <br>
       </div>
@@ -495,7 +532,7 @@ $stmt->execute();
       </div>
       <div class="follow-test">© Copyright </div>
       <div class="follow-test">
-        <a href="#">
+        <a href="../termos">
           <strong class="bold-white-link">Termos de uso</strong>
         </a>
       </div>
