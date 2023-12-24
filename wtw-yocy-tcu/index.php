@@ -338,130 +338,9 @@ $result = $result2->fetch_assoc();
           <!-- ============================================================== -->
           <!-- Sales Cards  -->
           <!-- ============================================================== -->
-          <div class="row">
-
-            <div class="col-md-6 col-lg-3 col-xlg-3">
-              <div class="card card-hover">
-                <div class="box bg-success text-center">
-                  <h1 class="font-light text-white">
-                    <i class="mdi mdi-arrow-down-bold"></i>
-                  </h1>
-                  <h4 class="text-white" id="valorUsuarios4">0</h4>
-                  <h6 class="text-white">Pix Gerados</h6>
-                </div>
-              </div>
-            </div>
-
-
-
-               <!-- ============================================================== -->
-               <script>
-                // Evento de clique ou outra ação que aciona a leitura
-                $(document).ready(function () {
-                    // Solicitação AJAX
-                    $.ajax({
-                        type: "GET",
-                        url: "php/numero_depositos.php",
-                        success: function (response) {
-                            // Atualiza o valor exibido na página
-                            $("#valorUsuarios4").text(response);
-                            console.log(response); // Exibe a resposta do servidor no console
-                        },
-                        error: function (error) {
-                            console.log("Erro na solicitação AJAX: " + error);
-                        }
-                    });
-                });
-              </script>
-
-
-
-
-
-            <!-- Column -->
-            <div class="col-md-6 col-lg-3 col-xlg-3">
-              <div class="card card-hover">
-                <div class="box bg-danger text-center">
-                  <h1 class="font-light text-white">
-                    <i class="mdi mdi-arrow-up-bold"></i>
-                  </h1>
-                  <h4 class="text-white">0</h4>
-                  <h6 class="text-white">Saques</h6>
-                </div>
-              </div>
-            </div>
-            <!-- Column -->
-
-            <div class="col-md-6 col-lg-3 col-xlg-3">
-              <div class="card card-hover">
-                <div class="box bg-success text-center">
-                  <h1 class="font-light text-white">
-                    <i class="mdi mdi-account-multiple"></i>
-                  </h1>
-                  <h4 class="text-white" id="valorUsuarios">0</h4>
-                  <h6 class="text-white">Usuarios</h6>
-                </div>
-              </div>
-            </div>
-
-           
-
-           
-           
-       
-          
-          </div>
- <!-- ============================================================== -->
-
- <script>
-  // Evento de clique ou outra ação que aciona a leitura
-  $(document).ready(function () {
-      // Solicitação AJAX
-      $.ajax({
-          type: "GET",
-          url: "php/app.php",
-          success: function (response) {
-              // Atualiza o valor exibido na página
-              $("#valorUsuarios").text(response);
-              console.log(response); // Exibe a resposta do servidor no console
-          },
-          error: function (error) {
-              console.log("Erro na solicitação AJAX: " + error);
-          }
-      });
-  });
-</script>
-       
-          <!-- ============================================================== -->
-
- <!-- card new -->
- <div class="card">
-  <div class="card-body">
-    <h4 class="card-title mb-0">Novidades</h4>
-  </div>
-  <ul class="list-style-none">
-    <li class="d-flex no-block card-body">
-      <i class="mdi mdi-check-circle fs-4 w-30px mt-1"></i>
-      <div>
-        <a href="#" class="mb-0 font-medium p-0"
-          >Atualizacão do Sistema de afiliados</a
-        >
-        <span class="text-muted"
-          >Sistema em atualização</span
-        >
-      </div>
-      <div class="ms-auto">
-        <div class="tetx-right">
-          <h5 class="text-muted mb-0">20</h5>
-          <span class="text-muted font-16">Out</span>
-        </div>
-      </div>
-    </li>
    
-   
-  </ul>
-</div>
-      
+
+
 
           <!-- ============================================================== -->
 
@@ -471,7 +350,10 @@ $result = $result2->fetch_assoc();
 
             <div class="col-md-6 col-lg-4 col-xlg-3">
               <div class="card card-hover">
-                <div class="box bg-success text-center">
+                <div class="box bg-info text-center">
+                   <h1 class="font-light text-white">
+                    <i class="mdi mdi-arrow-down-bold"></i>
+                  </h1>
                   <h1 class="font-light text-white" id="valorUsuarios3">
                     R$ 0,00
                   </h1>
@@ -510,8 +392,10 @@ $result = $result2->fetch_assoc();
             <!-- Column -->
             <div class="col-md-6 col-lg-4 col-xlg-3">
               <div class="card card-hover">
-                <div class="box bg-danger text-center">
-                 
+                <div class="box bg-info text-center">
+                    <h1 class="font-light text-white">
+                    <i class="mdi mdi-account-multiple"></i>
+                  </h1>
                     <h1 class="font-light text-white" id="valorUsuarios2">
                      0
                     </h1>
@@ -550,7 +434,10 @@ $result = $result2->fetch_assoc();
             <!-- Column -->
             <div class="col-md-6 col-lg-4 col-xlg-3">
               <div class="card card-hover">
-                <div class="box bg-danger text-center">
+                <div class="box bg-info text-center">
+                       <h1 class="font-light text-white">
+                    <i class="mdi mdi-arrow-up-bold"></i>
+                  </h1>
                   <h1 class="font-light text-white">
                     R$ 0,00
                   </h1>
@@ -604,7 +491,7 @@ $result = $result2->fetch_assoc();
                 <input type="text" class="form-control custom-input" value="<?php echo $result['deposito_min'] ?>" id="valorApostaMax" placeholder="Digite o valor" name="valor" required>
                 <br>
                 <br>
-                <button type="submit" class="btn btn-primary">Atualizar</button>
+                <button type="submit" class="btn btn-info">Atualizar</button>
             </form>
         </div>
     </div>
@@ -665,30 +552,13 @@ if ($conn->connect_error) {
                 <input type="text" class="form-control custom-input" value="<?php echo $result['saques_min'] ?>" id="valorSaqueMin"   placeholder="Digite o valor" name="valor" required>
                 <br>
                 <br>
-                <button type="submit" class="btn btn-primary">Atualizar</button>
+                <button type="submit" class="btn btn-info">Atualizar</button>
             </form>
         </div>
     </div>
 </div>
  <!-- ------------------------------------------------------------------------------------- -->
 
-  <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> <!-- Adicionado mb-3 para margem inferior -->
-    <div class="card card-hover">
-      <div class="box bg-dark text-center">
-        <h1 class="font-light text-white">
-          <i class="mdi mdi-cash-multiple"></i>
-        </h1>
-        <h5 class="text-white">Aposta Máxima</h5>
-        <h7 class="text-white">R$:</h7>
-        <form action="processos.php?opcao=apostaMax" method="post" id="editForm3">  
-                <input type="text" class="form-control custom-input" value="<?php echo $result['aposta_max'] ?>" id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
-                <br>
-                <br>
-                <button type="submit" class="btn btn-primary">Atualizar</button>
-            </form>
-      </div>
-    </div>
-  </div>
  <!-- ------------------------------------------------------------------------------------- -->
   <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
     <div class="card card-hover">
@@ -707,13 +577,18 @@ if ($conn->connect_error) {
                 </select>
                 <br>
                 <br>
-            <button type="submit" class="btn btn-primary" onclick="atualizarValor4()">Atualizar</button>
+            <button type="submit" class="btn btn-info" onclick="atualizarValor4()">Atualizar</button>
             </form>
         </div>
     </div>
 </div>
 
-  <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> <!-- Adicionado mb-3 para margem inferior -->
+
+
+
+ <!--
+ 
+  <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> 
     <div class="card card-hover">
       <div class="box bg-dark text-center">
         <h1 class="font-light text-white">
@@ -731,6 +606,9 @@ if ($conn->connect_error) {
     </div>
   </div>
   
+  
+  -->
+  
 
   <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> <!-- Adicionado mb-3 para margem inferior -->
     <div class="card card-hover">
@@ -744,14 +622,15 @@ if ($conn->connect_error) {
             <input type="text" class="form-control custom-input" value="<?php echo $result['rollover_saque'] ?>" id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
             <br>
             <br>
-            <button type="submit" class="btn btn-primary">Atualizar</button>
+            <button type="submit" class="btn btn-info">Atualizar</button>
         </form>
                  
       </div>
     </div>
   </div>
 
-  <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> <!-- Adicionado mb-3 para margem inferior -->
+   <!--
+   <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">  
     <div class="card card-hover">
       <div class="box bg-dark text-center">
         <h1 class="font-light text-white">
@@ -770,7 +649,7 @@ if ($conn->connect_error) {
     </div>
     
   </div>
-</div>
+</div>-->
 
         <div id="chart_div"></div>
         
