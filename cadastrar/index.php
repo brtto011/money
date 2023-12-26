@@ -49,14 +49,15 @@ echo '</script>';
 
 
 <?php
-ini_set('display_errors',1);
-ini_set('display_startup_erros',1);
+ini_set('display_errors', 1);
+ini_set('display_startup_erros', 1);
 error_reporting(E_ALL);
 
 session_start();
 
 // Função para validar os dados do formulário
-function validateForm($input) {
+function validateForm($input)
+{
     $input = trim($input);
     $input = stripslashes($input);
     $input = htmlspecialchars($input);
@@ -72,7 +73,8 @@ if ($conn->connect_error) {
     die("Erro na conexão com o banco de dados: " . $conn->connect_error);
 }
 
-function getParamFromUrl($url, $paramName){
+function getParamFromUrl($url, $paramName)
+{
     parse_str(parse_url($url, PHP_URL_QUERY), $op);
     return array_key_exists($paramName, $op) ? $op[$paramName] : '';
 }
@@ -88,22 +90,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (emailExists($email, $conn)) {
         $errorMessage = "Já existe uma conta com esse e-mail.";
     } else {
-        // Obter o próximo ID disponível
-        $getNextIdQuery = "SELECT MAX(id) AS max_id FROM appconfig";
-        $nextIdResult = $conn->query($getNextIdQuery);
-        $nextIdRow = $nextIdResult->fetch_assoc();
-        $nextId = $nextIdRow['max_id'] + 1;
-
-        // Verificar se o ID já existe e, se existir, obter o próximo ID disponível
-        while (idExists($nextId, $conn)) {
-            $nextId++;
-        }
+        // Obter o próximo ID aleatório de 8 dígitos
+        $nextId = generateRandomId(8);
 
         $saldo = 0;
         $plano = 20; // Valor fixo para a coluna plano
         $saldo_comissao = 0; // Valor fixo para a coluna saldo_comissao
-        $cpa= 0; // Valor fixo para o cpa unico
-        
+        $cpa = 0; // Valor fixo para o cpa único
 
         // Construir o link de afiliado
         $linkAfiliado = $callbackUrl . $nextId;
@@ -111,9 +104,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obter a data e hora atual no fuso horário de São Paulo
         $dataCadastro = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
         $dataCadastroFormatada = $dataCadastro->format('d-m-Y H:i');
-        
+
         $afiliado = isset($_GET['aff']) ? $_GET['aff'] : '';
-        
+
         // Inserir dados no banco de dados
         $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado) 
                         VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)";
@@ -123,44 +116,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             // Definir o email como uma variável de sessão
             $_SESSION['email'] = $email;
-            
-            
-            
-            
-            
 
+            $canal_id = '';
 
+            $sql = "SELECT canal_id FROM notificacao";
+            $result = $conn->query($sql);
 
+            if ($result) {
+                $row = $result->fetch_assoc();
+                $canal_id = $row['canal_id'];
 
-                            $canal_id = '';
+                $apiToken = "5597794728:AAGfwOg3RijfPrQ5S_Iw6NKAuYucNEdIsO8";
 
-$sql = "SELECT canal_id FROM notificacao";
-$result = $conn->query($sql);
+                $mensagem = [
+                    'chat_id' => $canal_id,
+                    'text' => 'NOVO CADASTRO REALIZADO - EMAIL:   ' . $email,
+                ];
 
-if ($result) {
-    $row = $result->fetch_assoc();
-    $canal_id = $row['canal_id'];
-
-    $apiToken = "5597794728:AAGfwOg3RijfPrQ5S_Iw6NKAuYucNEdIsO8";
-
-    $mensagem = [
-        'chat_id' => $canal_id,
-        'text' => 'NOVO CADASTRO REALIZADO - EMAIL:   ' . $email,
-    ];
-
-    $response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($mensagem));
-} else {
-    // Tratar erro na consulta
-    echo "Erro: " . $conn->error;
-}
-
-       
-
-
-
-
-
-
+                $response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($mensagem));
+            } else {
+                // Tratar erro na consulta
+                echo "Erro: " . $conn->error;
+            }
 
             // Redirecionar para a página com o número na URL
             header("Location: /deposito");
@@ -170,26 +147,12 @@ if ($result) {
         }
 
         $stmt->close();
-        $nextIdResult->close();
     }
 }
 
-
-
-// Função para verificar se um ID já existe na tabela
-function idExists($id, $conn) {
-    $checkIdQuery = "SELECT id FROM appconfig WHERE id = ?";
-    $checkIdStmt = $conn->prepare($checkIdQuery);
-    $checkIdStmt->bind_param("i", $id);
-    $checkIdStmt->execute();
-    $checkIdStmt->store_result();
-    $exists = $checkIdStmt->num_rows > 0;
-    $checkIdStmt->close();
-    return $exists;
-}
-
 // Função para verificar se um e-mail já existe na tabela
-function emailExists($email, $conn) {
+function emailExists($email, $conn)
+{
     $checkEmailQuery = "SELECT email FROM appconfig WHERE email = ?";
     $checkEmailStmt = $conn->prepare($checkEmailQuery);
     $checkEmailStmt->bind_param("s", $email);
@@ -199,9 +162,21 @@ function emailExists($email, $conn) {
     $checkEmailStmt->close();
     return $exists;
 }
+
+function generateRandomId($length)
+{
+    $characters = '0123456789';
+    $randomId = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $randomId .= $characters[random_int(0, strlen($characters) - 1)];
+    }
+
+    return $randomId;
+}
+
 $conn->close();
 ?>
-
 
 
 <!DOCTYPE html>
