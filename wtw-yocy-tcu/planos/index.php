@@ -20,7 +20,7 @@
     $chance_afiliado = $result['chance_afiliado'];
     $deposito_min_cpa = $result['deposito_min_cpa'];
     $revenue_share_falso = $result['revenue_share_falso'];
-    $max_saque_cpa = $result['max_saque_cpa'];
+    $saque_min_afiliado = $result['saque_min_afiliado'];
     $revenue_share = $result['revenue_share'];
     
     
@@ -272,17 +272,17 @@
             </div>
             <div class="box">
                 <form action='update.php?field=max_saque_cpa' method='post'>
-                    <p class="title">Saque máximo:</p> 
-                    <p class="description">Quantidade de saques máxima que um afiliado pode fazer por dia.</p>
+                    <p class="title">quantidades de Saques:</p> 
+                    <p class="description">Quantidade de saques que um afiliado pode fazer por dia.</p>
                     <input class="box-input" name="value" value="<?php echo $max_saque_cpa?>"/>
                     <button type="submit" class="btn box-btn btn-primary">Salvar Alterações</button>
                 </form>
             </div>
             <div class="box">
-                <form action='update.php?field=max_por_saque_cpa' method='post'>
-                    <p class="title">Máximo por saque:</p> 
+                <form action='update.php?field=saque_min_afiliado' method='post'>
+                    <p class="title">Máximo por saque Afiliado:</p> 
                     <p class="description">Valor máximo que um afiliado irá conseguir sacar por dia.</p>
-                    <input class="box-input" name="value" value="<?php echo $max_por_saque_cpa?>"/>
+                    <input class="box-input" name="value" value="<?php echo $saque_min_afiliado?>"/>
                     <button type="submit" class="btn box-btn btn-primary">Salvar Alterações</button>
                 </form>
             </div>

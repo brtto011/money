@@ -104,6 +104,7 @@ chance_afiliado VARCHAR(255) NOT NULL,
 nome_unico VARCHAR(255) NOT NULL,
 nome_um VARCHAR(255) NOT NULL,
 nome_dois VARCHAR(255) NOT NULL,
+saque_min_afiliado VARCHAR(255) NOT NULL,
 
 PRIMARY KEY (token)
 );
