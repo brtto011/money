@@ -53,6 +53,39 @@ $mensagem_saque_erro = "";
 // Recupere o email da sessão
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
+    
+    
+    
+      $getLinkQuery = "SELECT saque_min_afiliado FROM app";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->execute();
+  $stmt->bind_result($saque_min_afiliado);
+  $stmt->fetch();
+  $stmt->close();
+  
+    $getLinkQuery = "SELECT rollover_saque FROM app";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->execute();
+  $stmt->bind_result($rollover_saque);
+  $stmt->fetch();
+  $stmt->close();
+  
+   $getLinkQuery = "SELECT depositou FROM appconfig WHERE email = ?";
+  $stmt = $conn->prepare($getLinkQuery);
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->bind_result($depositou);
+  $stmt->fetch();
+  $stmt->close();
+  
+  
+  $rollover_atual = floatval($depositou) * floatval($rollover_saque);
+  
+  
+  
+  
+  
+  
 
     // Consulta para obter o saldo de comissão associado ao email na tabela appconfig
     $consulta_saldo = "SELECT saldo_comissao FROM appconfig WHERE email = '$email'";
@@ -90,39 +123,36 @@ if (isset($_SESSION['email'])) {
             $valor_disponivel = $saldo;
             
             // Consulta de inserção
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (!empty($nome_destinatario) && !empty($pix)) {
-                    // Verifique se o valor do saque é maior que zero e menor ou igual ao saldo disponível
-                    $valor_saque = floatval($valor_disponivel);
-    
-                    $row_status = $resultado_status->fetch_assoc();
-                    $status = trim($row_status['status']);
-                    //echo "valor do saque: $valor_saque ////";
-                    //echo "valor do saldo: $saldo ";
-                    //echo "status: $status";
-    
-                    if ($status == 'Aguardando Aprovação') {
-                        echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
-                    } else {
-                        if ($valor_saque > 0 && $valor_saque <= $saldo) {
-                            $status = 'Aguardando Aprovação';
-                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, data_solicitacao)
-                            VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, 'Aguardando Aprovação', CURRENT_TIMESTAMP)";
+           if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!empty($nome_destinatario) && !empty($pix)) {
+        // Verifique se o valor do saque é maior que zero e menor ou igual ao saldo disponível
+        $valor_saque = floatval($valor_disponivel);
+        
+        $row_status = $resultado_status->fetch_assoc();
+        $status = trim($row_status['status']);
 
-                    
-                            // Execute a consulta de inserção e verifique se há erros
-                            if ($conn->query($consulta_inserir_saque)) {
-                                echo "<script>window.location.reload();</script>";
-                            } else {
-                                echo "Erro ao inserir o saque: " . $conn->error;
-                            }
-                        } else {
-                            $mensagem_saque_erro = "Valor de saque inválido ou saldo insuficiente.";
-                        }
-                    }
+        if ($status == 'Aguardando Aprovação') {
+            echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
+        } else {
+            if ($valor_saque > 0 && $valor_saque <= $saldo && $saldo >= $saque_min_afiliado) {
+                $status = 'Aguardando Aprovação';
+                $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, data_solicitacao)
+                VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, 'Aguardando Aprovação', CURRENT_TIMESTAMP)";
+
+                // Execute a consulta de inserção e verifique se há erros
+                if ($conn->query($consulta_inserir_saque)) {
+                    echo "<script>window.location.reload();</script>";
                 } else {
-                    $mensagem_saque_erro = "Campos nome_destinatario e pix são obrigatórios.";
+                    echo "Erro ao inserir o saque: " . $conn->error;
                 }
+            } else {
+                $mensagem_saque_erro = "Valor de saque inválido, saldo insuficiente ou abaixo do limite mínimo de saque.";
+            }
+        }
+    } else {
+        $mensagem_saque_erro = "Campos nome_destinatario e pix são obrigatórios.";
+    }
+
             }
         }
     }
@@ -201,7 +231,22 @@ $conn->close();
 
 
 
+<style>
+  .hero-section-dark {
+    background-image: url("https://subwaypix.me/_next/background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center; /* Centraliza a imagem */
+  }
 
+  .hero-section {
+    background-image: url("https://subwaypix.me/_next/background.png");
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 90vh;
+    background-position: center center; /* Centraliza a imagem */
+  }
+</style>
 
 
 
@@ -336,6 +381,19 @@ $conn->close();
 
 </p>
 </div>
+
+
+ <h4>Saque Mínimo: R$ <?= $saque_min_afiliado ?> <br></h4>
+ 
+ 
+
+            
+            
+  
+  
+  
+  
+  
 </form>
 
 
