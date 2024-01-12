@@ -27,7 +27,9 @@ if ($result) {
 
 
 
-$apiUrl = 'https://ws.suitpay.app/api/v1/gateway/pix-payment';
+//$apiUrl = 'https://ws.suitpay.app/api/v1/gateway/pix-payment';
+$apiUrl = 'https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment';
+
 
 // Obtenha os dados da requisição POST
 $requestData = json_decode($_POST['requestData'], true);

@@ -179,6 +179,56 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             <option value="PAID_OUT">Aprovado</option>
             <option value="WAITING_FOR_APPROVAL">Pendente</option>
         </select>
+
+
+    
+        <!-- Modal -->
+        <style>
+            #modalConsulta {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+            }
+        
+            #modalConsultaContent {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 5px;
+                max-width: 100%;
+                height: auto; /* Ajusta a altura automaticamente conforme o conteúdo */
+                max-height: 90vh; /* Altura máxima de 90% da altura da janela */
+                overflow: auto; /* Adiciona rolagem quando necessário */
+            }
+        </style>
+
+             <button class="btn btn-primary" onclick="mostrarLogs()">Mostrar Logs de Saques</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modalConsulta" tabindex="-1" role="dialog" aria-labelledby="modalConsultaLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalConsultaLabel">Logs de Saques</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body col-12" id="modalConsultaContent">
+                            <!-- Aqui serão exibidos os dados -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="fecharLogs" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
         <table id="user-table" class="table table-striped table-bordered">
           <thead>
             <tr>
@@ -186,6 +236,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
                 <th>Nome</th>
                 <th>PIX</th>
                 <th>Valor</th>
+                <th>Cód. Ref.</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
@@ -212,6 +263,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         <p><strong>Nome:</strong> <span id="detalheNome"></span></p>
         <p><strong>Pix:</strong> <span id="detalhePix"></span></p>
         <p><strong>Valor:</strong> <span id="detalheValor"></span></p>
+        <p><strong>Cód. Ref:</strong> <span id="detalheExternalReference"></span></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnFechar">CANCELAR</button>
@@ -246,6 +298,55 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 </div>
 
 <script>
+    function mostrarLogs() {
+        // Realizar a requisição ao arquivo PHP
+        fetch('consultar_extrato_saque.php')
+            .then(response => response.json())
+            .then(data => exibirModal(data))
+            .catch(error => console.error('Erro ao obter dados:', error));
+    }
+
+    function exibirModal(data) {
+        // Criar uma tabela HTML com os dados
+        const logs = `
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Nome</th>
+                        <th>Pix</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Cód Reference</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.map(log => `
+                        <tr>
+                            <td>${log.email}</td>
+                            <td>${log.nome}</td>
+                            <td>${log.pix}</td>
+                            <td>${log.valor}</td>
+                            <td>${log.status}</td>
+                            <td>${log.external_reference}</td>
+                            <td>${log.data}</td>
+                        </tr>`).join('')}
+                </tbody>
+            </table>`;
+    
+        // Preencher o conteúdo do modal
+        document.getElementById('modalConsultaContent').innerHTML = logs;
+    
+        // Exibir o modal
+        $('#modalConsulta').modal('show');
+        
+        $('#fecharLogs').on('click', function() {
+          // Feche o modal
+          $('#modalConsulta').modal('hide');
+        });
+    }
+    
     
 </script>
 
@@ -261,20 +362,21 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         <td>${row.nome}</td>
         <td>${row.pix}</td>
         <td>${row.valor}</td>
+        <td>${row.external_reference}</td>
         <td class='${statusClass}'>${row.status}</td>
         <td>`;
 
       if (row.status === 'Aguardando Aprovação') {
         newRow += `<button class='btn-aprovar' data-toggle='modal' data-target='#modalDetalhes' 
                       data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                      data-valor='${row.valor}'>Aprovar</button>`;
+                      data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Aprovar</button>`;
       }
       
       if (row.status === 'Aguardando Aprovação') {
       // Adiciona o botão "Rejeitar"
         newRow += `<button class='btn-rejeitar' data-toggle='modal' data-target='#modalRejeitar' 
                       data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                      data-valor='${row.valor}'>Rejeitar</button>`;
+                      data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Rejeitar</button>`;
       }
 
       newRow += '</td></tr>';
@@ -299,12 +401,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
           var nome = $(this).data('nome');
           var pix = $(this).data('pix');
           var valor = $(this).data('valor');
+          var external_reference = $(this).data('external_reference');
 
           // Preencha os detalhes no modal
           $('#detalheEmail').text(email);
           $('#detalheNome').text(nome);
           $('#detalhePix').text(pix);
           $('#detalheValor').text(valor);
+          $('#detalheExternalReference').text(external_reference);
 
           // Exiba o modal
           $('#modalDetalhes').modal('show');
@@ -316,12 +420,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
           var nome = $(this).data('nome');
           var pix = $(this).data('pix');
           var valor = $(this).data('valor');
+          var external_reference = $(this).data('external_reference');
 
           // Preencha os detalhes no modal
           $('#rejeitarEmail').text(email);
           $('#rejeitarNome').text(nome);
           $('#rejeitarPix').text(pix);
           $('#rejeitarValor').text(valor);
+          $('#rejeitarExternalReference').text(valor);
 
           // Exiba o modal
           $('#modalRejetar').modal('show');
@@ -334,8 +440,8 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             var afiliadoValor = parseFloat($('#detalheValor').text()); // Substitua com o ID ou classe apropriado
             var email = $('#detalheEmail').text();
             var valor = $('#detalheValor').text();
-            
-            
+            var nome = $('#detalheNome').text();
+            var external_reference = $('#detalheExternalReference').text();
             
             
             
@@ -348,27 +454,30 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             };
             // Realize a chamada AJAX
             console.log('Valor de ci:', '<?php echo $client_id; ?>');
-                console.log('Valor de cs:', '<?php echo $client_secret; ?>');
+            console.log('Valor de cs:', '<?php echo $client_secret; ?>');
 
              $.ajax({
-            type: "POST",
-            url: "aprovar_saque.php", // Substitua com o nome do seu arquivo PHP
-            data: {
-                requestData: JSON.stringify(requestData),
-                afiliadoPix: afiliadoPix,
-                email: email
-            },
-            success: function(response) {
-                console.log('Saque aprovado:', response);
-                updateStatus(afiliadoPix, email, afiliadoValor);
-                // Feche o modal
-                $('#modalDetalhes').modal('hide');
-            },
-            error: function(error) {
-                console.error('Erro ao aprovar o saque:', error);
-                // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
-            }
-        });
+                type: "POST",
+                url: "aprovar_saque.php", // Substitua com o nome do seu arquivo PHP
+                data: {
+                    requestData: JSON.stringify(requestData),
+                    afiliadoPix: afiliadoPix,
+                    email: email
+                },
+                success: function(response) {
+                    console.log('Saque aprovado:', response);
+                    const statusAprovado = 'aprovado';
+                    const dataAtual = new Date();
+                    const dataFormatada = formatarData(dataAtual);
+                    extratoSaque(afiliadoPix, email,afiliadoValor, nome, dataFormatada, statusAprovado, external_reference);
+                    
+                    updateStatus(afiliadoPix, email, afiliadoValor, external_reference);
+                    $('#modalDetalhes').modal('hide');
+                },
+                error: function(error) {
+                    console.error('Erro ao aprovar o saque:', error);
+                }
+            });
     });
         
         
@@ -377,10 +486,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
             var afiliadoPix = $('#rejeitarPix').text(); // Substitua com o ID ou classe apropriado
             var email = $('#rejeitarEmail').text();
-        
+            var external_reference = $('#rejeitarExternalReference').text();
+            
+            const statusRejeitado = 'rejeitado';
+            const dataAtual = new Date();
+            const dataFormatada = formatarData(dataAtual);
+            extratoSaque(afiliadoPix, email,afiliadoValor, nome, dataFormatada, statusAprovado, external_reference);
             // Chame a função para atualizar o status "Rejeitado"
-            updateStatusRejeitar(afiliadoPix, email);
-        
+            updateStatusRejeitar(afiliadoPix, email, external_reference);
             // Feche o modal
             $('#modalRejeitar').modal('hide');
         });
@@ -405,17 +518,50 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
   });
 </script>
 
+
 <script>
-    function updateStatus(afiliadoPix, email, valor) {
+    function formatarData(data) {
+        const dia = (data.getDate() < 10 ? '0' : '') + data.getDate();
+        const mes = ((data.getMonth() + 1) < 10 ? '0' : '') + (data.getMonth() + 1);
+        const ano = data.getFullYear();
+        
+        const horas = (data.getHours() < 10 ? '0' : '') + data.getHours();
+        const minutos = (data.getMinutes() < 10 ? '0' : '') + data.getMinutes();
+        const segundos = (data.getSeconds() < 10 ? '0' : '') + data.getSeconds();
+    
+        return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+    }
+
+</script>
+
+<script>
+    function extratoSaque(afiliadoPix, email, valor, nome, data, status, externalreference) {
+        console.log('extrato saque', afiliadoPix, email, valor, nome, data, status, externalreference)
+        $.ajax({
+            type: "POST",
+            url: "extrato_saque.php", // Substitua pelo caminho correto
+            data: { pix: afiliadoPix, status: status, email: email, valor: valor, nome: nome, data: data, status: status, externalreference:externalreference },
+            success: function(response) {
+                console.log('Extrato gerado com sucesso:', response);
+            },
+            error: function(error) {
+                console.error('Erro ao gerar extrato:', error);
+            }
+        });
+    }
+</script>
+
+<script>
+    function updateStatus(afiliadoPix, email, valor, external_reference) {
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
-        console.log('update status', email, valor, afiliadoPix)
+        console.log('update status', email, valor, afiliadoPix, external_reference)
         $.ajax({
             type: "POST",
             url: "atualizar_status.php", // Substitua pelo caminho correto
-            data: { pix: afiliadoPix, status: 'Aprovado', email: email, valor: valor },
+            data: { pix: afiliadoPix, status: 'Aprovado', email: email, valor: valor, external_reference:external_reference },
             success: function(response) {
                 console.log('Status atualizado:', response);
-                // Adicione lógica adicional se necessário
+                window.location.reload();
             },
             error: function(error) {
                 console.error('Erro ao atualizar o status:', error);
@@ -427,16 +573,16 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 
 
 <script>
-    function updateStatusRejeitar(afiliadoPix, email,) {
+    function updateStatusRejeitar(afiliadoPix, email,external_reference) {
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
-        console.log('update status', email, afiliadoPix)
+        console.log('update status', email, afiliadoPix, external_reference)
         $.ajax({
             type: "POST",
             url: "atualizar_status_rejeitar.php", // Substitua pelo caminho correto
-            data: { pix: afiliadoPix, status: 'Rejeitado', email: email },
+            data: { pix: afiliadoPix, status: 'Rejeitado', email: email, external_reference:external_reference },
             success: function(response) {
                 console.log('Status atualizado:', response);
-                // Adicione lógica adicional se necessário
+                window.location.reload();
             },
             error: function(error) {
                 console.error('Erro ao atualizar o status:', error);
@@ -450,6 +596,8 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
 
 
     <script>
@@ -468,13 +616,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             <td>${row.nome}</td>
             <td>${row.pix}</td>
             <td>${row.valor}</td>
+            <td>${row.external_reference}</td>
             <td class='${statusClass}'>${row.status}</td>
             <td>`;
         
           if (row.status === 'Aguardando Aprovação') {
             newRow += `<button class='btn-aprovar' data-toggle='modal' data-target='#modalDetalhes' 
                           data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                          data-valor='${row.valor}'>Aprovar</button> `;
+                          data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Aprovar</button> `;
         
             
           }
@@ -483,7 +632,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
           // Adiciona o botão "Rejeitar"
             newRow += `<button class='btn-rejeitar' data-toggle='modal' data-target='#modalRejeitar' 
                           data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                          data-valor='${row.valor}'>Rejeitar</button>`;
+                          data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Rejeitar</button>`;
           }
           
           newRow += '</td></tr>';
@@ -509,12 +658,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
               var nome = $(this).data('nome');
               var pix = $(this).data('pix');
               var valor = $(this).data('valor');
+              var external_reference = $(this).data('external_reference');
 
               // Preencha os detalhes no modal
               $('#detalheEmail').text(email);
               $('#detalheNome').text(nome);
               $('#detalhePix').text(pix);
               $('#detalheValor').text(valor);
+              $('#detalheExternalReference').text(external_reference);
 
               // Exiba o modal
               $('#modalDetalhes').modal('show');
@@ -526,12 +677,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
               var nome = $(this).data('nome');
               var pix = $(this).data('pix');
               var valor = $(this).data('valor');
+              var external_reference = $(this).data('external_reference');
 
               // Preencha os detalhes no modal
               $('#rejeitarEmail').text(email);
               $('#rejeitarNome').text(nome);
               $('#rejeitarPix').text(pix);
               $('#rejeitarValor').text(valor);
+              $('#rejeitarExternalReference').text(external_reference);
 
               // Exiba o modal
               $('#modalRejeitar').modal('show');
@@ -562,7 +715,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
                   console.log('Erro ao enviar solicitação ao servidor PHP.');
                 }
               });
-
+                
               // Feche o modal após o envio da solicitação
               $('#modalDetalhes').modal('hide');
             });
@@ -592,7 +745,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
                   console.log('Erro ao enviar solicitação ao servidor PHP.');
                 }
               });
-
+                
               // Feche o modal após o envio da solicitação
               $('#modalRejeitar').modal('hide');
             });

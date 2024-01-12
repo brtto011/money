@@ -108,9 +108,7 @@ if (isset($_SESSION['email'])) {
     // Obtenha os resultados da consulta
     $row_soma_total_aprovados = $resultado_soma_dos_aprovados->fetch_assoc();
     
-
-    
-    
+    $external_reference = uniqid();
     // Verifique se a consulta foi bem-sucedida
     if ($resultado_saldo) {
          if ($resultado_saldo->num_rows > 0) {
@@ -121,37 +119,36 @@ if (isset($_SESSION['email'])) {
             $nome_destinatario = $_POST['withdrawName']; // Supondo que os dados sejam enviados por um formulário POST
             $pix = $_POST['withdrawCPF']; // Supondo que os dados sejam enviados por um formulário POST
             $valor_disponivel = $saldo;
-            
             // Consulta de inserção
            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!empty($nome_destinatario) && !empty($pix)) {
-        // Verifique se o valor do saque é maior que zero e menor ou igual ao saldo disponível
-        $valor_saque = floatval($valor_disponivel);
-        
-        $row_status = $resultado_status->fetch_assoc();
-        $status = trim($row_status['status']);
-
-        if ($status == 'Aguardando Aprovação') {
-            echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
-        } else {
-            if ($valor_saque > 0 && $valor_saque <= $saldo && $saldo >= $saque_min_afiliado) {
-                $status = 'Aguardando Aprovação';
-                $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, data_solicitacao)
-                VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, 'Aguardando Aprovação', CURRENT_TIMESTAMP)";
-
-                // Execute a consulta de inserção e verifique se há erros
-                if ($conn->query($consulta_inserir_saque)) {
-                    echo "<script>window.location.reload();</script>";
+                if (!empty($nome_destinatario) && !empty($pix)) {
+                    // Verifique se o valor do saque é maior que zero e menor ou igual ao saldo disponível
+                    $valor_saque = floatval($valor_disponivel);
+                    $row_status = $resultado_status->fetch_assoc();
+                    $status = trim($row_status['status']);
+                
+                    if ($status == 'Aguardando Aprovação') {
+                        echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
+                    } else {
+                        if ($valor_saque > 0 && $valor_saque <= $saldo && $saldo >= $saque_min_afiliado) {
+                            $status = 'Aguardando Aprovação';
+                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, external_reference, data_solicitacao)
+                            VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, 'Aguardando Aprovação', '$external_reference', CURRENT_TIMESTAMP)";
+                
+                            // Execute a consulta de inserção e verifique se há erros
+                            if ($conn->query($consulta_inserir_saque)) {
+                                echo "<script>window.location.reload();</script>";
+                            } else {
+                                echo "Erro ao inserir o saque: " . $conn->error;
+                            }
+                        } else {
+                            echo "<script>alert('errooo')</script>";
+                            $mensagem_saque_erro = "Valor de saque inválido, saldo insuficiente ou abaixo do limite mínimo de saque.";
+                        }
+                    }
                 } else {
-                    echo "Erro ao inserir o saque: " . $conn->error;
+                    $mensagem_saque_erro = "Campos nome_destinatario e pix são obrigatórios.";
                 }
-            } else {
-                $mensagem_saque_erro = "Valor de saque inválido, saldo insuficiente ou abaixo do limite mínimo de saque.";
-            }
-        }
-    } else {
-        $mensagem_saque_erro = "Campos nome_destinatario e pix são obrigatórios.";
-    }
 
             }
         }

@@ -8,8 +8,8 @@ if ($conn->connect_error) {
     die("Erro na conexão com o banco de dados: " . $conn->connect_error);
 }
 
-// Consulta SQL para obter dados da tabela saque_afiliado
-$sql = "SELECT email, nome, pix, valor, status, external_reference FROM saque_afiliado";
+// Consulta SQL para obter dados da tabela extrato_saque_afiliado
+$sql = "SELECT email, nome, pix, valor, status, external_reference, data FROM extrato_saque_afiliado";
 
 // Utilizando prepared statements para prevenir injeção de SQL
 $stmt = $conn->prepare($sql);
@@ -35,9 +35,6 @@ $data = array();
 while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
-
-// Reverter a ordem dos dados (últimos registros primeiro)
-$data = array_reverse($data);
 
 // Fechar a conexão com o banco de dados
 $stmt->close();
