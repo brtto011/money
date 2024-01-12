@@ -199,5 +199,6 @@ CREATE TABLE extrato_saque_afiliado (
     pix VARCHAR(255),
     valor DECIMAL(10, 2),
     status VARCHAR(50),
-    external_reference VARCHAR(255)
+    external_reference VARCHAR(255),
+    data VARCHAR(255);
 );
