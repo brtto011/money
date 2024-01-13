@@ -288,6 +288,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         <p><strong>Nome:</strong> <span id="rejeitarNome"></span></p>
         <p><strong>Pix:</strong> <span id="rejeitarPix"></span></p>
         <p><strong>Valor:</strong> <span id="rejeitarValor"></span></p>
+        <p><strong>Cód Ref:</strong> <span id="rejeitarExternalReference"></span></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnFechar">CANCELAR</button>
@@ -329,7 +330,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
                             <td>${log.pix}</td>
                             <td>${log.valor}</td>
                             <td>${log.status}</td>
-                            <td>${log.external_reference}</td>
+                            <td>${log.externalreference}</td>
                             <td>${log.data}</td>
                         </tr>`).join('')}
                 </tbody>
@@ -362,21 +363,21 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         <td>${row.nome}</td>
         <td>${row.pix}</td>
         <td>${row.valor}</td>
-        <td>${row.external_reference}</td>
+        <td>${row.externalreference}</td>
         <td class='${statusClass}'>${row.status}</td>
         <td>`;
 
       if (row.status === 'Aguardando Aprovação') {
         newRow += `<button class='btn-aprovar' data-toggle='modal' data-target='#modalDetalhes' 
                       data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                      data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Aprovar</button>`;
+                      data-valor='${row.valor}' data-externalreference='${row.externalreference}'>Aprovar</button>`;
       }
       
       if (row.status === 'Aguardando Aprovação') {
       // Adiciona o botão "Rejeitar"
         newRow += `<button class='btn-rejeitar' data-toggle='modal' data-target='#modalRejeitar' 
                       data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                      data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Rejeitar</button>`;
+                      data-valor='${row.valor}' data-externalreference='${row.externalreference}'>Rejeitar</button>`;
       }
 
       newRow += '</td></tr>';
@@ -401,14 +402,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
           var nome = $(this).data('nome');
           var pix = $(this).data('pix');
           var valor = $(this).data('valor');
-          var external_reference = $(this).data('external_reference');
+          var externalreference = $(this).data('externalreference');
 
           // Preencha os detalhes no modal
           $('#detalheEmail').text(email);
           $('#detalheNome').text(nome);
           $('#detalhePix').text(pix);
           $('#detalheValor').text(valor);
-          $('#detalheExternalReference').text(external_reference);
+          $('#detalheExternalReference').text(externalreference);
 
           // Exiba o modal
           $('#modalDetalhes').modal('show');
@@ -420,14 +421,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
           var nome = $(this).data('nome');
           var pix = $(this).data('pix');
           var valor = $(this).data('valor');
-          var external_reference = $(this).data('external_reference');
+          var externalreference = $(this).data('externalreference');
 
           // Preencha os detalhes no modal
           $('#rejeitarEmail').text(email);
           $('#rejeitarNome').text(nome);
           $('#rejeitarPix').text(pix);
           $('#rejeitarValor').text(valor);
-          $('#rejeitarExternalReference').text(valor);
+          $('#rejeitarExternalReference').text(externalreference);
 
           // Exiba o modal
           $('#modalRejetar').modal('show');
@@ -441,7 +442,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             var email = $('#detalheEmail').text();
             var valor = $('#detalheValor').text();
             var nome = $('#detalheNome').text();
-            var external_reference = $('#detalheExternalReference').text();
+            var externalreference = $('#detalheExternalReference').text();
             
             
             
@@ -469,10 +470,9 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
                     const statusAprovado = 'aprovado';
                     const dataAtual = new Date();
                     const dataFormatada = formatarData(dataAtual);
-                    extratoSaque(afiliadoPix, email,afiliadoValor, nome, dataFormatada, statusAprovado, external_reference);
-                    
-                    updateStatus(afiliadoPix, email, afiliadoValor, external_reference);
-                    $('#modalDetalhes').modal('hide');
+                    updateStatus(afiliadoPix, email, afiliadoValor, externalreference);
+                    extratoSaque(afiliadoPix, email,afiliadoValor, nome, dataFormatada, statusAprovado, externalreference);
+                    //$('#modalDetalhes').modal('hide');
                 },
                 error: function(error) {
                     console.error('Erro ao aprovar o saque:', error);
@@ -486,16 +486,18 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             // Obtenha os detalhes necessários do afiliado (substitua com os seus dados)
             var afiliadoPix = $('#rejeitarPix').text(); // Substitua com o ID ou classe apropriado
             var email = $('#rejeitarEmail').text();
-            var external_reference = $('#rejeitarExternalReference').text();
+            var externalreference = $('#rejeitarExternalReference').text();
+            var afiliadoValor = parseFloat($('#rejeitarValor').text());
+            var nome = $('#rejeitarNome').text();
             
-            const statusRejeitado = 'rejeitado';
+            const statusRejeitado = 'Rejeitado';
             const dataAtual = new Date();
             const dataFormatada = formatarData(dataAtual);
-            extratoSaque(afiliadoPix, email,afiliadoValor, nome, dataFormatada, statusAprovado, external_reference);
             // Chame a função para atualizar o status "Rejeitado"
-            updateStatusRejeitar(afiliadoPix, email, external_reference);
+            updateStatusRejeitar(externalreference);
+            extratoSaque(afiliadoPix, email,afiliadoValor, nome, dataFormatada, statusRejeitado, externalreference);
             // Feche o modal
-            $('#modalRejeitar').modal('hide');
+            //$('#modalRejeitar').modal('hide');
         });
 
 
@@ -534,22 +536,6 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 
 </script>
 
-<script>
-    function extratoSaque(afiliadoPix, email, valor, nome, data, status, externalreference) {
-        console.log('extrato saque', afiliadoPix, email, valor, nome, data, status, externalreference)
-        $.ajax({
-            type: "POST",
-            url: "extrato_saque.php", // Substitua pelo caminho correto
-            data: { pix: afiliadoPix, status: status, email: email, valor: valor, nome: nome, data: data, status: status, externalreference:externalreference },
-            success: function(response) {
-                console.log('Extrato gerado com sucesso:', response);
-            },
-            error: function(error) {
-                console.error('Erro ao gerar extrato:', error);
-            }
-        });
-    }
-</script>
 
 <script>
     function updateStatus(afiliadoPix, email, valor, external_reference) {
@@ -558,10 +544,10 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
         $.ajax({
             type: "POST",
             url: "atualizar_status.php", // Substitua pelo caminho correto
-            data: { pix: afiliadoPix, status: 'Aprovado', email: email, valor: valor, external_reference:external_reference },
+            data: { pix: afiliadoPix, status: 'Aprovado', email: email, valor: valor, externalreference:external_reference },
             success: function(response) {
                 console.log('Status atualizado:', response);
-                window.location.reload();
+                
             },
             error: function(error) {
                 console.error('Erro ao atualizar o status:', error);
@@ -573,21 +559,40 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 
 
 <script>
-    function updateStatusRejeitar(afiliadoPix, email,external_reference) {
+    function updateStatusRejeitar(external_reference) {
         // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
-        console.log('update status', email, afiliadoPix, external_reference)
+        console.log('entrou rejeitado',external_reference)
         $.ajax({
             type: "POST",
             url: "atualizar_status_rejeitar.php", // Substitua pelo caminho correto
-            data: { pix: afiliadoPix, status: 'Rejeitado', email: email, external_reference:external_reference },
+            data: { status: 'Rejeitado',  externalreference:external_reference },
             success: function(response) {
                 console.log('Status atualizado:', response);
-                window.location.reload();
+                
+                
             },
             error: function(error) {
                 console.error('Erro ao atualizar o status:', error);
                 // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
             }
+        });
+    }
+</script>
+
+<script>
+    function extratoSaque(afiliadoPix, email, valor, nome, data, status, external_reference) {
+        console.log('extrato saque', afiliadoPix, email, valor, nome, data, status, external_reference)
+        $.ajax({
+            type: "POST",
+            url: "extrato_saque.php", // Substitua pelo caminho correto
+            data: { pix: afiliadoPix, status: status, email: email, valor: valor, nome: nome, data: data, status: status, externalreference:external_reference },
+            success: function(response) {
+                console.log('Extrato gerado com sucesso:', response);
+                window.location.reload();
+            },
+            error: function(error) {
+                console.error('Erro ao gerar extrato:', error);
+            },
         });
     }
 </script>
@@ -616,14 +621,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
             <td>${row.nome}</td>
             <td>${row.pix}</td>
             <td>${row.valor}</td>
-            <td>${row.external_reference}</td>
+            <td>${row.externalreference}</td>
             <td class='${statusClass}'>${row.status}</td>
             <td>`;
         
           if (row.status === 'Aguardando Aprovação') {
             newRow += `<button class='btn-aprovar' data-toggle='modal' data-target='#modalDetalhes' 
                           data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                          data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Aprovar</button> `;
+                          data-valor='${row.valor}' data-externalreference='${row.externalreference}'>Aprovar</button> `;
         
             
           }
@@ -632,7 +637,7 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
           // Adiciona o botão "Rejeitar"
             newRow += `<button class='btn-rejeitar' data-toggle='modal' data-target='#modalRejeitar' 
                           data-email='${row.email}' data-nome='${row.nome}' data-pix='${row.pix}' 
-                          data-valor='${row.valor}' data-external_reference='${row.external_reference}'>Rejeitar</button>`;
+                          data-valor='${row.valor}' data-externalreference='${row.externalreference}'>Rejeitar</button>`;
           }
           
           newRow += '</td></tr>';
@@ -658,14 +663,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
               var nome = $(this).data('nome');
               var pix = $(this).data('pix');
               var valor = $(this).data('valor');
-              var external_reference = $(this).data('external_reference');
+              var externalreference = $(this).data('externalreference');
 
               // Preencha os detalhes no modal
               $('#detalheEmail').text(email);
               $('#detalheNome').text(nome);
               $('#detalhePix').text(pix);
               $('#detalheValor').text(valor);
-              $('#detalheExternalReference').text(external_reference);
+              $('#detalheExternalReference').text(externalreference);
 
               // Exiba o modal
               $('#modalDetalhes').modal('show');
@@ -677,14 +682,14 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
               var nome = $(this).data('nome');
               var pix = $(this).data('pix');
               var valor = $(this).data('valor');
-              var external_reference = $(this).data('external_reference');
+              var externalreference = $(this).data('externalreference');
 
               // Preencha os detalhes no modal
               $('#rejeitarEmail').text(email);
               $('#rejeitarNome').text(nome);
               $('#rejeitarPix').text(pix);
               $('#rejeitarValor').text(valor);
-              $('#rejeitarExternalReference').text(external_reference);
+              $('#rejeitarExternalReference').text(externalreference);
 
               // Exiba o modal
               $('#modalRejeitar').modal('show');

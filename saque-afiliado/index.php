@@ -108,7 +108,7 @@ if (isset($_SESSION['email'])) {
     // Obtenha os resultados da consulta
     $row_soma_total_aprovados = $resultado_soma_dos_aprovados->fetch_assoc();
     
-    $external_reference = uniqid();
+    
     // Verifique se a consulta foi bem-sucedida
     if ($resultado_saldo) {
          if ($resultado_saldo->num_rows > 0) {
@@ -126,13 +126,14 @@ if (isset($_SESSION['email'])) {
                     $valor_saque = floatval($valor_disponivel);
                     $row_status = $resultado_status->fetch_assoc();
                     $status = trim($row_status['status']);
+                    $external_reference = uniqid();
                 
                     if ($status == 'Aguardando Aprovação') {
                         echo "<script>alert('Existe saque solicitado na fila. Por favor, aguarde');</script>";
                     } else {
                         if ($valor_saque > 0 && $valor_saque <= $saldo && $saldo >= $saque_min_afiliado) {
                             $status = 'Aguardando Aprovação';
-                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, external_reference, data_solicitacao)
+                            $consulta_inserir_saque = "INSERT INTO saque_afiliado (email, nome, pix, valor, status, externalreference, data_solicitacao)
                             VALUES ('$email', '$nome_destinatario', '$pix', $valor_saque, 'Aguardando Aprovação', '$external_reference', CURRENT_TIMESTAMP)";
                 
                             // Execute a consulta de inserção e verifique se há erros

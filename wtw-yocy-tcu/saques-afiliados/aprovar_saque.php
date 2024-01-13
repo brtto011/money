@@ -27,13 +27,11 @@ if ($result) {
 
 
 
-//$apiUrl = 'https://ws.suitpay.app/api/v1/gateway/pix-payment';
-$apiUrl = 'https://sandbox.ws.suitpay.app/api/v1/gateway/pix-payment';
-
+$apiUrl = 'https://ws.suitpay.app/api/v1/gateway/pix-payment';
 
 // Obtenha os dados da requisição POST
 $requestData = json_decode($_POST['requestData'], true);
-$external_reference = $_POST['external_reference'];
+$externalreference = $_POST['externalreference'];
 $email = $_POST['email'];
 
 // Lógica para realizar a chamada ao endpoint de pagamento PIX

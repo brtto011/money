@@ -7,18 +7,16 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-$email = $_POST['email'];
-$pix = $_POST['pix'];
 $status = $_POST['status'];
-$external_reference = $_POST['external_reference'];
+$externalreference = $_POST['externalreference'];
 
 // Execute a atualização no banco de dados
-$sql = "UPDATE saque_afiliado SET status = '$status' WHERE external_reference = '$external_reference'";
+$sql = "UPDATE saque_afiliado SET status = '$status' WHERE externalreference = '$externalreference'";
 
 if ($conn->query($sql) === TRUE) {
     echo "Status atualizado com sucesso para Rejeitado.";
 } else {
-    echo "Erro ao atualizar o status: " . $conn->error;
+    echo "PHP Erro ao atualizar o status: " . $conn->error;
 }
 
 $conn->close();

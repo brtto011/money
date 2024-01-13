@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL para obter dados da tabela saque_afiliado
-$sql = "SELECT email, nome, pix, valor, status, external_reference FROM saque_afiliado";
+$sql = "SELECT email, nome, pix, valor, externalreference, status FROM saque_afiliado";
 
 // Utilizando prepared statements para prevenir injeção de SQL
 $stmt = $conn->prepare($sql);

@@ -12,7 +12,7 @@ $valor = $_POST['valor'];
 // Receba os dados da solicitação AJAX
 $pix = $_POST['pix'];
 $status = $_POST['status'];
-$external_reference = $_POST['external_reference'];
+$externalreference = $_POST['externalreference'];
 
 // Consulta para obter o saldo atual
 $saldoConsulta = "SELECT saldo_comissao FROM appconfig WHERE email = '$email'";
@@ -30,7 +30,7 @@ if ($resultadoSaldo > 0) {
         // Executar a atualização do saldo
         if ($conn->query($atualizarSaldo) === TRUE) {
             // Execute a atualização no banco de dados
-            $sql = "UPDATE saque_afiliado SET status = '$status' WHERE external_reference = '$external_reference'";
+            $sql = "UPDATE saque_afiliado SET status = '$status' WHERE externalreference = '$externalreference'";
             
             if ($conn->query($sql) === TRUE) {
                 // Atualizar a coluna 'sacou' na tabela 'appconfig'

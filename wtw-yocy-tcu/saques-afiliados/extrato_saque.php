@@ -15,16 +15,16 @@ $valor = $_POST['valor'];
 $nome = $_POST['nome'];
 $data = $_POST['data'];
 $status = $_POST['status'];
-$externalReference = $_POST['externalreference'];
+$externalreference = $_POST['externalreference'];
 
 // Preparar e executar a instrução SQL para inserir dados
-$sql = "INSERT INTO extrato_saque_afiliado (email, nome, pix, valor, status, external_reference, data) 
-        VALUES ('$email', '$nome', '$afiliadoPix', '$valor', '$status', '$externalReference', '$data')";
+$sql = "INSERT INTO extrato_saque_afiliado (email, nome, pix, valor, status, externalreference, data) 
+        VALUES ('$email', '$nome', '$afiliadoPix', '$valor', '$status', '$externalreference', '$data')";
 
 if ($conn->query($sql) === TRUE) {
     echo "Extrato inserido com sucesso!";
 } else {
-    echo "Erro ao inserir registro: " . $conn->error;
+    echo "PHP Erro ao inserir registro: " . $conn->error;
 }
 
 // Fechar a conexão
