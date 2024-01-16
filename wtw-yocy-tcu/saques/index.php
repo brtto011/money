@@ -236,6 +236,29 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
   </div>
 </div>
 
+<div class="modal fade" id="modalDetalhesRejeitar" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDetalhesLabel">Rejeitar Saque </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Cód. Referência:</strong> <span id="detalheExternalReferenceRejeitar"></span></p>
+        <p><strong>Email:</strong> <span id="detalheEmailRejeitar"></span></p>
+        <p><strong>Pix:</strong> <span id="detalheCPFRejeitar"></span></p>
+        <p><strong>Valor:</strong> <span id="detalheValorRejeitar"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnFecharRejeitar">CANCELAR</button>
+        <button type="button" class="btn btn-danger" id="btnRejeitar">CONFIRMAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Inclua o jQuery antes do seu código JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -250,24 +273,31 @@ $(document).ready(function() {
             $('#table-body').empty();
 
             // Inserir dados na tabela
-            data.forEach(function(row) {
+            data.forEach(function (row) {
                 var statusClass = row.status === 'Aprovado' ? 'text-success' : 'text-danger';
-                var newRow = "<tr>" +
-                    "<td>" + row.email + "</td>" +
-                    "<td>" + row.externalreference + "</td>" +
-                    "<td>" + row.cpf + "</td>" +
-                    "<td>" + row.valor + "</td>" +
-                    "<td class='" + statusClass + "'>" + row.status + "</td>";
-
-                // Adicionar coluna extra com botão "Aprovar" quando o status for "Aguardando Aprovação"
+                var buttons = '';
+            
                 if (row.status === 'Aguardando Aprovação') {
-                    newRow += "<td><button class='aprovar-btn' data-toggle='modal' data-target='#aprovarModal' " +
-                        "data-email='" + row.email + "' data-externalreference='" + row.externalreference + "' data-nome='" + row.nome + "' data-cpf='" + row.cpf + "' data-valor='" + row.valor + "'>Aprovar</button></td>";
-                } else {
-                    newRow += "<td></td>"; // Coluna vazia para outros status
+                    buttons += `<button class='aprovar-btn' data-toggle='modal' data-target='#aprovarModal' 
+                                  data-email='${row.email}' data-externalreference='${row.externalreference}' 
+                                  data-nome='${row.nome}' data-cpf='${row.cpf}' data-valor='${row.valor}'>Aprovar</button>`;
                 }
-
-                newRow += "</tr>";
+            
+                if (row.status === 'Aguardando Aprovação') {
+                    buttons += `<button class='rejeitar-btn' data-toggle='modal' data-target='#rejeitarModal' 
+                                  data-email='${row.email}' data-externalreference='${row.externalreference}' 
+                                  data-nome='${row.nome}' data-cpf='${row.cpf}' data-valor='${row.valor}'>Rejeitar</button>`;
+                }
+            
+                var newRow = `<tr>
+                                <td>${row.email}</td>
+                                <td>${row.externalreference}</td>
+                                <td>${row.cpf}</td>
+                                <td>${row.valor}</td>
+                                <td class='${statusClass}'>${row.status}</td>
+                                <td>${buttons}</td>
+                              </tr>`;
+            
                 $('#table-body').append(newRow);
             });
 
@@ -287,6 +317,17 @@ $(document).ready(function() {
 
                 // Abrir o modal
                 $('#modalDetalhes').modal('show');
+            });
+            $('.rejeitar-btn').click(function() {
+                // Preencher os detalhes no modal
+                $('#detalheEmailRejeitar').text($(this).data('email'));
+                $('#detalheExternalReferenceRejeitar').text($(this).data('externalreference'));
+                $('#detalheNomeRejeitar').text($(this).data('nome'));
+                $('#detalheCPFRejeitar').text($(this).data('cpf'));
+                $('#detalheValorRejeitar').text($(this).data('valor'));
+
+                // Abrir o modal
+                $('#modalDetalhesRejeitar').modal('show');
             });
         },
         error: function() {
@@ -330,6 +371,14 @@ $(document).ready(function() {
             }
         });
     });
+    
+    // Adicionar evento de clique para o botão "Rejeitar" no modal
+    $('#btnRejeitar').on('click', function() {
+        var external_reference = $('#detalheExternalReferenceRejeitar').text();
+        
+        updateStatusRejeitar(external_reference);
+        
+    });
 
     $('#btnFechar').on('click', function() {
         // Feche o modal
@@ -337,24 +386,43 @@ $(document).ready(function() {
     });
 
        function updateStatus(external_reference,email, saqueValor) {
-        status = 'Aprovado'
-        console.log('datas', external_reference, email, saqueValor, status);
-        // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
-        $.ajax({
-            type: "POST",
-            url: "atualizar_status.php", // Substitua pelo caminho correto
-            data: { external_reference: external_reference, status:status , email: email, valor: saqueValor, },
-            
-            success: function(response) {
-                console.log('Status atualizado:', response);
-                // Adicione lógica adicional se necessário
-            },
-            error: function(error) {
-                console.error('Erro ao atualizar o status:', error);
-                // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
-            }
-        });
-    }
+            status = 'Aprovado'
+            console.log('datas', external_reference, email, saqueValor, status);
+            // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
+            $.ajax({
+                type: "POST",
+                url: "atualizar_status.php", // Substitua pelo caminho correto
+                data: { external_reference: external_reference, status:status , email: email, valor: saqueValor, },
+                
+                success: function(response) {
+                    console.log('Status atualizado:', response);
+                    window.location.reload();
+                },
+                error: function(error) {
+                    console.error('Erro ao atualizar o status:', error);
+                    // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+                }
+            });
+        };
+        
+        function updateStatusRejeitar(external_reference) {
+            status = 'Rejeitado'
+            // Realize uma nova solicitação ao servidor para executar uma atualização no banco de dados
+            $.ajax({
+                type: "POST",
+                url: "rejeitar_saque.php", // Substitua pelo caminho correto
+                data: { external_reference: external_reference, status:status },
+                
+                success: function(response) {
+                    console.log('Status atualizado:', response);
+                    window.location.reload();
+                },
+                error: function(error) {
+                    console.error('Erro ao atualizar o status:', error);
+                    // Adicione lógica para lidar com o erro (exibir mensagem de erro, etc.)
+                }
+            });
+        }
 });
 </script>
 

@@ -85,7 +85,6 @@ if ($conn->connect_error) {
 // Recupere o email da sessão
 if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_SESSION['email'];
-    $externalreference = isset($_SESSION['externalReference']) ? $_SESSION['externalReference'] : uniqid();
     $CPF = $_POST['withdrawCPF'];
     $valor = $_POST['withdrawValue'];
     $status = 'Aguardando Aprovação';
@@ -105,6 +104,7 @@ if (isset($_SESSION['email']) && $_SERVER["REQUEST_METHOD"] == "POST") {
             // Verifica se o saldo é suficiente
             if ($saldoDisponivel >= $valor) {
               // Consulta de inserção usando declaração preparada
+              $externalreference = uniqid();
               $sql = "INSERT INTO saques (email, valor, status, externalreference, CPF) VALUES (?, ?, ?, ?, ?)";
               
               // Preparar e executar a instrução SQL
@@ -175,7 +175,31 @@ if ($stmt) {
 $conn->close();
 ?>
 
+<?php
+include '../conectarbanco.php';
 
+$conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+$sql = "SELECT rollover1 FROM appconfig where email = '$email'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+
+    $row = $result->fetch_assoc();
+
+
+    $rollover = $row['rollover1'];
+
+} else {
+    return false;
+}
+
+$conn->close();
+?>
 <script></script>
 
 
@@ -371,9 +395,8 @@ $conn->close();
 
 
  <h4>Saque Mínimo: R$ <?= $saques_min ?> <br></h4>
- 
- 
-  <h4>Meta de Rollover: R$ <?= $rollover_atual ?> <br></h4>
+ <h4>Meta de Rollover: R$ <?= $rollover_atual ?> <br></h4>
+ <h4>Rollover Acumulado: R$  <?= $rollover ?><br></h4>
             
             
   
@@ -386,19 +409,26 @@ $conn->close();
  
 
 
-    <script>
-        function validateWithdrawal() {
-            var withdrawalValue = document.getElementById('withdrawValue').value;
-            var saquesMin = <?= $saques_min ?>;
-            
-            if (parseFloat(withdrawalValue) < saquesMin) {
-                alert('O valor do saque deve ser maior que o valor do saque mínimo.');
-                return false; // Prevent form submission
-            }
+<script>
+    function validateWithdrawal() {
+        var withdrawalValue = parseFloat(document.getElementById('withdrawValue').value);
+        var saquesMin = <?= $saques_min ?>;
+        var rollover = parseFloat('<?= $rollover ?>');
+        var rolloverAtual = parseFloat('<?= $rollover_atual ?>');
 
-            return true; // Allow form submission
+        if (rollover < rolloverAtual) {
+            alert('O Rollover acumulado é menor que a meta de Rollover.');
+            return false; // Prevent form submission
         }
-    </script>
+
+        if (withdrawalValue < saquesMin) {
+            alert('O valor do saque deve ser maior que o valor do saque mínimo.');
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+    }
+</script>
 
 
 
