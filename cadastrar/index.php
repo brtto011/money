@@ -97,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $plano = 20; // Valor fixo para a coluna plano
         $saldo_comissao = 0; // Valor fixo para a coluna saldo_comissao
         $cpa = 0; // Valor fixo para o cpa único
+        $rollover1 = 0;
 
         // Construir o link de afiliado
         $linkAfiliado = $callbackUrl . $nextId;
@@ -108,10 +109,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $afiliado = isset($_GET['aff']) ? $_GET['aff'] : '';
 
         // Inserir dados no banco de dados
-        $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado) 
-                        VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)";
+        $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado, rollover1) 
+                        VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("isssissiiss", $nextId, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado);
+        $stmt->bind_param("isssissiisss", $nextId, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado, $rollover1);
 
         if ($stmt->execute()) {
             // Definir o email como uma variável de sessão
