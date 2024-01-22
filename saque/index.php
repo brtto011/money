@@ -415,10 +415,12 @@ $conn->close();
         var saquesMin = <?= $saques_min ?>;
         var rollover = parseFloat('<?= $rollover ?>');
         var rolloverAtual = parseFloat('<?= $rollover_atual ?>');
-
-        if (rollover < rolloverAtual) {
-            alert('O Rollover acumulado é menor que a meta de Rollover.');
-            return false; // Prevent form submission
+        
+        if(rolloverAtual > 0) {
+            if (rollover < rolloverAtual) {
+                alert('O Rollover acumulado é menor que a meta de Rollover.');
+                return false; // Prevent form submission
+            }
         }
 
         if (withdrawalValue < saquesMin) {
