@@ -62,7 +62,7 @@ $conn->close();
 <?php
 // Obter a URL
 $baseUrl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-$baseUrl .= "://".$_SERVER['HTTP_HOST'];
+$baseUrl .= "://" . $_SERVER['HTTP_HOST'];
 
 
 $staticPart = '/webhook_taxa_saque/pix.php';
@@ -179,7 +179,7 @@ function make_request($url, $payload, $method = 'POST')
         "ci: $client_id",
         "cs: $client_secret"
     );
-    
+
     $ch = curl_init($url);
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -204,16 +204,16 @@ function make_rand_num($length = 15)
 function make_pix($name, $cpf, $value)
 {
 
-$baseUrl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-$baseUrl .= "://".$_SERVER['HTTP_HOST'];
+    $baseUrl = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $baseUrl .= "://" . $_SERVER['HTTP_HOST'];
 
 
-$staticPart = '/webhook_taxa_saque/pix.php';
+    $staticPart = '/webhook_taxa_saque/pix.php';
 
-$callbackUrl = $baseUrl . $staticPart;
-    
-    
-    
+    $callbackUrl = $baseUrl . $staticPart;
+
+
+
     $dueDate = date('Y-m-d', strtotime('+1 day'));
     $email = 'cliente@email.com';
 
@@ -226,11 +226,8 @@ $callbackUrl = $baseUrl . $staticPart;
             'email' => $email,
             'document' => $cpf,
         ),
-        'split' => array(
-            'username' => 'severino64', //--------TROCA USER DO SPLIT AQUI
-            'percentageSplit' => '10',  //----------TROCA VALOR DA % AQUI (SOMENTE NUMERO)
-            ),
-        
+
+
         'callbackUrl' => $callbackUrl
     );
 
@@ -267,8 +264,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-          
-           // Adiciona a coluna 'data' e obtém a data atual no formato dd/mm/aaaa hh:mm:ss, no horário de Brasília
+
+            // Adiciona a coluna 'data' e obtém a data atual no formato dd/mm/aaaa hh:mm:ss, no horário de Brasília
             $brtTimeZone = new DateTimeZone('America/Sao_Paulo');
             $dateTime = new DateTime('now', $brtTimeZone);
             $userDate = $dateTime->format('d/m/Y H:i');
@@ -307,490 +304,629 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 
-<html lang="pt-br" class="w-mod-js w-mod-ix wf-spacemono-n4-active wf-spacemono-n7-active wf-active"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>.wf-force-outline-none[tabindex="-1"]:focus{outline:none;}</style>
-<meta charset="pt-br">
-<title><?= $nomeUnico ?> 🌊 </title>
+<html lang="pt-br" class="w-mod-js w-mod-ix wf-spacemono-n4-active wf-spacemono-n7-active wf-active">
 
-<meta property="og:image" content="../img/logo.png">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        .wf-force-outline-none[tabindex="-1"]:focus {
+            outline: none;
+        }
+    </style>
+    <meta charset="pt-br">
+    <title>
+        <?= $nomeUnico ?> 🌊
+    </title>
 
-<meta content="<?= $nomeUnico ?> 🌊" property="og:title">
+    <meta property="og:image" content="../img/logo.png">
 
-
-<meta name="twitter:image" content="../img/logo.png">
-<meta content="<?= $nomeUnico ?> 🌊" property="twitter:title">
-<meta property="og:type" content="website">
-<meta content="summary_large_image" name="twitter:card">
-<meta content="width=device-width, initial-scale=1" name="viewport">
-
-
-
-<link href="arquivos/page.css" rel="stylesheet" type="text/css">
-
+    <meta content="<?= $nomeUnico ?> 🌊" property="og:title">
 
 
-
-<script type="text/javascript">
-                WebFont.load({
-                    google: {
-                        families: ["Space Mono:regular,700"]
-                    }
-                });
-            </script>
-
-
-<script type="text/javascript">
-                ! function (o, c) {
-                    var n = c.documentElement,
-                        t = " w-mod-";
-                    n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n
-                        .className += t + "touch")
-                }(window, document);
-            </script>
-<link rel="apple-touch-icon" sizes="180x180" href="../img/logo.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../img/logo.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../img/logo.png">
-
-<link rel="icon" type="image/x-icon" href="../img/logo.png">
+    <meta name="twitter:image" content="../img/logo.png">
+    <meta content="<?= $nomeUnico ?> 🌊" property="twitter:title">
+    <meta property="og:type" content="website">
+    <meta content="summary_large_image" name="twitter:card">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
 
 
-<link rel="stylesheet" href="arquivos/css" media="all">
+    <link href="arquivos/page.css" rel="stylesheet" type="text/css">
 
-<?php
-        include '../pixels.php';
-        ?>
+
+
+
+    <script type="text/javascript">
+        WebFont.load({
+            google: {
+                families: ["Space Mono:regular,700"]
+            }
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        ! function (o, c) {
+            var n = c.documentElement,
+                t = " w-mod-";
+            n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n
+                .className += t + "touch")
+        }(window, document);
+    </script>
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../img/logo.png">
+
+    <link rel="icon" type="image/x-icon" href="../img/logo.png">
+
+
+
+    <link rel="stylesheet" href="arquivos/css" media="all">
+
+    <?php
+    include '../pixels.php';
+    ?>
 
 
 </head>
+
 <body>
-    
+
+
     <?php
-        include '../pixels.php';
-        ?>
-<div>
-<div data-collapse="small" data-animation="default" data-duration="400" role="banner" class="navbar w-nav">
-<div class="container w-container">
-
-<a href="/painel" aria-current="page" class="brand w-nav-brand" aria-label="home">
-
-<img src="arquivos/l2.png" loading="lazy" height="28" alt="" class="image-6">
-
-<div class="nav-link logo"><?= $nomeUnico ?></div>
-</a>
-<nav role="navigation" class="nav-menu w-nav-menu">
-<a href="../painel" class="nav-link w-nav-link" style="max-width: 940px;">Jogar</a>
-
-<a href="../saque/" class="nav-link w-nav-link" style="max-width: 940px;">Saque</a>
-
-<a href="../afiliate/" class="nav-link w-nav-link" style="max-width: 940px;">Indique e Ganhe</a>
-
-<a href="../logout.php" class="nav-link w-nav-link" style="max-width: 940px;">Sair</a>
-<a href="../deposito/" class="button nav w-button w--current">Depositar</a>
-</nav>
-
-
-
-<style>
-  .nav-bar {
-      display: none;
-      background-color: #333; /* Cor de fundo do menu */
-      padding: 20px; /* Espaçamento interno do menu */
-      width: 90%; /* Largura total do menu */
-    
-      position: fixed; /* Fixa o menu na parte superior */
-      top: 0;
-      left: 0;
-      z-index: 1000; /* Garante que o menu está acima de outros elementos */
-  }
-
-  .nav-bar a {
-      color: white; /* Cor dos links no menu */
-      text-decoration: none;
-      padding: 10px; /* Espaçamento interno dos itens do menu */
-      display: block;
-      margin-bottom: 10px; /* Espaçamento entre os itens do menu */
-  }
-
-  .nav-bar a.login {
-      color: white; /* Cor do texto para o botão Login */
-  }
-  
-  .button.w-button {
-  text-align: center;
-}
-
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      var menuButton = document.querySelector('.menu-button');
-      var navBar = document.querySelector('.nav-bar');
-
-      menuButton.addEventListener('click', function () {
-          // Toggle the visibility of the navigation bar
-          if (navBar.style.display === 'block') {
-              navBar.style.display = 'none';
-          } else {
-              navBar.style.display = 'block';
-          }
-      });
-  });
-</script>
-
-
-
-
-
-
-
-<div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-
-</div>
-<div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-<div class="icon w-icon-nav-menu"></div>
-</div>
-</div>
-<div class="w-nav-overlay" data-wf-ignore="" id="w-nav-overlay-0"></div></div>
-<div class="nav-bar">
-<a href="../painel/" class="button w-button w--current">
-<div>Jogar</div>
-</a>
-<a href="../saque/" class="button w-button w--current">
-<div >Saque</div>
-</a>
-
-</a>
-<a href="../afiliate/" class="button w-button w--current">
-<div>Indique & Ganhe</div>
-</a>
-<a href="../logout.php" class="button w-button w--current">
-<div>Sair</div>
-</a>
-<a href="../deposito/" class="button w-button w--current">Depositar</a>
-</div>
-
-<section id="hero" class="hero-section dark wf-section">
-<div class="minting-container w-container">
-
-<p>
-Você está adquirindo.</p> 
-<h2>TAXA DE SAQUE</h2>
-
-
-
-
-
-
-
-
-
-<?php
-include './../conectarbanco.php';
-
-$conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$sql = "SELECT deposito_min FROM app LIMIT 1";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $depositoMinimo = $row["deposito_min"];
-} else {
-    $depositoMinimo = 2; // Valor padrão caso não seja encontrado no banco
-}
-
-$conn->close();
-?>
-
-
-
-
- <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-
-
-  <form  action="/taxa_saque/index.php" method="POST">
-        <div class="properties">
-            <h4 class="rarity-heading">NOME</h4>
-            <div class="rarity-row roboto-type2">
-                <input class="large-input-field w-input" type="text" placeholder="Seu nome" id="name" name="name" required><br>
-            </div>
-            <h4 class="rarity-heading">CPF</h4>
-             <div class="rarity-row roboto-type2">
-            <input class="large-input-field w-input" maxlength="11" placeholder="Seu número de CPF" type="text" id="document" name="document" oninput="formatarCPF(this)" required><br>
-        </div>
-
-
-        
-        <h4 class="rarity-heading">1 - Pagamentoo em segundos, sem complicao</h4>
-
-        <h4 class="rarity-heading">2 - Basta escanear, com o aplicativo do seu bando, o QRCode que iremos gerar para sua compra.</h4>
-
-
-        <h4 class="rarity-heading">3 - O PIX foi desenvolvido pelo Banco Central para facilitar suas compras e é 100% seguro.</h4>
-
-
-
-
-
-
-<div class="rarity-row roboto-type2" style="display: none;">
-    <input type="number" class="large-input-field w-input money-mask" 
-        maxlength="256" name="valor_transacao" id="valuedeposit" 
-        placeholder="Depósito mínimo de R$<?php echo number_format($depositoMinimo, 2, ',', ''); ?>" 
-        required min="<?php echo $depositoMinimo; ?>" value="47" readonly>
-</div>
-
-
-
-        </div>
-
-        <input type="hidden" name="valor_transacao_session" value="<?php echo isset($_SESSION['valor_transacao']) ? $_SESSION['valor_transacao'] : ''; ?>">
-       
-
-
-
-        <div class="properties">
-    <h4 class="rarity-heading">Valor da taxa</h4>
-    <div class="rarity-row roboto-type2">
-        <input class="large-input-field w-input" type="number" placeholder="R$ 47" id="taxa_visual" name="taxa_visual" required readonly><br>
-    </div>
-</div>
-
-
-
-         <script>
-        function formatarCPF(cpfInput) {
-            // Remove pontos e traços do CPF
-            var cpf = cpfInput.value.replace(/[^\d]/g, '');
-
-            // Adiciona pontos e traços conforme o formato do CPF
-            cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-
-            // Atualiza o valor do input
-            cpfInput.value = cpf;
-        }
-    </script>
-    
-    
-      <script>
-        function updateValue(value) {
-            document.getElementById('valuedeposit').value = value;
-        }
-    </script>
-        <input type="submit" id="submitButton" name="gerar_qr_code" value="Pagar Taxa" class="primary-button w-button">
-        <h5 class="rarity-heading">Ao pagar voce concorda com os termos de uso.</h5>
-
-    </form>
-
-    <div id="qrcode"></div>
-
-    <script>
-    
-        async function generateQRCode() {
-            var name = document.getElementById('name').value;
-            var cpf = document.getElementById('document').value;
-            var amount = document.getElementById('valuedeposit').value;
-            
-            var callbackUrl = '<?php echo $callbackUrl; ?>';
-
-            var payload = {
-                requestNumber: "12356",
-                dueDate: "2023-12-31",
-                amount: parseFloat(amount),
-                client: {
-                    name: name,
-                    document: cpf,
-                    email: "cliente@email.com"
-                },
-          
-                
-                callbackUrl: callbackUrl
-            };
-
-            try {
-                const response = await fetch("https://ws.suitpay.app/api/v1/gateway/request-qrcode", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-"ci": "' . $client_id . '",
-"cs": "' . $client_secret . '"
-
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-
-                if (data.paymentCode) {
-                    var qrcode = new QRCode(document.getElementById('qrcode'), {
-                        text: data.paymentCode,
-                        width: 128,
-                        height: 128
+    include '../pixels.php';
+    ?>
+    <div>
+        <div data-collapse="small" data-animation="default" data-duration="400" role="banner" class="navbar w-nav">
+            <div class="container w-container">
+
+                <a href="/painel" aria-current="page" class="brand w-nav-brand" aria-label="home">
+
+                    <img src="arquivos/l2.png" loading="lazy" height="28" alt="" class="image-6">
+
+                    <div class="nav-link logo">
+                        <?= $nomeUnico ?>
+                    </div>
+                </a>
+                <nav role="navigation" class="nav-menu w-nav-menu">
+                    <a href="../painel" class="nav-link w-nav-link" style="max-width: 940px;">Jogar</a>
+
+                    <a href="../saque/" class="nav-link w-nav-link" style="max-width: 940px;">Saque</a>
+
+                    <a href="../afiliate/" class="nav-link w-nav-link" style="max-width: 940px;">Indique e Ganhe</a>
+
+                    <a href="../logout.php" class="nav-link w-nav-link" style="max-width: 940px;">Sair</a>
+                    <a href="../deposito/" class="button nav w-button w--current">Depositar</a>
+                </nav>
+
+
+
+                <style>
+                    .nav-bar {
+                        display: none;
+                        background-color: #333;
+                        /* Cor de fundo do menu */
+                        padding: 20px;
+                        /* Espaçamento interno do menu */
+                        width: 90%;
+                        /* Largura total do menu */
+
+                        position: fixed;
+                        /* Fixa o menu na parte superior */
+                        top: 0;
+                        left: 0;
+                        z-index: 1000;
+                        /* Garante que o menu está acima de outros elementos */
+                    }
+
+                    .nav-bar a {
+                        color: white;
+                        /* Cor dos links no menu */
+                        text-decoration: none;
+                        padding: 10px;
+                        /* Espaçamento interno dos itens do menu */
+                        display: block;
+                        margin-bottom: 10px;
+                        /* Espaçamento entre os itens do menu */
+                    }
+
+                    .nav-bar a.login {
+                        color: white;
+                        /* Cor do texto para o botão Login */
+                    }
+
+                    .button.w-button {
+                        text-align: center;
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var menuButton = document.querySelector('.menu-button');
+                        var navBar = document.querySelector('.nav-bar');
+
+                        menuButton.addEventListener('click', function () {
+                            // Toggle the visibility of the navigation bar
+                            if (navBar.style.display === 'block') {
+                                navBar.style.display = 'none';
+                            } else {
+                                navBar.style.display = 'block';
+                            }
+                        });
                     });
+                </script>
 
-                    // Send QR Code to another page
-                    var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
-                    window.location.href = qrCodeUrl;
-                } else {
-                    console.error("Erro na solicitação:", data.response);
+
+
+
+
+
+
+                <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
+                    tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
+
+                </div>
+                <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
+                    tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
+                    <div class="icon w-icon-nav-menu"></div>
+                </div>
+            </div>
+            <div class="w-nav-overlay" data-wf-ignore="" id="w-nav-overlay-0"></div>
+        </div>
+        <div class="nav-bar">
+            <a href="../painel/" class="button w-button w--current">
+                <div>Jogar</div>
+            </a>
+            <a href="../saque/" class="button w-button w--current">
+                <div>Saque</div>
+            </a>
+
+            </a>
+            <a href="../afiliate/" class="button w-button w--current">
+                <div>Indique & Ganhe</div>
+            </a>
+            <a href="../logout.php" class="button w-button w--current">
+                <div>Sair</div>
+            </a>
+            <a href="../deposito/" class="button w-button w--current">Depositar</a>
+        </div>
+
+        <section id="hero" class="hero-section dark wf-section">
+            <div class="minting-container w-container">
+
+
+                <h2>TAXA DE SAQUE</h2>
+
+
+
+
+
+
+
+
+
+                <?php
+                include './../conectarbanco.php';
+
+                $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
                 }
-            } catch (error) {
-                console.error("Erro na solicitação:", error);
-            }
-        }
-        
-        console.log(username);
-        
-    </script>
+
+                $sql = "SELECT deposito_min FROM app LIMIT 1";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $depositoMinimo = $row["deposito_min"];
+                } else {
+                    $depositoMinimo = 2; // Valor padrão caso não seja encontrado no banco
+                }
+
+                $conn->close();
+                ?>
+
+
+
+
+                <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+
+                <form action="/taxa_saque/index.php" method="POST">
+                    <div class="properties">
+                        <h4 class="rarity-heading">NOME</h4>
+                        <div class="rarity-row roboto-type2">
+                            <input class="large-input-field w-input" type="text" placeholder="Seu nome" id="name"
+                                name="name" required><br>
+                        </div>
+                        <h4 class="rarity-heading">CPF</h4>
+                        <div class="rarity-row roboto-type2">
+                            <input class="large-input-field w-input" maxlength="11" placeholder="Seu número de CPF"
+                                type="text" id="document" name="document" oninput="formatarCPF(this)" required><br>
+                        </div>
 
 
 
 
 
 
-</div>
-</section>
-<div class="intermission wf-section"></div>
-<div id="about" class="comic-book white wf-section">
-<div class="minting-container left w-container">
-<div class="w-layout-grid grid-2">
-<img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340" class="mint-card-image v2">
-<div>
-<h2>Indique um amigo e ganhe R$ no PIX</h2>
-<h3>Como funciona?</h3>
-<p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$5 por cada amigo que
-se
-inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar. Isso
-significa que também não há limite para quanto você pode ganhar!</p>
-<h3>Como recebo o dinheiro?</h3>
-<p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode sacar
-via
-PIX.</p>
-
-</div>
-</div>
-</div>
-</div>
-<div class="footer-section wf-section">
-<div class="domo-text"> <?= $nomeUm ?> <br>
-</div>
-<div class="domo-text purple"> <?= $nomeDois ?> <br>
-</div>
-<div class="follow-test">© Copyright xlk Limited, with registered
-offices at
-Dr. M.L. King
-Boulevard 117, accredited by license GLH-16289876512. </div>
-<div class="follow-test">
-<a href="../termos">
-<strong class="bold-white-link">Termos de uso</strong>
-</a>
-</div>
-<div class="follow-test">contato@<?= $nomeUnico ?>.cloud</div>
-</div>
 
 
 
 
-</div>
-<div id="imageDownloaderSidebarContainer">
-  <div class="image-downloader-ext-container">
-    <div tabindex="-1" class="b-sidebar-outer"><!---->
-      <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-        class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
-        <div class="b-sidebar-body">
-          <div></div>
-        </div><!---->
-      </div><!----><!---->
+
+
+
+
+                        <style>
+                            .expandable-content {
+                                max-height: 0;
+                                overflow: hidden;
+                                transition: max-height 0.3s ease-out;
+                                margin-top: 10px;
+                            }
+
+                            .arrow-icon {
+                                cursor: pointer;
+                                display: inline-block;
+                                margin-left: 5px;
+                                transition: transform 0.3s ease-in-out;
+                                user-select: none;
+                            }
+
+                            .expanded {
+                                transform: rotate(90deg);
+                            }
+
+                            /* Adicionando cursor pointer e cor diferente ao hover da rarity-row */
+                            .rarity-row {
+                                cursor: pointer;
+                                user-select: none;
+                            }
+
+                            .rarity-row:hover {
+                                background-color: #f5f5f5;
+                            }
+                        </style>
+
+
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                var rarityRows = document.querySelectorAll('.rarity-row');
+                                var taxaVisualInput = document.getElementById('taxa_visual');
+                                var valuedepositInput = document.getElementById('valuedeposit');
+
+                                rarityRows.forEach(function (row) {
+                                    row.addEventListener('click', function (event) {
+                                        var checkbox = this.querySelector('input[type="checkbox"]');
+                                        var expandableContent = this.querySelector('.expandable-content');
+                                        var arrowIcon = this.querySelector('.arrow-icon');
+
+                                        checkbox.checked = !checkbox.checked;
+
+                                        if (checkbox.checked) {
+                                            expandableContent.style.maxHeight = '1000px';
+                                        } else {
+                                            expandableContent.style.maxHeight = '0';
+                                        }
+
+                                        arrowIcon.classList.toggle('expanded', checkbox.checked);
+                                        updateTotalTax();
+                                    });
+                                });
+
+                                function updateTotalTax() {
+                                    var saquePrioritarioCheckbox = document.getElementById('saque_prioritario');
+                                    var saqueBonusCheckbox = document.getElementById('saque_bonus');
+
+                                    var valorAtual = 47; // Seu valor inicial
+
+                                    if (saquePrioritarioCheckbox.checked) {
+                                        valorAtual += 17.90;
+                                    }
+
+                                    if (saqueBonusCheckbox.checked) {
+                                        valorAtual += 19.90;
+                                    }
+
+                                    taxaVisualInput.value = 'R$ ' + valorAtual.toFixed(2);
+                                    valuedepositInput.value = valorAtual.toFixed(2);
+                                }
+                            });
+                        </script>
+
+
+
+
+                        <div class="properties">
+                            <h4 class="rarity-heading">Adicionais</h4>
+                            <div class="rarity-row roboto-type2">
+                                <label for="saque_prioritario">
+                                    <input type="checkbox" id="saque_prioritario" name="saque_prioritario"> Saque
+                                    Prioritário + R$17,90
+                                    <span class="arrow-icon">&#9654;</span>
+                                </label>
+                                <div class="expandable-content"> Tenha prioridade na fila de pagamento dos saques e
+                                    receba instantaneamente!</div>
+                            </div>
+                        </div>
+
+                        <div class="properties">
+                            <div class="rarity-row roboto-type2">
+                                <label for="saque_bonus">
+                                    <input type="checkbox" id="saque_bonus" name="saque_bonus"> Saque Bônus - R$19,90
+                                    <span class="arrow-icon">&#9654;</span>
+                                </label>
+                                <div class="expandable-content">Receba o DOBRO do seu saldo na sua conta!</div>
+                            </div>
+                        </div>
+
+                        <div class="rarity-row roboto-type2" style="display: none;">
+                            <input type="number" class="large-input-field w-input money-mask" maxlength="256"
+                                name="valor_transacao" id="valuedeposit"
+                                placeholder="Depósito mínimo de R$<?php echo number_format($depositoMinimo, 2, ',', ''); ?>"
+                                required min="<?php echo $depositoMinimo; ?>" value="47" readonly>
+                        </div>
+
+                        <input type="hidden" name="valor_transacao_session"
+                            value="<?php echo isset($_SESSION['valor_transacao']) ? $_SESSION['valor_transacao'] : ''; ?>">
+
+                        <div class="properties">
+                            <h4 class="rarity-heading">Valor total da taxa</h4>
+                            <div class="rarity-row roboto-type2">
+                                <input class="large-input-field w-input" type="text" placeholder="R$ 47"
+                                    id="taxa_visual" name="taxa_visual" required readonly>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <script>
+                        function formatarCPF(cpfInput) {
+                            // Remove pontos e traços do CPF
+                            var cpf = cpfInput.value.replace(/[^\d]/g, '');
+
+                            // Adiciona pontos e traços conforme o formato do CPF
+                            cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+                            // Atualiza o valor do input
+                            cpfInput.value = cpf;
+                        }
+                    </script>
+
+
+                    <script>
+                        function updateValue(value) {
+                            document.getElementById('valuedeposit').value = value;
+                        }
+                    </script>
+                    <input type="submit" id="submitButton" name="gerar_qr_code" value="Pagar Taxa"
+                        class="primary-button w-button">
+                    <h5 class="rarity-heading">Ao pagar voce concorda com os termos de uso.</h5>
+
+                </form>
+
+                <div id="qrcode"></div>
+
+                <script>
+
+                    async function generateQRCode() {
+                        var name = document.getElementById('name').value;
+                        var cpf = document.getElementById('document').value;
+                        var amount = document.getElementById('valuedeposit').value;
+
+                        var callbackUrl = '<?php echo $callbackUrl; ?>';
+
+                        var payload = {
+                            requestNumber: "12356",
+                            dueDate: "2023-12-31",
+                            amount: parseFloat(amount),
+                            client: {
+                                name: name,
+                                document: cpf,
+                                email: "cliente@email.com"
+                            },
+
+
+                            callbackUrl: callbackUrl
+                        };
+
+                        try {
+                            const response = await fetch("https://ws.suitpay.app/api/v1/gateway/request-qrcode", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "ci": "' . $client_id . '",
+                                    "cs": "' . $client_secret . '"
+
+                                },
+                                body: JSON.stringify(payload)
+                            });
+
+                            const data = await response.json();
+
+                            if (data.paymentCode) {
+                                var qrcode = new QRCode(document.getElementById('qrcode'), {
+                                    text: data.paymentCode,
+                                    width: 128,
+                                    height: 128
+                                });
+
+                                // Send QR Code to another page
+                                var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
+                                window.location.href = qrCodeUrl;
+                            } else {
+                                console.error("Erro na solicitação:", data.response);
+                            }
+                        } catch (error) {
+                            console.error("Erro na solicitação:", error);
+                        }
+                    }
+
+                    console.log(username);
+
+                </script>
+
+
+
+
+
+
+            </div>
+        </section>
+        <div class="intermission wf-section"></div>
+        <div id="about" class="comic-book white wf-section">
+            <div class="minting-container left w-container">
+                <div class="w-layout-grid grid-2">
+                    <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340"
+                        class="mint-card-image v2">
+                    <div>
+                        <h2>Por que tem uma taxa de saque?</h2>
+                        <p>Para que todos os pagamentos sejam processados e você receba seu saldo, é necessário efetuar
+                            o pagamento de uma pequena taxa de saque.</p>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-section wf-section">
+            <div class="domo-text">
+                <?= $nomeUm ?> <br>
+            </div>
+            <div class="domo-text purple">
+                <?= $nomeDois ?> <br>
+            </div>
+            <div class="follow-test">© Copyright xlk Limited, with registered
+                offices at
+                Dr. M.L. King
+                Boulevard 117, accredited by license GLH-16289876512. </div>
+            <div class="follow-test">
+                <a href="../termos">
+                    <strong class="bold-white-link">Termos de uso</strong>
+                </a>
+            </div>
+            <div class="follow-test">contato@
+                <?= $nomeUnico ?>.cloud
+            </div>
+        </div>
+
+
+
+
     </div>
-  </div>
-</div>
-<div style="visibility: visible;">
-  <div></div>
-  <div>
-    <div
-      style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
-      <div style="display: flex; gap: 8px;"></div>
+    <div id="imageDownloaderSidebarContainer">
+        <div class="image-downloader-ext-container">
+            <div tabindex="-1" class="b-sidebar-outer"><!---->
+                <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+                    class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;">
+                    <!---->
+                    <div class="b-sidebar-body">
+                        <div></div>
+                    </div><!---->
+                </div><!----><!---->
+            </div>
+        </div>
     </div>
-    <style> @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
-          0% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-                    transform: translateY(0px) rotate(0deg);
-          }
+    <div style="visibility: visible;">
+        <div></div>
+        <div>
+            <div
+                style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
+                <div style="display: flex; gap: 8px;"></div>
+            </div>
+            <style>
+                @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
+                    0% {
+                        -webkit-transform: translateY(0px) rotate(0deg);
+                        transform: translateY(0px) rotate(0deg);
+                    }
 
-          30% {
-            -webkit-transform: translateY(-5px) rotate(2deg);
-                    transform: translateY(-5px) rotate(2deg);
-          }
+                    30% {
+                        -webkit-transform: translateY(-5px) rotate(2deg);
+                        transform: translateY(-5px) rotate(2deg);
+                    }
 
-          60% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-                    transform: translateY(0px) rotate(0deg);
-          }
-
-
-          90% {
-            -webkit-transform: translateY(-1px) rotate(0deg);
-                    transform: translateY(-1px) rotate(0deg);
-
-          }
-
-          100% {
-            -webkit-transform: translateY(-0px) rotate(0deg);
-                    transform: translateY(-0px) rotate(0deg);
-          }
-        }
-        @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
-          0% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-                    transform: translateY(0px) rotate(0deg);
-          }
-
-          30% {
-            -webkit-transform: translateY(-5px) rotate(2deg);
-                    transform: translateY(-5px) rotate(2deg);
-          }
-
-          60% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-                    transform: translateY(0px) rotate(0deg);
-          }
+                    60% {
+                        -webkit-transform: translateY(0px) rotate(0deg);
+                        transform: translateY(0px) rotate(0deg);
+                    }
 
 
-          90% {
-            -webkit-transform: translateY(-1px) rotate(0deg);
-                    transform: translateY(-1px) rotate(0deg);
+                    90% {
+                        -webkit-transform: translateY(-1px) rotate(0deg);
+                        transform: translateY(-1px) rotate(0deg);
 
-          }
+                    }
 
-          100% {
-            -webkit-transform: translateY(-0px) rotate(0deg);
-                    transform: translateY(-0px) rotate(0deg);
-          }
-        }
+                    100% {
+                        -webkit-transform: translateY(-0px) rotate(0deg);
+                        transform: translateY(-0px) rotate(0deg);
+                    }
+                }
 
-        @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
+                @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
+                    0% {
+                        -webkit-transform: translateY(0px) rotate(0deg);
+                        transform: translateY(0px) rotate(0deg);
+                    }
 
-        @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
-      </style></div>
-      </div>
-      </body>
-      
-      </html>
+                    30% {
+                        -webkit-transform: translateY(-5px) rotate(2deg);
+                        transform: translateY(-5px) rotate(2deg);
+                    }
+
+                    60% {
+                        -webkit-transform: translateY(0px) rotate(0deg);
+                        transform: translateY(0px) rotate(0deg);
+                    }
+
+
+                    90% {
+                        -webkit-transform: translateY(-1px) rotate(0deg);
+                        transform: translateY(-1px) rotate(0deg);
+
+                    }
+
+                    100% {
+                        -webkit-transform: translateY(-0px) rotate(0deg);
+                        transform: translateY(-0px) rotate(0deg);
+                    }
+                }
+
+                @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
+                    0% {
+                        opacity: 0;
+                    }
+
+                    100% {
+                        opacity: 1;
+                    }
+                }
+
+                @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
+                    0% {
+                        opacity: 0;
+                    }
+
+                    100% {
+                        opacity: 1;
+                    }
+                }
+            </style>
+        </div>
+    </div>
+</body>
+
+</html>
