@@ -14,14 +14,71 @@
             >
           </li>
           <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../GGR"
-              aria-expanded="false"
-              ><i class="mdi mdi-margin"></i
-              ><span class="hide-menu">GGR</span></a
-            >
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="../webhook"
+                aria-expanded="false"
+                ><i class="mdi mdi-webhook"></i
+                ><span class="hide-menu">WebHook </span></a
+              >
           </li>
+          <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark"
+                 href="javascript:void(0)" aria-expanded="false">
+                 <i class="mdi mdi-square-inc-cash"></i>
+                 <span class="hide-menu">Financeiro </span>
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item ">
+                    <a href="../depositos" class="sidebar-link">
+                      <i class="mdi mdi-cash">
+
+                      </i><span class="hide-menu"> Depositos </span></a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="../saques" class="sidebar-link">
+                      <i class="mdi mdi-cash"></i>
+                      <span class="hide-menu"> Saques </span></a>
+                  </li>
+                  <li class="sidebar-item ">
+                    <a href="../saques-afiliados" class="sidebar-link">
+                      <i class="mdi mdi-cash">
+
+                      </i><span class="hide-menu"> Saques Afiliados </span></a>
+                  </li>
+                </ul>
+              </li>
+
+
+              <li class="sidebar-item">
+                <a class="sidebar-link has-arrow waves-effect waves-dark"
+                 href="javascript:void(0)" aria-expanded="false">
+                 <i class="mdi mdi-square-inc-cash"></i>
+                 <span class="hide-menu">Configurações </span>
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                  <li class="sidebar-item ">
+                    <a href="../depositos" class="sidebar-link">
+                      <i class="mdi mdi-cash">
+
+                      </i><span class="hide-menu"> Depositos </span></a>
+                  </li>
+                  <li class="sidebar-item">
+                    <a href="../saques" class="sidebar-link">
+                      <i class="mdi mdi-cash"></i>
+                      <span class="hide-menu"> Saques </span></a>
+                  </li>
+                  <li class="sidebar-item ">
+                    <a href="../saques-afiliados" class="sidebar-link">
+                      <i class="mdi mdi-cash">
+
+                      </i><span class="hide-menu"> Saques Afiliados </span></a>
+                  </li>
+                </ul>
+              </li>
+
+
+
           <li class="sidebar-item">
             <a
               class="sidebar-link waves-effect waves-dark sidebar-link"
@@ -31,35 +88,9 @@
               ><span class="hide-menu">Usuários</span></a
             >
           </li>
-          <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../depositos"
-              aria-expanded="false"
-              ><i class="mdi mdi-cash"></i
-              ><span class="hide-menu">Depositos</span></a
-            >
-          </li>
-          <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../saques"
-              aria-expanded="false"
-              ><i class="mdi mdi-cash"></i
-              ><span class="hide-menu">Saques</span></a
-            >
-            </li>
+      
+       
 
-            <li class="sidebar-item">
-              <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../saques-afiliados"
-              aria-expanded="false"
-              ><i class="mdi mdi-square-inc-cash"></i
-              ><span class="hide-menu">Saques de Afiliados</span></a
-              >
-            </li>
-            
           
            <li class="sidebar-item">
             <a

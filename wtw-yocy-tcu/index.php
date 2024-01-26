@@ -179,14 +179,14 @@ $result = $result2->fetch_assoc();
               ><span class="hide-menu">Página inicial</span></a
             >
           </li>
-          <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="GGR"
-              aria-expanded="false"
-              ><i class="mdi mdi-margin"></i
-              ><span class="hide-menu">GGR</span></a
-            >
+         <li class="sidebar-item">
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="webhook"
+                aria-expanded="false"
+                ><i class="mdi mdi-webhook"></i
+                ><span class="hide-menu">WebHook </span></a
+              >
           </li>
           <li class="sidebar-item">
             <a
