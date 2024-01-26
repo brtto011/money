@@ -13,7 +13,34 @@
               ><span class="hide-menu">Página inicial</span></a
             >
           </li>
+     
+     
+          
+
+
           <li class="sidebar-item">
+            <a
+              class="sidebar-link waves-effect waves-dark sidebar-link"
+              href="../usuarios"
+              aria-expanded="false"
+              ><i class="mdi mdi-account"></i
+              ><span class="hide-menu">Usuários</span></a
+            >
+          </li>
+      
+ 
+           <li class="sidebar-item">
+                            <a
+                              class="sidebar-link waves-effect waves-dark sidebar-link"
+                              href="../planos"
+                              aria-expanded="false"
+                              ><i class="mdi mdi-square-inc-cash"></i
+                              ><span class="hide-menu">Afiliados</span></a
+                            >
+                        </li>
+
+
+                        <li class="sidebar-item">
               <a
                 class="sidebar-link waves-effect waves-dark sidebar-link"
                 href="../webhook"
@@ -22,6 +49,20 @@
                 ><span class="hide-menu">WebHook </span></a
               >
           </li>
+
+                        
+                        
+                          <li class="sidebar-item">
+              <a
+                class="sidebar-link waves-effect waves-dark sidebar-link"
+                href="../notificacao"
+                aria-expanded="false"
+                ><i class="mdi mdi-near-me"></i
+                ><span class="hide-menu">Notificações </span></a
+              >
+          </li>
+
+
           <li class="sidebar-item">
                 <a class="sidebar-link has-arrow waves-effect waves-dark"
                  href="javascript:void(0)" aria-expanded="false">
@@ -53,96 +94,30 @@
               <li class="sidebar-item">
                 <a class="sidebar-link has-arrow waves-effect waves-dark"
                  href="javascript:void(0)" aria-expanded="false">
-                 <i class="mdi mdi-square-inc-cash"></i>
+                 <i class="mdi mdi-settings"></i>
                  <span class="hide-menu">Configurações </span>
                 </a>
                 <ul aria-expanded="false" class="collapse first-level">
                   <li class="sidebar-item ">
-                    <a href="../depositos" class="sidebar-link">
+                    <a href="../gateway" class="sidebar-link">
                       <i class="mdi mdi-cash">
 
-                      </i><span class="hide-menu"> Depositos </span></a>
+                      </i><span class="hide-menu"> Gateway </span></a>
                   </li>
                   <li class="sidebar-item">
-                    <a href="../saques" class="sidebar-link">
-                      <i class="mdi mdi-cash"></i>
-                      <span class="hide-menu"> Saques </span></a>
+                    <a href="../pixels" class="sidebar-link">
+                      <i class="mdi mdi-code-tags"></i>
+                      <span class="hide-menu"> Pixels </span></a>
                   </li>
                   <li class="sidebar-item ">
-                    <a href="../saques-afiliados" class="sidebar-link">
-                      <i class="mdi mdi-cash">
+                    <a href="../config" class="sidebar-link">
+                      <i class="mdi mdi-account">
 
-                      </i><span class="hide-menu"> Saques Afiliados </span></a>
+                      </i><span class="hide-menu"> Nome do Game </span></a>
                   </li>
                 </ul>
               </li>
 
-
-
-          <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../usuarios"
-              aria-expanded="false"
-              ><i class="mdi mdi-account"></i
-              ><span class="hide-menu">Usuários</span></a
-            >
-          </li>
-      
-       
-
-          
-           <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../pixels"
-              aria-expanded="false"
-              ><i class="mdi mdi-code-tags"></i
-              ><span class="hide-menu">Pixels</span></a
-            >
-          </li>
-          
-          
-                    <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../gateway"
-              aria-expanded="false"
-              ><i class="mdi mdi-cash"></i
-              ><span class="hide-menu">Gateway</span></a
-            >
-          </li>
-          
-                    <li class="sidebar-item">
-            <a
-              class="sidebar-link waves-effect waves-dark sidebar-link"
-              href="../config"
-              aria-expanded="false"
-              ><i class="mdi mdi-account"></i
-              ><span class="hide-menu">Configurações</span></a
-            >
-          </li>
-          
-           <li class="sidebar-item">
-                            <a
-                              class="sidebar-link waves-effect waves-dark sidebar-link"
-                              href="../planos"
-                              aria-expanded="false"
-                              ><i class="mdi mdi-square-inc-cash"></i
-                              ><span class="hide-menu">Afiliados</span></a
-                            >
-                        </li>
-                        
-                        
-                          <li class="sidebar-item">
-              <a
-                class="sidebar-link waves-effect waves-dark sidebar-link"
-                href="../notificacao"
-                aria-expanded="false"
-                ><i class="mdi mdi-near-me"></i
-                ><span class="hide-menu">Notificações </span></a
-              >
-          </li>
           
           
           

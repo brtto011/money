@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
 
     // Verificar se já existe uma linha na tabela
-    $checkSql = "SELECT * FROM notificacao LIMIT 1";
+    $checkSql = "SELECT url_cadastro, url_gerado, url_pago FROM app LIMIT 1";
     $result = $conn->query($checkSql);
 
     if ($result->num_rows > 0) {

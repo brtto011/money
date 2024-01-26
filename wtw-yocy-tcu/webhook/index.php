@@ -11,6 +11,36 @@ if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
 
 ?>
 
+<?php
+include '../../conectarbanco.php';
+
+$conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+
+$sql = "SELECT url_cadastro, url_gerado, url_pago FROM app LIMIT 1";  
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $urlCadastro = $row['url_cadastro'];
+    $urlGerado = $row['url_gerado'];
+    $urlPago = $row['url_pago'];
+} else {
+
+    $urlCadastro = "URL não cadastrada";
+    $urlGerado = "URL não cadastrada";
+    $urlPago = "URL não cadastrada";
+}
+
+$conn->close();
+
+?>
+
 
 <?php
 include './bd.php'; ?>
@@ -19,6 +49,12 @@ include './bd.php'; ?>
 <html dir="ltr" lang="en">
 
 <head>
+    <style>
+        input[type="text"] {
+  width: 656px;
+}
+
+    </style>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -39,29 +75,7 @@ include './bd.php'; ?>
   <!-- Custom CSS -->
   <link href="../dist/css/style.min.css" rel="stylesheet" />
 
-  <script>
-    $(document).ready(function () {
-      $("#notificacao-form").submit(function (event) {
-        event.preventDefault(); // Evita que o formulário seja enviado normalmente
 
-        var canalID = $("#canal-id").val();
-
-        $.ajax({
-          url: "bd.php",
-          type: "POST",
-          data: { canalID: canalID },
-          success: function (response) {
-            console.log(response);
-            alert(response);
-          },
-          error: function (error) {
-            console.log(error);
-            alert("Erro. Verifique o console");
-          }
-        });
-      });
-    });
-  </script>
 </head>
 
 <body>
@@ -119,66 +133,72 @@ include './bd.php'; ?>
     
     <div class="page-wrapper">
       <div class="card" style="margin-bottom: 100px;">
-        <div class="card-body">
+        <div class="card-body"">
           <h5 class="card-title">Configurações de integracao com SMS FUNNEL</h5>
         </div>
         <h2 style="margin-left: 25px;">Recebimento WEBHOOK com SMS FUNNEL</h1>
 
       
         
-       
+<?php
+include './../conectarbanco.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['url_cadastro'], $_POST['url_gerado'], $_POST['url_pago'])) {
+        $conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+        if ($conn->connect_error) {
+            die("Conexão falhou: " . $conn->connect_error);
+        }
+
+        $urlCadastro = $_POST['url_cadastro'];
+        $urlPixGerado = $_POST['url_gerado'];
+        $urlPixPago = $_POST['url_pago'];
+
+        if (empty($urlCadastro) || empty($urlPixGerado) || empty($urlPixPago)) {
+            echo "Todos os campos devem ser preenchidos.";
+        } else {
+            $sql = "UPDATE app SET url_cadastro = ?, url_gerado = ?, url_pago = ?";
+            $stmt = $conn->prepare($sql);
+
+            if (!$stmt) {
+                die("Erro na preparação da consulta: " . $conn->error);
+            }
+
+            $stmt->bind_param("sss", $urlCadastro, $urlPixGerado, $urlPixPago);
+            $result = $stmt->execute();
+
+            if ($result) {
+                echo "Dados atualizados com sucesso!";
+            } else {
+                echo "Erro ao atualizar os dados. Tente novamente.";
+            }
+
+            $stmt->close();
+        }
+        
+        
+
+        $conn->close();
+    } else {
+        echo "Erro: Dados não recebidos corretamente.";
+    }
+}
+?>
+
+
+      
+
+
       
       <form id="notificacao-form">
        <div class="card">
-                <div class="card-body">
+                <div class="card-body" style="border: 1px solid #333; margin-left: 15px; margin-right: 15px; border-radius: 25px;">
               
             
                 
                  
-                  <div class="form-group row">
-                    <label class="col-md-3">Disparos de Notificações </label>
-                    <div class="col-md-9">
-                      <div class="form-check mr-sm-2">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="customControlAutosizing1"
-                           checked
-                        />
-                        <label
-                          class="form-check-label mb-0"
-                          for="customControlAutosizing1"
-                          >Cadastro</label
-                        >
-                      </div>
-                      <div class="form-check mr-sm-2">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="customControlAutosizing2"
-                          checked
-                        />
-                        <label
-                          class="form-check-label mb-0"
-                          for="customControlAutosizing2"
-                          >PIX Gerado</label
-                        >
-                      </div>
-                      <div class="form-check mr-sm-2">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          id="customControlAutosizing3"
-                          checked
-                        />
-                        <label
-                          class="form-check-label mb-0"
-                          for="customControlAutosizing3"
-                          >Pix Pago</label
-                        >
-                      </div>
-                    </div>
-                  </div>
+              
                   
                     <div class="form-group row">
                     <label class="col-md-3" for="disabledTextInput"
@@ -189,7 +209,7 @@ include './bd.php'; ?>
                         type="text"
                         id="disabledTextInput"
                         class="form-control"
-                        placeholder="<?php echo $canal_id; ?>"
+                        placeholder="<?php echo $urlCadastro ?>"
                         disabled
                       />
                     </div>
@@ -198,14 +218,14 @@ include './bd.php'; ?>
                 
                   <div class="form-group row">
                     <label class="col-md-3" 
-                      >Inserir nova URL : </label
+                      >Inserir nova URL de cadastro : </label
                     >
                     <div class="col-md-9">
                       <input
                         type="text"
-                       id="canal-id"
+                        id="urlCadastro"
                         class="form-control"
-                        placeholder="Insira seu novo ID"
+                        placeholder="Insira sua URL da Lista de Cadastro"
                       
                       />
                     </div>
@@ -214,14 +234,14 @@ include './bd.php'; ?>
                   <br>
                   <div class="form-group row">
                     <label class="col-md-3" for="disabledTextInput"
-                      >URL DE CADASTRO </label
+                      >URL DE PIX GERADO </label
                     >
                     <div class="col-md-9">
                       <input
                         type="text"
                         id="disabledTextInput"
                         class="form-control"
-                        placeholder="<?php echo $canal_id; ?>"
+                        placeholder="<?php echo $urlGerado ?>"
                         disabled
                       />
                     </div>
@@ -230,14 +250,14 @@ include './bd.php'; ?>
                 
                   <div class="form-group row">
                     <label class="col-md-3" 
-                      >Inserir nova URL : </label
+                      >Inserir nova URL de pix gerado : </label
                     >
                     <div class="col-md-9">
                       <input
                         type="text"
-                       id="canal-id"
+                       id="urlPixGerado"
                         class="form-control"
-                        placeholder="Insira seu novo ID"
+                        placeholder="Insira sua URL da Lista de Pix Gerado"
                       
                       />
                     </div>
@@ -247,14 +267,14 @@ include './bd.php'; ?>
                   <br>
                   <div class="form-group row">
                     <label class="col-md-3" for="disabledTextInput"
-                      >URL DE CADASTRO </label
+                      >URL DE PIX PAGO </label
                     >
                     <div class="col-md-9">
                       <input
                         type="text"
                         id="disabledTextInput"
                         class="form-control"
-                        placeholder="<?php echo $canal_id; ?>"
+                        placeholder="<?php echo $urlPago; ?>"
                         disabled
                       />
                     </div>
@@ -263,25 +283,67 @@ include './bd.php'; ?>
                 
                   <div class="form-group row">
                     <label class="col-md-3" 
-                      >Inserir nova URL : </label
+                      >Inserir nova URL de pix pago : </label
                     >
                     <div class="col-md-9">
                       <input
                         type="text"
-                       id="canal-id"
+                       id="urlPixPago"
                         class="form-control"
-                        placeholder="Insira seu novo ID"
+                        placeholder="Insira sua URL da Lista de Pix Pago"
                       
                       />
                     </div>
                   </div>
                   
+                  
+                  </div>
                   
             
+             
+              <button style="margin-top: 35px;" type="button" class="btn btn-primary" onclick="salvarAlteracoes()">Salvar Alterações</button>
+            
 
-                    <button type="submit" class="btn btn-primary">
-                      Salvar Alterações 
-                    </button>
+<script>
+  function salvarAlteracoes() {
+
+    var urlCadastro = document.getElementById('urlCadastro').value;
+    var urlPixGerado = document.getElementById('urlPixGerado').value;
+    var urlPixPago = document.getElementById('urlPixPago').value;
+
+  
+    if (urlCadastro === '' || urlPixGerado === '' || urlPixPago === '') {
+      alert("Todos os campos devem ser preenchidos.");
+      return;
+    }
+
+  
+    var formData = new FormData();
+    formData.append('url_cadastro', urlCadastro);
+    formData.append('url_gerado', urlPixGerado);
+    formData.append('url_pago', urlPixPago);
+
+fetch('index.php', {
+  method: 'POST',
+  body: formData
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`Erro na requisição: ${response.statusText}`);
+  }
+  return response.json(); 
+})
+.then(data => {
+ alert ("Dados atualizados com sucesso! Atualize a página para visualizar!")
+})
+.catch(error => {
+  
+  alert("Dados atualizados com sucesso! Atualize a página para visualizar!");
+});
+
+  }
+</script>
+
                   </div>
                 </div>
            
@@ -295,36 +357,7 @@ include './bd.php'; ?>
         
         
         
-                  <!-- ============================================================== -->
 
- <!-- card new -->
- <div class="card">
-  <div class="card-body">
-    <h4 class="card-title mb-0">Observacoes:</h4>
-  </div>
-  <ul class="list-style-none">
-    <li class="d-flex no-block card-body">
-    
-      <div>
-        <a href="#" class="mb-0 font-medium p-0"
-          >Para receber as notificações deve adicionar o bot @tki_bot no seu canal e dar todas as permissões de ADM</a
-        >
-        <span class="text-muted"
-          >Sistema em atualização</span
-        >
-      </div>
-      <div class="ms-auto">
-      
-      </div>
-    </li>
-   
-   
-  </ul>
-</div>
-      
-
-          <!-- ============================================================== -->
-          
           
           
       </div>
