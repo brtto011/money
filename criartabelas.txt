@@ -107,6 +107,9 @@ nome_unico VARCHAR(255) NOT NULL,
 nome_um VARCHAR(255) NOT NULL,
 nome_dois VARCHAR(255) NOT NULL,
 saque_min_afiliado VARCHAR(255) NOT NULL,
+url_cadastro VARCHAR(255) NOT NULL,
+url_gerado VARCHAR(255) NOT NULL,
+url_pago VARCHAR(255) NOT NULL,
 
 PRIMARY KEY (token)
 );

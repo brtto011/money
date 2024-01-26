@@ -28,6 +28,135 @@ $conn->close();
 
 
 
+
+
+
+
+
+
+
+
+<?php
+
+include './../conectarbanco.php';
+
+$conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+session_start();
+
+if (!isset($_SESSION['email'])) {
+    header('Location: /login');
+    die();
+}
+
+$email = $_SESSION['email'];
+
+$sql = "SELECT url_gerado FROM app LIMIT 1"; 
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $urlGerado = $row['url_gerado'];
+} else {
+    $urlGerado = "Integração não feita";
+}    
+
+
+$sqlTelefone = "SELECT telefone FROM appconfig WHERE email = ?";
+$stmtTelefone = $conn->prepare($sqlTelefone);
+$stmtTelefone->bind_param("s", $email);
+$stmtTelefone->execute();
+$resultTelefone = $stmtTelefone->get_result();
+
+if ($resultTelefone->num_rows > 0) {
+    $rowTelefone = $resultTelefone->fetch_assoc();
+    $phone = $rowTelefone['telefone'];
+} else {
+    $phone = "Telefone não encontrado";
+}
+
+$stmtTelefone->close();  // Feche o statement após usá-lo
+
+// Consulta SQL usando prepared statement para obter nome
+$sqlNome = "SELECT nome FROM appconfig WHERE email = ?";
+$stmtNome = $conn->prepare($sqlNome);
+$stmtNome->bind_param("s", $email);
+$stmtNome->execute();
+$resultNome = $stmtNome->get_result();
+
+if ($resultNome->num_rows > 0) {
+    $rowName = $resultNome->fetch_assoc();
+    $name = $rowName['nome'];
+
+    // Certifique-se de que $name seja uma string não vazia
+    if (!empty($name) && is_string($name)) {
+        $name = trim($name); // Remova espaços em branco extras
+    } else {
+        // Se o nome for inválido, use um valor padrão
+        $name = "Cliente Subway";
+    }
+} else {
+
+    $name = "Cliente";
+}
+
+$stmtNome->close();  // Feche o statement após usá-lo
+
+
+
+
+
+
+// Adicione logs no console
+echo "<script>console.log('Enviando para o SMS Funnel - Name: $name, Email: $email, Phone: $phone', URL: $urlCadastro);</script>";
+
+$data = json_encode([
+    'name' => "$name",
+    'email' => "$email",
+    'phone' => "$phone"
+]);
+
+$urlSmsFunnel = "$urlGerado?name=$name&email=$email&phone=$phone";
+
+// Inicia a sessão cURL para a segunda URL
+$chSmsFunnel = curl_init($urlSmsFunnel);
+
+curl_setopt($chSmsFunnel, CURLOPT_POST, 1);
+curl_setopt($chSmsFunnel, CURLOPT_POSTFIELDS, $data);
+curl_setopt($chSmsFunnel, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($chSmsFunnel, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($chSmsFunnel, CURLOPT_TIMEOUT, 10); 
+
+$responseSmsFunnel = curl_exec($chSmsFunnel);
+
+// Adicione logs no console
+if (curl_errno($chSmsFunnel)) {
+    echo "<script>console.error('Erro na requisição cURL: " . curl_error($chSmsFunnel) . "');</script>";
+} else {
+    echo "<script>console.log('Resposta do SMS Funnel: $responseSmsFunnel');</script>";
+}
+
+curl_close($chSmsFunnel);
+
+$conn->close();
+?>
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
     // Inicia a sessão
     session_start();
@@ -1432,22 +1561,7 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
                 
                 
      
-    <script>
-      (function(d,t) {
-        var BASE_URL="https://app.chatwoot.com";
-        var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-        g.src=BASE_URL+"/packs/js/sdk.js";
-        g.defer = true;
-        g.async = true;
-        s.parentNode.insertBefore(g,s);
-        g.onload=function(){
-          window.chatwootSDK.run({
-            websiteToken: '=======',
-            baseUrl: BASE_URL
-          })
-        }
-      })(document,"script");
-    </script>
+   
     
 
 

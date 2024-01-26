@@ -1,6 +1,3 @@
-
-
-
 <?php
 include '../conectarbanco.php';
 
@@ -41,7 +38,7 @@ $callbackUrl = $baseUrl . $staticPart;
 
 
 echo '<script>';
-echo 'console.log("Callback URL:", ' . json_encode($callbackUrl) . ');'; // Adicione esta linha para depurar
+echo 'console.log("Callback URL:", ' . json_encode($callbackUrl) . ');'; 
 echo 'var callbackUrl = ' . json_encode($callbackUrl) . ';';
 echo '</script>';
 ?>
@@ -81,6 +78,7 @@ function getParamFromUrl($url, $paramName)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar e obter os dados do formulário
+    $nome = validateForm($_POST["nome"]);
     $email = validateForm($_POST["email"]);
     $senha = validateForm($_POST["senha"]);
     $telefone = validateForm($_POST["telefone_confirmation"]);
@@ -97,7 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $plano = 20; // Valor fixo para a coluna plano
         $saldo_comissao = 0; // Valor fixo para a coluna saldo_comissao
         $cpa = 0; // Valor fixo para o cpa único
-        $rollover1 = 0;
 
         // Construir o link de afiliado
         $linkAfiliado = $callbackUrl . $nextId;
@@ -109,10 +106,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $afiliado = isset($_GET['aff']) ? $_GET['aff'] : '';
 
         // Inserir dados no banco de dados
-        $insertQuery = "INSERT INTO appconfig (id,cpa, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado, rollover1) 
-                        VALUES (?,0, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?)";
+        $insertQuery = "INSERT INTO appconfig (id,cpa,nome, email, senha, telefone, saldo, lead_aff, linkafiliado, indicados, plano, saldo_comissao, data_cadastro, afiliado) 
+                        VALUES (?,0, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("isssissiisss", $nextId, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado, $rollover1);
+        $stmt->bind_param("issssissiiss", $nextId, $nome, $email, $senha, $telefone, $saldo, $leadAff, $linkAfiliado, $plano, $saldo_comissao, $dataCadastroFormatada, $afiliado);
 
         if ($stmt->execute()) {
             // Definir o email como uma variável de sessão
@@ -120,28 +117,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $canal_id = '';
 
-            $sql = "SELECT canal_id FROM notificacao";
-            $result = $conn->query($sql);
-
-            if ($result) {
-                $row = $result->fetch_assoc();
-                $canal_id = $row['canal_id'];
-
-                $apiToken = "5597794728:AAGfwOg3RijfPrQ5S_Iw6NKAuYucNEdIsO8";
-
-                $mensagem = [
-                    'chat_id' => $canal_id,
-                    'text' => 'NOVO CADASTRO REALIZADO - EMAIL:   ' . $email,
-                ];
-
-                $response = file_get_contents("http://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($mensagem));
-            } else {
-                // Tratar erro na consulta
-                echo "Erro: " . $conn->error;
-            }
-
+      
             // Redirecionar para a página com o número na URL
-            header("Location: /deposito");
+            header("Location: /confirmado");
             exit();
         } else {
             $errorMessage = "Erro ao inserir dados na tabela 'appconfig': " . $stmt->error;
@@ -178,6 +156,7 @@ function generateRandomId($length)
 
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -224,8 +203,25 @@ $conn->close();
 ?>
 
 
+
+  
+
+
+
+
+
+
 </head>
 <body>
+    
+   
+<div>
+
+
+
+
+
+
 <div>
 
 
@@ -344,22 +340,61 @@ if (!empty($errorMessage)) {
 }
 ?>
 
+ <script>
+        function validarTelefone() {
+            // Obtém o valor do campo de telefone
+            var telefoneInput = document.getElementById("telefone_confirmation");
+            var telefone = telefoneInput.value;
 
+            // Remove qualquer caractere que não seja número
+            telefone = telefone.replace(/\D/g, '');
 
-<form method="POST" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
+            // Atualiza o valor do campo apenas com números
+            telefoneInput.value = telefone;
+
+            // Verifica se o telefone possui 11 dígitos (considerando o DDD)
+            if (telefone.length !== 11) {
+                alert("Por favor, insira um número de telefone válido com DDD.");
+                return false;
+            }
+
+            // Se a validação passar, o formulário pode ser enviado
+            return true;
+        }
+
+        // Adiciona um ouvinte de evento para permitir apenas números no campo de telefone
+        document.getElementById("telefone_confirmation").addEventListener("input", function (event) {
+            event.target.value = event.target.value.replace(/\D/g, '');
+        });
+    </script>
+<form method="POST" action="<?php echo $_SERVER['REQUEST_URI'] ?>" onsubmit="return validarTelefone()">
   
 
 
 
   <div class="properties">
+          <h4 class="rarity-heading">Nome</h4>
+  <div class="rarity-row roboto-type2">
+  <input type="e-mail" class="large-input-field w-input" maxlength="256" name="nome" placeholder="Seu Nome" id="nome" required>
+  </div>
+  
+  
   <h4 class="rarity-heading">E-mail</h4>
   <div class="rarity-row roboto-type2">
   <input type="e-mail" class="large-input-field w-input" maxlength="256" name="email" placeholder="seuemail@gmail.com" id="email" required>
   </div>
+  
+  
+ 
+  
+  
   <h4 class="rarity-heading">Telefone</h4>
   <div class="rarity-row roboto-type2">
-      <input type="tel" class="large-input-field w-input" maxlength="20" name="telefone_confirmation" placeholder="Seu telefone" id="telefone_confirmation" required>
+      <input type="tel" class="large-input-field w-input" maxlength="11" name="telefone_confirmation" placeholder="Seu telefone (Somente Números)" id="telefone_confirmation" required>
   </div>
+  
+  
+  
   <h4 class="rarity-heading">Senha</h4>
   <div class="rarity-row roboto-type2">
   <input type="password" class="large-input-field w-input" maxlength="256" name="senha" data-name="password" placeholder="Uma senha segura" id="senha" required>
@@ -420,7 +455,7 @@ if (!empty($errorMessage)) {
   
   
   
-  <a href="../termos">termos de serviço</a> e que possui pelo menos 18 anos.
+  <a href="../terms">termos de serviço</a> e que possui pelo menos 18 anos.
   </p>
   </div>
   </form>
