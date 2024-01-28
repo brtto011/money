@@ -26,59 +26,6 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
 
-<?php
-
-function redirecionarParaPix($slug) {
-    header("Location: ../deposito/pix.php?pix_key=" . urlencode($slug));
-    exit;
-}
-
-function apagarRegistro($conn, $slug) {
-    $sqlDelete = "DELETE FROM deposito_gerado WHERE slug = '" . mysqli_real_escape_string($conn, $slug) . "'";
-    $conn->query($sqlDelete);
-}
-
-try {
-    include './../conectarbanco.php';
-
-    $conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
-    
-    if ($conn->connect_error) {
-        die("Conexão falhou: " . $conn->connect_error);
-    }
-
-    $brtTimeZone = new DateTimeZone('America/Sao_Paulo');
-    $dateTimeAtual = new DateTime('now', $brtTimeZone);
-
-    $sqlSelect = "SELECT slug, data FROM deposito_gerado";
-    $result = $conn->query($sqlSelect);
-
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $dataDeposito = DateTime::createFromFormat('d/m/Y H:i', $row['data'], $brtTimeZone);
-            $diferenca = $dateTimeAtual->diff($dataDeposito);
-            $minutosDiferenca = $diferenca->i;
-
-            if ($minutosDiferenca > 5) {
-                // Mais de 5 minutos, apaga o registro
-                apagarRegistro($conn, $row['slug']);
-            } else {
-                // Menos de 5 minutos, redireciona para pix.php
-                redirecionarParaPix($row['slug']);
-            }
-        }
-    }
-
-    $conn->close();
-} catch (Exception $ex) {
-    var_dump($ex);
-    http_response_code(200);
-    exit;
-}
-?>
-
-
-
 
 <?php
 // Conectar ao banco de dados
@@ -325,10 +272,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $brtTimeZone = new DateTimeZone('America/Sao_Paulo');
             $dateTime = new DateTime('now', $brtTimeZone);
             $userDate = $dateTime->format('d/m/Y H:i');
-            
-            $paymentCode = $res['paymentCode'];
-            
-            $slugValue = $paymentCode . '&token=' . $res['idTransaction'];
 
             $sql = sprintf(
                 "INSERT INTO confirmar_deposito (email, valor, externalreference, status, data) VALUES ('%s', '%s', '%s', '%s', '%s')",
@@ -340,15 +283,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
             $conn->query($sql);
-            
-            // Segundo INSERT para a tabela 'deposito_gerado'
-           $sqlDepositoGerado = sprintf(
-            "INSERT INTO deposito_gerado (slug, data) VALUES ('%s', '%s')",
-            $conn->real_escape_string($slugValue), // Evita injeção de SQL
-            $userDate
-            );
-            
-            $conn->query($sqlDepositoGerado);
             $conn->close();
         } catch (Exception $ex) {
             var_dump($ex);
@@ -356,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        
+        $paymentCode = $res['paymentCode'];
         // Send QR Code to another page
         // var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
         header("Location: ../deposito/pix.php?pix_key=" . $paymentCode . '&token=' . $res['idTransaction']);
@@ -708,8 +642,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             BÔNUS</button>
                         <br><br>
                     </div>
-                    
-                    <div id="loadingSpinner" class="loading-spinner"></div>
+
 
                     <script>
                         function formatarCPF(cpfInput) {
@@ -733,38 +666,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="submit" id="submitButton" name="gerar_qr_code" value="Depositar via PIX"
                         class="primary-button w-button">
                 </form>
-                
-                <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-                <script>
-                    $(document).ready(function() {
-                        $('form').submit(function() {
-                            // Mostrar o spinner quando o formulário é enviado
-                            $('#loadingSpinner').show();
-                        });
-                    });
-                </script>
-                
-                <style>
-                    .loading-spinner {
-                        display: none;
-                        width: 5rem;
-                        height: 5rem;
-                        border: 1rem solid rgba(255, 255, 255, 0.3);
-                        border-radius: 50%;
-                        border-top: 1rem solid #3498db;
-                        animation: spin 1s linear infinite;
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                    }
-            
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                </style>
-                
+
                 <div id="qrcode"></div>
 
                 <script>
