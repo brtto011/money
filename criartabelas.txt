@@ -203,5 +203,11 @@ CREATE TABLE extrato_saque_afiliado (
     valor DECIMAL(10, 2),
     status VARCHAR(50),
     externalreference VARCHAR(255),
-    data VARCHAR(255),
+    data VARCHAR(255)
 );
+
+CREATE TABLE deposito_gerado (
+    slug VARCHAR(255),
+    data VARCHAR(255)
+);
+
