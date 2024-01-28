@@ -46,7 +46,7 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
-$sql = "SELECT url_pago FROM app LIMIT 1"; 
+$sql = "SELECT url_pago FROM app LIMIT 1";
 
 $result = $conn->query($sql);
 
@@ -55,7 +55,7 @@ if ($result->num_rows > 0) {
     $urlPago = $row['url_pago'];
 } else {
     $urlPago = "Integração não feita";
-}    
+}
 
 
 $sqlTelefone = "SELECT telefone FROM appconfig WHERE email = ?";
@@ -163,6 +163,78 @@ $saldo = 1;
 <html lang="pt-br" class="w-mod-js w-mod-ix wf-spacemono-n4-active wf-spacemono-n7-active wf-active">
 
 <head>
+
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+    <script>
+        // Função para recarregar a página infinitamente
+        function reloadPage() {
+            location.reload();
+            setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+        }
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            reloadPage();  // Inicia o ciclo de recarregamento da página
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção de teclas
+        window.addEventListener('keydown', function (e) {
+            // Bloqueia F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+I
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+                e.preventDefault();
+            }
+        });
+
+        // Event listener para detecção do botão direito
+        window.addEventListener('contextmenu', function (e) {
+
+            e.preventDefault();
+        });
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            window.location.href = 'about:blank'; // Redireciona para uma página em branco
+        });
+
+        // Event listener para detecção de clique com o botão direito (opcional)
+        window.addEventListener('mousedown', function (e) {
+            if (e.button === 2) {
+
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção do atalho Ctrl+U
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+K
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style>
         .wf-force-outline-none[tabindex="-1"]:focus {
@@ -170,7 +242,9 @@ $saldo = 1;
         }
     </style>
     <meta charset="pt-br">
-    <title><?= $nomeUnico ?> 🌊 </title>
+    <title>
+        <?= $nomeUnico ?> 🌊
+    </title>
     <meta property="og:image" content="../img/logo.png">
     <meta content="<?= $nomeUnico ?> 🌊" property="og:title">
     <meta name="twitter:image" content="../img/logo.png">
@@ -202,10 +276,10 @@ $saldo = 1;
     <link rel="stylesheet" href="../arquivos/css" media="all">
 
 
-<?php
-        include '../pixels.php';
-        ?>
-        
+    <?php
+    include '../pixels.php';
+    ?>
+
 
 </head>
 
@@ -214,9 +288,9 @@ $saldo = 1;
 
 
 
-<?php
-        include '../pixels.php';
-        ?>
+    <?php
+    include '../pixels.php';
+    ?>
 
 
     <div>

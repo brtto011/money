@@ -37,6 +37,76 @@ if (isset($_GET['msg'])) {
 <html lang="pt-br" class="w-mod-js w-mod-ix wf-spacemono-n4-active wf-spacemono-n7-active wf-active">
 
 <head>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+    <script>
+        // Função para recarregar a página infinitamente
+        function reloadPage() {
+            location.reload();
+            setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+        }
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            reloadPage();  // Inicia o ciclo de recarregamento da página
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção de teclas
+        window.addEventListener('keydown', function (e) {
+            // Bloqueia F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+I
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+                e.preventDefault();
+            }
+        });
+
+        // Event listener para detecção do botão direito
+        window.addEventListener('contextmenu', function (e) {
+
+            e.preventDefault();
+        });
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            window.location.href = 'about:blank'; // Redireciona para uma página em branco
+        });
+
+        // Event listener para detecção de clique com o botão direito (opcional)
+        window.addEventListener('mousedown', function (e) {
+            if (e.button === 2) {
+
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção do atalho Ctrl+U
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+K
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+                e.preventDefault();
+            }
+        });
+    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style>
         .wf-force-outline-none[tabindex="-1"]:focus {

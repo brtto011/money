@@ -47,9 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $emailSubject = "Recuperação de Senha -";
         $emailMessage = "Você solicitou a recuperação de senha com sucesso!";
         $emailMessage = "Utilize sua senha já cadastrada para efetuar o login: $senha";
-        $headers = 'From: contato@fruitcashonline.com' . "\r\n" .
-            'Sender: contato@fruitcashonline.com' . "\r\n";
-        'Reply-To: davimachadocruz@gmail.com' . "\r\n" .
+        $headers = 'From: ' . "\r\n" .
+            'Sender: ' . "\r\n";
+        'Reply-To: ' . "\r\n" .
             'X-Mailer: PHP/' . phpversion();
 
         // Envie o e-mail
@@ -72,6 +72,78 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="pt-br" class="w-mod-js wf-spacemono-n7-active wf-spacemono-n4-active wf-active w-mod-ix">
 
 <head>
+
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+    <script>
+        // Função para recarregar a página infinitamente
+        function reloadPage() {
+            location.reload();
+            setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+        }
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            reloadPage();  // Inicia o ciclo de recarregamento da página
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção de teclas
+        window.addEventListener('keydown', function (e) {
+            // Bloqueia F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+I
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+                e.preventDefault();
+            }
+        });
+
+        // Event listener para detecção do botão direito
+        window.addEventListener('contextmenu', function (e) {
+
+            e.preventDefault();
+        });
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            window.location.href = 'about:blank'; // Redireciona para uma página em branco
+        });
+
+        // Event listener para detecção de clique com o botão direito (opcional)
+        window.addEventListener('mousedown', function (e) {
+            if (e.button === 2) {
+
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção do atalho Ctrl+U
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+K
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <meta charset="pt-br">
     <title>subwaypay</title>
 
@@ -292,7 +364,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-        
+
 
                     <div class="">
                         <button style="margin-top: 35px;" class="primary-button w-button">Enviar Senha</button><br><br>
@@ -300,9 +372,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </form>
 
 
-         <a href="../login" style="margin-top: 20px;">
-             <p>Clique aqui para fazer login</p>
-        </a>
+                <a href="../login" style="margin-top: 20px;">
+                    <p>Clique aqui para fazer login</p>
+                </a>
 
 
             </div>
@@ -337,7 +409,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="follow-test">contato@subwaypay.com</div>
             <div class="follow-test">
 
-              
+
             </div>
         </div>
 

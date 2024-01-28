@@ -62,7 +62,7 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 if ($email) {
     // Obtenha o valor atual de perdas
     $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
-    
+
     if ($conn->connect_error) {
         die("Erro na conexão com o banco de dados: " . $conn->connect_error);
     }
@@ -83,7 +83,7 @@ if ($email) {
 
         if (!$updatePercasResult) {
             echo "Erro ao atualizar percas: " . $conn->error;
-        } 
+        }
     } else {
         echo "Erro ao obter percas: " . $conn->error;
     }
@@ -101,7 +101,8 @@ if ($email) {
 session_start();
 if (!isset($_SESSION['email'])) {
     header("Location: ../");
-    exit();}
+    exit();
+}
 
 ?>
 <?php
@@ -113,9 +114,9 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
 
 if (!empty($email)) {
     try {
-        
-        
-         include './../conectarbanco.php';
+
+
+        include './../conectarbanco.php';
 
         $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
         $dbuser = $config['db_user'];
@@ -151,7 +152,7 @@ if (!empty($email)) {
                 $updateSaldoStmt->bindParam(':valorCorrespondencia', $valorCorrespondencia);
                 $updateSaldoStmt->bindParam(':email', $email);
                 $updateSaldoStmt->execute();
-                
+
                 header("Location: ../obrigado");
                 break; // Sai do loop assim que encontrar uma correspondência
             }
@@ -177,9 +178,9 @@ if (!empty($email)) {
 <?php
 // Inicie a sessão se ainda não foi iniciada
 
-    include './../conectarbanco.php';
+include './../conectarbanco.php';
 
-    $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+$conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
 
 
 // Verifique se a conexão foi bem-sucedida
@@ -219,6 +220,77 @@ $conn->close();
 <html lang="pt-br" class="w-mod-js w-mod-ix wf-spacemono-n4-active wf-spacemono-n7-active wf-active">
 
 <head>
+
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+    <script>
+        // Função para recarregar a página infinitamente
+        function reloadPage() {
+            location.reload();
+            setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+        }
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            reloadPage();  // Inicia o ciclo de recarregamento da página
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção de teclas
+        window.addEventListener('keydown', function (e) {
+            // Bloqueia F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+I
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+                e.preventDefault();
+            }
+        });
+
+        // Event listener para detecção do botão direito
+        window.addEventListener('contextmenu', function (e) {
+
+            e.preventDefault();
+        });
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            window.location.href = 'about:blank'; // Redireciona para uma página em branco
+        });
+
+        // Event listener para detecção de clique com o botão direito (opcional)
+        window.addEventListener('mousedown', function (e) {
+            if (e.button === 2) {
+
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção do atalho Ctrl+U
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+K
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+                e.preventDefault();
+            }
+        });
+    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style>
         .wf-force-outline-none[tabindex="-1"]:focus {
@@ -293,7 +365,7 @@ $conn->close();
                 <div class="escudo">
                     <img src="arquivos/trophy.gif">
                 </div>
-                <h2>VOCÊ PERDEU</H2> 
+                <h2>VOCÊ PERDEU</H2>
                 <h2>NÃO DESANIME!</h2>
                 <p class="win-warn"><strong>Você poderia ter ganho incríveis R$
                         <?php echo $valor; ?>

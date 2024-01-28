@@ -48,7 +48,7 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
-$sql = "SELECT url_cadastro FROM app LIMIT 1"; 
+$sql = "SELECT url_cadastro FROM app LIMIT 1";
 
 $result = $conn->query($sql);
 
@@ -57,7 +57,7 @@ if ($result->num_rows > 0) {
     $urlCadastro = $row['url_cadastro'];
 } else {
     $urlCadastro = "Integração não feita";
-}    
+}
 
 
 $sqlTelefone = "SELECT telefone FROM appconfig WHERE email = ?";
@@ -164,7 +164,7 @@ if (!isset($_SESSION['email'])) {
 $email = $_SESSION['email'];
 
 
-    ?>
+?>
 
 
 
@@ -182,6 +182,77 @@ $email = $_SESSION['email'];
 <html lang="pt-br" class="w-mod-js w-mod-ix wf-spacemono-n4-active wf-spacemono-n7-active wf-active">
 
 <head>
+
+<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+    <script>
+        // Função para recarregar a página infinitamente
+        function reloadPage() {
+            location.reload();
+            setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+        }
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            reloadPage();  // Inicia o ciclo de recarregamento da página
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção de teclas
+        window.addEventListener('keydown', function (e) {
+            // Bloqueia F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+I
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+                e.preventDefault();
+            }
+        });
+
+        // Event listener para detecção do botão direito
+        window.addEventListener('contextmenu', function (e) {
+
+            e.preventDefault();
+        });
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            window.location.href = 'about:blank'; // Redireciona para uma página em branco
+        });
+
+        // Event listener para detecção de clique com o botão direito (opcional)
+        window.addEventListener('mousedown', function (e) {
+            if (e.button === 2) {
+
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção do atalho Ctrl+U
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+K
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+                e.preventDefault();
+            }
+        });
+    </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style>
         .wf-force-outline-none[tabindex="-1"]:focus {
@@ -189,7 +260,9 @@ $email = $_SESSION['email'];
         }
     </style>
     <meta charset="pt-br">
-    <title><?= $nomeUnico ?> 🌊 </title>
+    <title>
+        <?= $nomeUnico ?> 🌊
+    </title>
     <meta property="og:image" content="../img/logo.png">
     <meta content="<?= $nomeUnico ?> 🌊" property="og:title">
     <meta name="twitter:image" content="../img/logo.png">
@@ -248,7 +321,7 @@ $email = $_SESSION['email'];
                 }
             </style>
 
-            <div class="minting-container w-container" style="margin-top: -40px;" >
+            <div class="minting-container w-container" style="margin-top: -40px;">
                 <div class="escudo">
                     <img src="arquivos/trophy.gif">
                 </div>
@@ -260,29 +333,30 @@ $email = $_SESSION['email'];
                 <strong>✅ Corra, Pule e Desvie-se</strong>
 
 
-                 <a href="../jogodemo" style="margin-top: 30px; margin-bottom: 30px;" class="botao-jogar"> Jogar Agora</a>
+                <a href="../jogodemo" style="margin-top: 30px; margin-bottom: 30px;" class="botao-jogar"> Jogar
+                    Agora</a>
 
 
 
                 <style>
                     .botao-jogar {
-                            display: inline-block;
-                            padding: 16px 40px;
-                            border-style: solid;
-                            border-width: 4px;
-                            border-color: #1f2024;
-                            border-radius: 8px;
-                            background-color: #ACE5D7;
-                            box-shadow: -3px 3px 0 0 #1f2024;
-                            -webkit-transition: background-color 200ms ease, box-shadow 200ms ease, -webkit-transform 200ms ease;
-                            transition: background-color 200ms ease, box-shadow 200ms ease, -webkit-transform 200ms ease;
-                            transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
-                            transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease, -webkit-transform 200ms ease;
-                            font-family: right grotesk, sans-serif;
-                            color: #1f2024;
-                            font-size: 1.25em;
-                            text-align: center;
-                            letter-spacing: .12em;
+                        display: inline-block;
+                        padding: 16px 40px;
+                        border-style: solid;
+                        border-width: 4px;
+                        border-color: #1f2024;
+                        border-radius: 8px;
+                        background-color: #ACE5D7;
+                        box-shadow: -3px 3px 0 0 #1f2024;
+                        -webkit-transition: background-color 200ms ease, box-shadow 200ms ease, -webkit-transform 200ms ease;
+                        transition: background-color 200ms ease, box-shadow 200ms ease, -webkit-transform 200ms ease;
+                        transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+                        transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease, -webkit-transform 200ms ease;
+                        font-family: right grotesk, sans-serif;
+                        color: #1f2024;
+                        font-size: 1.25em;
+                        text-align: center;
+                        letter-spacing: .12em;
                     }
                 </style>
 
@@ -303,10 +377,11 @@ $email = $_SESSION['email'];
             ">
 
                 <?php
-                function obterNumeroAleatorio() {
-                $numeroAleatorio = rand(500, 1000);
+                function obterNumeroAleatorio()
+                {
+                    $numeroAleatorio = rand(500, 1000);
 
-                return $numeroAleatorio;
+                    return $numeroAleatorio;
                 }
 
                 $numero = obterNumeroAleatorio();
@@ -314,19 +389,26 @@ $email = $_SESSION['email'];
                 ?>
 
 
-                Usuários Online:<br class="jWQDfMST8B"> <?php echo $numero; ?> </div>
+                Usuários Online:<br class="jWQDfMST8B">
+                <?php echo $numero; ?>
+            </div>
 
-    
+
         </section>
         <section id="mint" class="mint-section wf-section">
             <div class="minting-container w-container">
                 <img src="arquivos/jake.gif" loading="lazy" width="240" alt="" class="mint-card-image">
-                <h2><?= $nomeUnico ?></h2>
-                <p class="paragraph">Bem-vindo ao mundo emocionante de <?= $nomeUnico ?>!
+                <h2>
+                    <?= $nomeUnico ?>
+                </h2>
+                <p class="paragraph">Bem-vindo ao mundo emocionante de
+                    <?= $nomeUnico ?>!
                     Prepare-se para uma aventura eletrizante nos trilhos, onde cada curva guarda a promessa de fortuna.
                     Desvie dos obstáculos, colete moedas reluzentes e desbloqueie novos percursos enquanto corre em
                     busca da riqueza. Sua jornada pela cidade começa agora – acelere, desfrute e acumule sua fortuna nos
-                    trilhos de <?= $nomeUnico ?>!. </p>
+                    trilhos de
+                    <?= $nomeUnico ?>!.
+                </p>
 
 
                 <a href="../painel" class="primary-button hero w-button">JOGAR AGORA</a>
@@ -357,7 +439,9 @@ $email = $_SESSION['email'];
             <div class="question first">
                 <img src="arquivos/60f988c9d3d37e14794eca22_head 25.svg" loading="lazy" width="110" alt="">
                 <h3>Como funciona?</h3>
-                <div><?= $nomeUnico ?> é o mais novo jogo divertido e lucrativo da galera! Lembra daquele joguinho de surfar
+                <div>
+                    <?= $nomeUnico ?> é o mais novo jogo divertido e lucrativo da galera! Lembra daquele joguinho de
+                    surfar
                     por cima dos trens que todo mundo era viciado? Ele voltou e agora dá para ganhar dinheiro de
                     verdade, mas cuidado com os obstáculos para você garantir o seu prêmio. É super simples, surf,
                     desvie dos obstáculos e colete seus prêmios.
@@ -385,7 +469,8 @@ $email = $_SESSION['email'];
                 <img src="arquivos/60fa004b7690e70dded91f9a_light.svg" loading="lazy" width="80" alt="">
                 <h3>É tipo foguetinho?</h3>
                 <div>
-                    <b>Não</b>! <?= $nomeUnico ?> é totalmente diferente, basta apenas estar atento para desviar dos
+                    <b>Não</b>!
+                    <?= $nomeUnico ?> é totalmente diferente, basta apenas estar atento para desviar dos
                     obstáculos na hora certa. Não existe sua sorte em jogo, basta ter foco e completar o percurso
                     até resgatar o máximo de moedas que conseguir.
                 </div>
@@ -428,10 +513,13 @@ $email = $_SESSION['email'];
                         <li>Seu amigo deve se inscrever através do seu link de convite pessoal. </li>
                         <li>Seu amigo deve ter depositado pelo menos R$25.00 BRL para receber o prêmio do convite.
                         </li>
-                        <li>Você não pode criar novas contas na <?= $nomeUnico ?> e se inscrever através do seu próprio link
+                        <li>Você não pode criar novas contas na
+                            <?= $nomeUnico ?> e se inscrever através do seu próprio link
                             para receber a recompensa. O programa Indique um Amigo é feito para nossos jogadores
-                            convidarem amigos para a plataforma <?= $nomeUnico ?>. Qualquer outro uso deste programa é
-                            estritamente proibido. </li>
+                            convidarem amigos para a plataforma
+                            <?= $nomeUnico ?>. Qualquer outro uso deste programa é
+                            estritamente proibido.
+                        </li>
                     </ol>
                     <p>‍</p>
                 </div>
@@ -488,9 +576,11 @@ $email = $_SESSION['email'];
     </div>
 
     <div class="footer-section wf-section">
-        <div class="domo-text"><?= $nomeUm ?> <br>
+        <div class="domo-text">
+            <?= $nomeUm ?> <br>
         </div>
-        <div class="domo-text purple"><?= $nomeDois ?> <br>
+        <div class="domo-text purple">
+            <?= $nomeDois ?> <br>
         </div>
         <div class="follow-test">© Copyright xlk Limited, with registered
             offices at
@@ -501,7 +591,9 @@ $email = $_SESSION['email'];
                 <strong class="bold-white-link">Termos de uso</strong>
             </a>
         </div>
-        <div class="follow-test">contato@<?= $nomeUnico ?>.cloud</div>
+        <div class="follow-test">contato@
+            <?= $nomeUnico ?>.cloud
+        </div>
     </div>
 
 
@@ -608,6 +700,6 @@ $email = $_SESSION['email'];
             </style>
         </div>
     </div>
-</body>
+    </body>
 
 </html>

@@ -4,7 +4,7 @@ include '../conectarbanco.php';
 $conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
 
 if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
+  die("Conexão falhou: " . $conn->connect_error);
 }
 
 $sql = "SELECT nome_unico, nome_um, nome_dois FROM app";
@@ -12,15 +12,15 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
 
-    $row = $result->fetch_assoc();
+  $row = $result->fetch_assoc();
 
 
-    $nomeUnico = $row['nome_unico'];
-    $nomeUm = $row['nome_um'];
-    $nomeDois = $row['nome_dois'];
+  $nomeUnico = $row['nome_unico'];
+  $nomeUm = $row['nome_um'];
+  $nomeDois = $row['nome_dois'];
 
 } else {
-    return false;
+  return false;
 }
 
 $conn->close();
@@ -30,8 +30,8 @@ $conn->close();
 
 <?php
 session_start();
-ini_set('display_errors',1);
-ini_set('display_startup_erros',1);
+ini_set('display_errors', 1);
+ini_set('display_startup_erros', 1);
 error_reporting(E_ALL);
 
 include './../conectarbanco.php';
@@ -61,7 +61,7 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($cpa);
   $stmt->fetch();
   $stmt->close();
-  
+
   $getLinkQuery = "SELECT cpa FROM appconfig WHERE email = ?";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
@@ -69,9 +69,9 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($cpa_u);
   $stmt->fetch();
   $stmt->close();
-  
+
   if ($cpa_u != 0) {
-      $cpa = $cpa_u;
+    $cpa = $cpa_u;
   }
 
 
@@ -90,7 +90,7 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($saldo_comissao);
   $stmt->fetch();
   $stmt->close();
-  
+
   $getLinkQuery = "SELECT sacou FROM appconfig WHERE email = ?";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
@@ -107,8 +107,8 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($linkAfiliado);
   $stmt->fetch();
   $stmt->close();
-  
-   
+
+
   $getLinkQuery = "SELECT count(*) FROM appconfig WHERE afiliado = (SELECT id FROM appconfig WHERE email = ? LIMIT 1)";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
@@ -117,7 +117,7 @@ if (isset($_SESSION['email'])) {
   $stmt->fetch();
   $stmt->close();
 
-  
+
   $getLinkQuery = "SELECT count(*) FROM appconfig WHERE afiliado = (SELECT id FROM appconfig WHERE email = ? LIMIT 1) AND status_primeiro_deposito = 1";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
@@ -126,7 +126,7 @@ if (isset($_SESSION['email'])) {
   $stmt->fetch();
   $stmt->close();
 
-	//original
+  //original
   //$getLinkQuery = "SELECT count(*) FROM appconfig WHERE afiliado = (SELECT id FROM appconfig WHERE email = ? LIMIT 1) AND status_primeiro_deposito = 1";
   //$getLinkQuery = "SELECT count(*) FROM appconfig WHERE afiliado = (SELECT id FROM appconfig WHERE email = ? LIMIT 1)";
   //$stmt = $conn->prepare($getLinkQuery);
@@ -136,7 +136,7 @@ if (isset($_SESSION['email'])) {
   //$stmt->fetch();
   //$stmt->close();
   //$cad_ativo_sum = $cad_ativo_sum * $cpa;
-  
+
   $getLinkQuery = "SELECT saldo_cpa FROM appconfig WHERE email = ?";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
@@ -144,7 +144,7 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($saldo_cpa);
   $stmt->fetch();
   $stmt->close();
-  
+
   $getLinkQuery = "SELECT IFNULL(revenue_share * (SELECT sum(depositou) FROM appconfig WHERE afiliado = (SELECT id from appconfig WHERE email = ? LIMIT 1) AND status_primeiro_deposito = 1) / 100, 0) FROM app";
   $stmt = $conn->prepare($getLinkQuery);
   $stmt->bind_param("s", $email);
@@ -152,21 +152,21 @@ if (isset($_SESSION['email'])) {
   $stmt->bind_result($rev_ativo_sum);
   $stmt->fetch();
   $stmt->close();
-  
+
   $saldo_comissao_total = floatval($saldo_cpa) + floatval($rev_ativo_sum);
-  
-  
-    $saldo_comissao =floatval($saldo_cpa) + floatval($rev_ativo_sum) - floatval($sacou);
 
-// Atualizar o valor na tabela appconfig apenas para a linha com o email da sessão
-$query = "UPDATE appconfig SET saldo_comissao = ? WHERE email = ?";
-$stmt = $conn->prepare($query);
 
-// Vincular os parâmetros e executar a declaração
-$stmt->bind_param("ds", $saldo_comissao, $_SESSION['email']);
-$stmt->execute();
-  
-  
+  $saldo_comissao = floatval($saldo_cpa) + floatval($rev_ativo_sum) - floatval($sacou);
+
+  // Atualizar o valor na tabela appconfig apenas para a linha com o email da sessão
+  $query = "UPDATE appconfig SET saldo_comissao = ? WHERE email = ?";
+  $stmt = $conn->prepare($query);
+
+  // Vincular os parâmetros e executar a declaração
+  $stmt->bind_param("ds", $saldo_comissao, $_SESSION['email']);
+  $stmt->execute();
+
+
   // Consultar o valor da coluna indicados para o email atual
   $getIndicadosQuery = "SELECT indicados FROM appconfig WHERE email = ?";
   $stmt = $conn->prepare($getIndicadosQuery);
@@ -194,6 +194,77 @@ $stmt->execute();
 <html lang="pt-br" class="w-mod-js wf-spacemono-n4-active wf-spacemono-n7-active wf-active w-mod-ix">
 
 <head>
+
+<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+  <script>
+    // Função para recarregar a página infinitamente
+    function reloadPage() {
+      location.reload();
+      setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+    }
+
+    // Event listener para detecção da abertura das ferramentas de desenvolvedor
+    window.addEventListener('devtoolschange', function (e) {
+
+      reloadPage();  // Inicia o ciclo de recarregamento da página
+    });
+  </script>
+
+  <script>
+    // Event listener para detecção de teclas
+    window.addEventListener('keydown', function (e) {
+      // Bloqueia F12
+      if (e.key === 'F12' || e.keyCode === 123) {
+
+        e.preventDefault();
+      }
+
+      // Bloqueia Ctrl+Shift+I
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+        e.preventDefault();
+      }
+    });
+
+    // Event listener para detecção do botão direito
+    window.addEventListener('contextmenu', function (e) {
+
+      e.preventDefault();
+    });
+
+    // Event listener para detecção da abertura das ferramentas de desenvolvedor
+    window.addEventListener('devtoolschange', function (e) {
+
+      window.location.href = 'about:blank'; // Redireciona para uma página em branco
+    });
+
+    // Event listener para detecção de clique com o botão direito (opcional)
+    window.addEventListener('mousedown', function (e) {
+      if (e.button === 2) {
+
+        e.preventDefault();
+      }
+    });
+  </script>
+
+  <script>
+    // Event listener para detecção do atalho Ctrl+U
+    window.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+        e.preventDefault();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+      }
+
+      // Bloqueia Ctrl+Shift+K
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+        e.preventDefault();
+      }
+    });
+  </script>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <style>
     .wf-force-outline-none[tabindex="-1"]:focus {
@@ -201,7 +272,9 @@ $stmt->execute();
     }
   </style>
   <meta charset="pt-br">
-  <title><?= $nomeUnico ?> 🌊 </title>
+  <title>
+    <?= $nomeUnico ?> 🌊
+  </title>
 
   <meta property="og:image" content="../img/logo.png">
 
@@ -225,7 +298,7 @@ $stmt->execute();
 
 
   <script type="text/javascript">
-    ! function(o, c) {
+    ! function (o, c) {
       var n = c.documentElement,
         t = " w-mod-";
       n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n
@@ -253,7 +326,9 @@ $stmt->execute();
       <div class="container w-container">
         <a href="/painel" aria-current="page" class="brand w-nav-brand" aria-label="home">
           <img src="arquivos/l2.png" loading="lazy" height="28" alt="" class="image-6">
-         <div class="nav-link logo"><?= $nomeUnico ?></div>
+          <div class="nav-link logo">
+            <?= $nomeUnico ?>
+          </div>
         </a>
         <nav role="navigation" class="nav-menu w-nav-menu">
           <a href="../painel" class="nav-link w-nav-link" style="max-width: 940px;">Jogar</a>
@@ -310,11 +385,11 @@ $stmt->execute();
         </style>
 
         <script>
-          document.addEventListener('DOMContentLoaded', function() {
+          document.addEventListener('DOMContentLoaded', function () {
             var menuButton = document.querySelector('.menu-button');
             var navBar = document.querySelector('.nav-bar');
 
-            menuButton.addEventListener('click', function() {
+            menuButton.addEventListener('click', function () {
               // Toggle the visibility of the navigation bar
               if (navBar.style.display === 'block') {
                 navBar.style.display = 'none';
@@ -335,13 +410,15 @@ $stmt->execute();
 
 
 
-        <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
+        <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0"
+          aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
           <div class="" style="-webkit-user-select: text;">
 
             <a href="../deposito/" class="menu-button2 w-nav-dep nav w-button">DEPOSITAR</a>
           </div>
         </div>
-        <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
+        <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
+          tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
           <div class="icon w-icon-nav-menu"></div>
         </div>
       </div>
@@ -367,7 +444,8 @@ $stmt->execute();
 
     <section id="hero" class="hero-section dark wf-section">
       <div class="minting-container w-container">
-        <img src="arquivos/image.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7" alt="Roboto #6340" class="mint-card-image">
+        <img src="arquivos/su.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
+          alt="Roboto #6340" class="mint-card-image">
 
         <h<h2>Divulgue & Ganhe</h2>
           <p>Este é o resumo de seu resultado divulgando. <br>
@@ -377,7 +455,8 @@ $stmt->execute();
           <br>
 
           <p>
-            <a id="copiarLinkBtn" class="primary-button dark w-button" onclick="copiarLink()">Copiar link de afiliado</a>
+            <a id="copiarLinkBtn" class="primary-button dark w-button" onclick="copiarLink()">Copiar link de
+              afiliado</a>
           </p>
 
           <br><br>
@@ -404,23 +483,31 @@ $stmt->execute();
               </div>
               <div class="rarity-row roboto-type">
                 <div class="rarity-number full">Saldo disponível para Saque:</div>
-      <div class="padded">R$<?php echo $saldo_comissao; ?></div>
+                <div class="padded">R$
+                  <?php echo $saldo_comissao; ?>
+                </div>
 
               </div>
               <div class="w-layout-grid grid">
                 <div>
                   <div class="rarity-row blue">
                     <div class="rarity-number">Cadastro ativo</div>
-                    <div>R$ <?php echo $saldo_cpa; ?> </div>
+                    <div>R$
+                      <?php echo $saldo_cpa; ?>
+                    </div>
                   </div>
                   <div class="rarity-row">
                     <div class="rarity-number">Recorrência</div>
-                    <div>R$ <?php echo $rev_ativo_sum; ?> </div>
+                    <div>R$
+                      <?php echo $rev_ativo_sum; ?>
+                    </div>
                   </div>
 
                   <div class="rarity-row blue">
                     <div class="rarity-number">Cadastros</div>
-                    <div><?php echo $cads; ?> cadastros</div>
+                    <div>
+                      <?php echo $cads; ?> cadastros
+                    </div>
 
                   </div>
                 </div>
@@ -428,13 +515,14 @@ $stmt->execute();
                   <div class="rarity-row blue">
                     <div class="rarity-number">Cadastros ativos</div>
                     <div>
-                      <?php echo $cad_ativo?> cadastros
+                      <?php echo $cad_ativo ?> cadastros
                     </div>
                   </div>
                   <div class="rarity-row">
                     <div class="rarity-number">Valor por ativo(CPA)</div>
                     <div>
-                      R$ <?php echo $cpa; ?>
+                      R$
+                      <?php echo $cpa; ?>
                     </div>
 
 
@@ -484,51 +572,55 @@ $stmt->execute();
         </div>
       </div>
     </div>
-<div id="rarity" class="rarity-section wf-section">
-    <div class="minting-container w-container">
+    <div id="rarity" class="rarity-section wf-section">
+      <div class="minting-container w-container">
         <img src="arquivos/withdraw.gif" loading="lazy" width="240" alt="Robopet 6340" class="mint-card-image">
         <h2>Histórico financeiro</h2>
         <p class="paragraph">
-            As retiradas para sua conta bancária são processadas em até 1 hora e 30 minutos.
-            <br>
-            <br>Você já sacou <b>R$ <?php echo $sacou; ?></b>
+          As retiradas para sua conta bancária são processadas em até 1 hora e 30 minutos.
+          <br>
+          <br>Você já sacou <b>R$
+            <?php echo $sacou; ?>
+          </b>
         </p>
         <div class="properties">
-            <h3 class="rarity-heading">Saques realizados</h3>
+          <h3 class="rarity-heading">Saques realizados</h3>
 
-            <?php
-            include './../conectarbanco.php';
+          <?php
+          include './../conectarbanco.php';
 
-            $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
-            $email = $_SESSION['email'];
-            $sql = "SELECT * FROM saque_afiliado WHERE email = '$email'";
-            $result = $conn->query($sql);
+          $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+          $email = $_SESSION['email'];
+          $sql = "SELECT * FROM saque_afiliado WHERE email = '$email'";
+          $result = $conn->query($sql);
 
-            if ($result->num_rows > 0) {
-                echo '<ul class="saque-list">';
-                while ($row = $result->fetch_assoc()) {
-                    echo '<li class="saque-item">';
-                    echo '<strong>Nome:</strong> ' . $row['nome'] . '<br>';
-                    echo '<strong>Pix:</strong> ' . $row['pix'] . '<br>';
-                    echo '<strong>Valor:</strong> R$ ' . $row['valor'] . '<br>';
-                    echo '<strong>Status:</strong> ' . $row['status'] . '<br>';
-                echo '<strong>Data de Solicitação:</strong> ' . date('Y-m-d', strtotime($row['data_solicitacao']));
-                    echo '</li>';
-                }
-                echo '</ul>';
-            } else {
-                echo '<p>Nenhum saque realizado.</p>';
+          if ($result->num_rows > 0) {
+            echo '<ul class="saque-list">';
+            while ($row = $result->fetch_assoc()) {
+              echo '<li class="saque-item">';
+              echo '<strong>Nome:</strong> ' . $row['nome'] . '<br>';
+              echo '<strong>Pix:</strong> ' . $row['pix'] . '<br>';
+              echo '<strong>Valor:</strong> R$ ' . $row['valor'] . '<br>';
+              echo '<strong>Status:</strong> ' . $row['status'] . '<br>';
+              echo '<strong>Data de Solicitação:</strong> ' . date('Y-m-d', strtotime($row['data_solicitacao']));
+              echo '</li>';
             }
-            ?>
+            echo '</ul>';
+          } else {
+            echo '<p>Nenhum saque realizado.</p>';
+          }
+          ?>
 
         </div>
+      </div>
     </div>
-</div>
 
     <div class="footer-section wf-section">
-  <div class="domo-text"><?= $nomeUm ?> <br>
+      <div class="domo-text">
+        <?= $nomeUm ?> <br>
       </div>
-      <div class="domo-text purple"><?= $nomeDois ?> <br>
+      <div class="domo-text purple">
+        <?= $nomeDois ?> <br>
       </div>
       <div class="follow-test">© Copyright </div>
       <div class="follow-test">
@@ -536,7 +628,9 @@ $stmt->execute();
           <strong class="bold-white-link">Termos de uso</strong>
         </a>
       </div>
-   <div class="follow-test">contato@<?= $nomeUnico ?>.cloud</div>
+      <div class="follow-test">contato@
+        <?= $nomeUnico ?>.cloud
+      </div>
     </div>
 
 
@@ -546,9 +640,9 @@ $stmt->execute();
     <script type="text/javascript">
       var hidden = false;
 
-      $(document).ready(function() {
-        $("form").submit(function() {
-          $(this).submit(function() {
+      $(document).ready(function () {
+        $("form").submit(function () {
+          $(this).submit(function () {
             return false;
           });
           return true;
@@ -569,7 +663,8 @@ $stmt->execute();
   <div id="imageDownloaderSidebarContainer">
     <div class="image-downloader-ext-container">
       <div tabindex="-1" class="b-sidebar-outer"><!---->
-        <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true" class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
+        <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+          class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
           <div class="b-sidebar-body">
             <div></div>
           </div><!---->
@@ -580,7 +675,8 @@ $stmt->execute();
   <div style="visibility: visible;">
     <div></div>
     <div>
-      <div style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
+      <div
+        style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
         <div style="display: flex; gap: 8px;"></div>
       </div>
       <style>
