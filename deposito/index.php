@@ -642,6 +642,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             BÔNUS</button>
                         <br><br>
                     </div>
+                    
+                    
+                       <div id="loadingSpinner" class="loading-spinner"></div>
 
 
                     <script>
@@ -666,6 +669,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="submit" id="submitButton" name="gerar_qr_code" value="Depositar via PIX"
                         class="primary-button w-button">
                 </form>
+                
+                
+                   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                        $('form').submit(function() {
+                            // Mostrar o spinner quando o formulário é enviado
+                            $('#loadingSpinner').show();
+                        });
+                    });
+                </script>
+                
+                <style>
+                    .loading-spinner {
+                        display: none;
+                        width: 5rem;
+                        height: 5rem;
+                        border: 1rem solid rgba(255, 255, 255, 0.3);
+                        border-radius: 50%;
+                        border-top: 1rem solid #3498db;
+                        animation: spin 1s linear infinite;
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+            
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
 
                 <div id="qrcode"></div>
 
