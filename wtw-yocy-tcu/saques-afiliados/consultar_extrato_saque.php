@@ -43,4 +43,3 @@ $conn->close();
 // Enviar os dados como JSON
 header('Content-Type: application/json');
 echo json_encode($data);
-?>

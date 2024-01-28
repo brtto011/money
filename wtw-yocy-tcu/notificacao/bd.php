@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $canalID = $_POST["canalID"];
-   
+
 
     // Verificar se já existe uma linha na tabela
     $checkSql = "SELECT * FROM notificacao LIMIT 1";
@@ -53,4 +53,4 @@ if ($result->num_rows > 0) {
 }
 
 $conn->close();
-?>
+

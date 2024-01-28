@@ -20,4 +20,3 @@ if ($conn->query($atualizarStatus) === TRUE) {
 }
 
 $conn->close();
-?>

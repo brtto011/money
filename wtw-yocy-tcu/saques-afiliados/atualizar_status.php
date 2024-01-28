@@ -22,20 +22,20 @@ if ($resultadoSaldo > 0) {
     $rowSaldo = $resultadoSaldo->fetch_assoc();
     $saldoAtual = $rowSaldo['saldo_comissao'];
     // Verificar se há saldo suficiente antes de atualizar o status
-    if ($saldoAtual >= $valor){
-        
+    if ($saldoAtual >= $valor) {
+
         $novoSaldo = $saldoAtual - $valor;
         $atualizarSaldo = "UPDATE appconfig SET saldo_comissao = '$novoSaldo' WHERE email = '$email'";
-        
+
         // Executar a atualização do saldo
         if ($conn->query($atualizarSaldo) === TRUE) {
             // Execute a atualização no banco de dados
             $sql = "UPDATE saque_afiliado SET status = '$status' WHERE externalreference = '$externalreference'";
-            
+
             if ($conn->query($sql) === TRUE) {
                 // Atualizar a coluna 'sacou' na tabela 'appconfig'
                 $atualizarSacou = "UPDATE appconfig SET sacou = sacou + '$valor' WHERE email = '$email'";
-                
+
                 if ($conn->query($atualizarSacou) === TRUE) {
                     echo "Status atualizado com sucesso. Saldo deduzido e 'sacou' atualizado.";
                 } else {
@@ -55,4 +55,3 @@ if ($resultadoSaldo > 0) {
 }
 
 $conn->close();
-?>

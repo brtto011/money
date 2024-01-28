@@ -96,6 +96,12 @@ $result = $result2->fetch_assoc();
     });
   </script>
 
+  <style>
+    * {
+      transition: all 0.3s ease;
+    }
+  </style>
+
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -108,7 +114,7 @@ $result = $result2->fetch_assoc();
   <meta name="keywords" content="Admin Dashboard" />
   <meta name="description" content="Admin Dashboard" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>Admin Dashboard</title>
+  <title>TKI Admin - Dashboard</title>
 
   <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png" />
   <!-- Custom CSS -->
@@ -142,24 +148,34 @@ $result = $result2->fetch_assoc();
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    <header class="topbar" data-navbarbg="skin5">
-      <nav class="navbar top-navbar navbar-expand-md navbar-dark">
-        <div class="navbar-header" data-logobg="skin5">
+
+    <style>
+      .topbar .nav-toggler,
+      .topbar .topbartoggler {
+        color: #343a40;
+        padding: 0 15px;
+        font-size: 25px;
+      }
+    </style>
+
+    <header class="topbar">
+      <nav class="navbar top-navbar navbar-expand-md">
+        <div class="navbar-header">
           <!-- ============================================================== -->
           <!-- Logo -->
           <!-- ============================================================== -->
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="#" style="background-color: #fff;">
             <!-- Logo icon -->
             <b class="logo-icon ps-2">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
               <!-- Dark Logo icon -->
-              <img src="assets/images/logo-icon.png " alt="homepage" class="light-logo" width="25" />
+              <img src="assets/images/logo-icon.png " alt="homepage" class="light-logo" width="50"
+                style="margin-right: -10px; margin-left: -10px;" />
             </b>
             <!--End Logo icon -->
             <!-- Logo text -->
-            <span class="logo-text ms-2">
-              <!-- dark Logo text -->
-              <img src="assets/images/logo-text.png" width="150" height="50" alt="homepage" class="light-logo" />
+            <span class="logo-text ms-2" style="color: #343a40; font-weight: 700; margin-left: -35px;">
+              TKI Tecnologia
             </span>
             <!-- Logo icon -->
             <!-- <b class="logo-icon"> -->
@@ -182,14 +198,14 @@ $result = $result2->fetch_assoc();
         <!-- ============================================================== -->
         <!-- End Logo -->
         <!-- ============================================================== -->
-        <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
+        <div class="navbar-collapse collapse" style="background-color: #fff;">
           <!-- ============================================================== -->
           <!-- toggle and nav items -->
           <!-- ============================================================== -->
           <ul class="navbar-nav float-start me-auto">
             <li class="nav-item d-none d-lg-block">
               <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
-                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a>
+                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24" style="color: #333"></i></a>
             </li>
 
 
@@ -199,90 +215,123 @@ $result = $result2->fetch_assoc();
       </nav>
     </header>
     <!-- ==========    MENU    =================== -->
-    <aside class="left-sidebar" data-sidebarbg="skin5">
+    <aside class="left-sidebar" style="background-color: #fff; box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 0px 16px -8px;
+">
       <!-- Sidebar scroll-->
       <div class="scroll-sidebar">
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
           <ul id="sidebarnav" class="pt-4">
             <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"><i
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="#" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;"><i style="color: #343a40;"
                   class="mdi mdi-view-dashboard"></i><span class="hide-menu">Página inicial</span></a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="usuarios" aria-expanded="false"><i
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="usuarios" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;"><i style="color: #343a40;"
                   class="mdi mdi-account"></i><span class="hide-menu">Usuários</span></a>
             </li>
 
 
             <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="planos" aria-expanded="false"><i
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="planos" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;"><i style="color: #343a40;"
                   class="mdi mdi-square-inc-cash"></i><span class="hide-menu">Afiliados</span></a>
             </li>
 
 
             <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="webhook" aria-expanded="false"><i
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="webhook" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;"><i style="color: #343a40;"
                   class="mdi mdi-webhook"></i><span class="hide-menu">WebHook </span></a>
             </li>
 
 
 
             <li class="sidebar-item">
-              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="notificacao" aria-expanded="false"><i
+              <a class="sidebar-link waves-effect waves-dark sidebar-link" href="notificacao" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;"><i style="color: #343a40;"
                   class="mdi mdi-near-me"></i><span class="hide-menu">Notificações </span></a>
             </li>
 
 
+            <style>
+              .sidebar-nav .has-arrow:after {
+                position: absolute;
+                content: "";
+                width: 7px;
+                height: 7px;
+                border-width: 1px 0 0 1px;
+                border-style: solid;
+                border-color: #343a40;
+                margin-left: 10px;
+                transform: rotate(135deg) translate(0, -50%);
+                transform-origin: top;
+                top: 26px;
+                right: 15px;
+                transition: all 0.3s ease-out;
+              }
+            </style>
+
+
             <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                <i class="mdi mdi-square-inc-cash"></i>
+              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;">
+                <i style="color: #343a40;" class="mdi mdi-square-inc-cash"></i>
                 <span class="hide-menu">Financeiro </span>
               </a>
-              <ul aria-expanded="false" class="collapse first-level">
-                <li class="sidebar-item ">
+              <ul aria-expanded="false" class="collapse first-level" style="color: #343a40">
+                <li class="sidebar-item" style="color: #343a40">
                   <a href="depositos" class="sidebar-link">
-                    <i class="mdi mdi-cash">
+                    <i class="mdi mdi-cash" style="color: #343a40">
 
-                    </i><span class="hide-menu"> Depositos </span></a>
+                    </i><span class="hide-menu" style="color: #343a40; font-weight: 700; font-size: 15px;"> Depositos
+                    </span></a>
                 </li>
                 <li class="sidebar-item">
                   <a href="saques" class="sidebar-link">
-                    <i class="mdi mdi-cash"></i>
-                    <span class="hide-menu"> Saques </span></a>
+                    <i class="mdi mdi-cash" style="color: #343a40"></i>
+                    <span class="hide-menu" style="color: #343a40; font-weight: 700; font-size: 15px;"> Saques
+                    </span></a>
                 </li>
                 <li class="sidebar-item ">
                   <a href="saques-afiliados" class="sidebar-link">
-                    <i class="mdi mdi-cash">
+                    <i class="mdi mdi-cash" style="color: #343a40">
 
-                    </i><span class="hide-menu"> Saques Afiliados </span></a>
+                    </i><span class="hide-menu" style="color: #343a40; font-weight: 700; font-size: 15px;"> Saques
+                      Afiliados </span></a>
                 </li>
               </ul>
             </li>
 
 
             <li class="sidebar-item">
-              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                <i class="mdi mdi-settings"></i>
+              <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"
+                style="color: #343a40; font-weight: 700; font-size: 18px;"><i style="color: #343a40;"
+                  class="mdi mdi-settings"></i>
                 <span class="hide-menu">Configurações </span>
               </a>
               <ul aria-expanded="false" class="collapse first-level">
                 <li class="sidebar-item ">
                   <a href="gateway" class="sidebar-link">
-                    <i class="mdi mdi-cash">
+                    <i class="mdi mdi-cash" style="color: #343a40">
 
-                    </i><span class="hide-menu"> Gateway </span></a>
+                    </i><span class="hide-menu" style="color: #343a40; font-weight: 700; font-size: 15px;"> Gateway
+                    </span></a>
                 </li>
                 <li class="sidebar-item">
                   <a href="pixels" class="sidebar-link">
-                    <i class="mdi mdi-code-tags"></i>
-                    <span class="hide-menu"> Pixels </span></a>
+                    <i class="mdi mdi-code-tags" style="color: #343a40"></i>
+                    <span class="hide-menu" style="color: #343a40; font-weight: 700; font-size: 15px;"> Pixels
+                    </span></a>
                 </li>
                 <li class="sidebar-item ">
                   <a href="config" class="sidebar-link">
-                    <i class="mdi mdi-account">
+                    <i class="mdi mdi-account" style="color: #343a40">
 
-                    </i><span class="hide-menu"> Nome do Game </span></a>
+                    </i><span class="hide-menu" style="color: #343a40; font-weight: 700; font-size: 15px;"> Nome do Game
+                    </span></a>
                 </li>
               </ul>
             </li>
@@ -291,15 +340,7 @@ $result = $result2->fetch_assoc();
 
 
 
-            <li class="sidebar-item p-3">
-              <a href="https://wa.me/5581994298684?text=Preciso+de+suporte+com+o+painel+adm" target="_blank" class="
-                w-100
-                btn btn-cyan
-                d-flex
-                align-items-center
-                text-white
-              "><i class="mdi mdi-message font-20 me-2"></i>Suporte</a>
-            </li>
+
           </ul>
         </nav>
         <!-- End Sidebar navigation -->
@@ -316,10 +357,10 @@ $result = $result2->fetch_assoc();
       <!-- ============================================================== -->
       <!-- Bread crumb and right sidebar toggle -->
       <!-- ============================================================== -->
-      <div class="page-breadcrumb">
+      <div class="page-breadcrumb" style="background-color: #fff;">
         <div class="row">
           <div class="col-12 d-flex no-block align-items-center">
-            <h4 class="page-title">Dashboard</h4>
+
             <div class="ms-auto text-end">
               <nav aria-label="breadcrumb">
 
@@ -334,7 +375,8 @@ $result = $result2->fetch_assoc();
       <!-- ============================================================== -->
       <!-- Container fluid  -->
       <!-- ============================================================== -->
-      <div class="container-fluid">
+      <div class="container-fluid" style="background-color: #fff;">
+
         <!-- ============================================================== -->
         <!-- Sales Cards  -->
         <!-- ============================================================== -->
@@ -349,15 +391,15 @@ $result = $result2->fetch_assoc();
 
 
           <div class="col-md-6 col-lg-4 col-xlg-3">
-            <div class="card card-hover">
-              <div class="box bg-info text-center">
+            <div class="card card-hover" style="border-radius: 15px;">
+              <div class="box bg-info text-center" style="border-radius: 15px;">
                 <h1 class="font-light text-white">
                   <i class="mdi mdi-arrow-down-bold"></i>
                 </h1>
                 <h1 class="font-light text-white" id="valorUsuarios3">
                   R$ 0,00
                 </h1>
-                <h4 class="text-white">Total depositado</h4>
+                <h4 class="text-white">Total Depositado</h4>
               </div>
             </div>
           </div>
@@ -391,15 +433,15 @@ $result = $result2->fetch_assoc();
 
           <!-- Column -->
           <div class="col-md-6 col-lg-4 col-xlg-3">
-            <div class="card card-hover">
-              <div class="box bg-info text-center">
+            <div class="card card-hover" style="border-radius: 15px;">
+              <div class="box bg-info text-center" style="border-radius: 15px;">
                 <h1 class="font-light text-white">
                   <i class="mdi mdi-account-multiple"></i>
                 </h1>
                 <h1 class="font-light text-white" id="valorUsuarios2">
                   0
                 </h1>
-                <h4 class="text-white">Total de cadastros</h4>
+                <h4 class="text-white">Total Cadastrados</h4>
               </div>
             </div>
           </div>
@@ -433,15 +475,15 @@ $result = $result2->fetch_assoc();
 
           <!-- Column -->
           <div class="col-md-6 col-lg-4 col-xlg-3">
-            <div class="card card-hover">
-              <div class="box bg-info text-center">
+            <div class="card card-hover" style="border-radius: 15px;">
+              <div class="box bg-info text-center" style="border-radius: 15px;">
                 <h1 class="font-light text-white">
                   <i class="mdi mdi-arrow-up-bold"></i>
                 </h1>
                 <h1 class="font-light text-white">
                   R$ 0,00
                 </h1>
-                <h4 class="text-white">Total de Saques</h4>
+                <h4 class="text-white">Total Saques</h4>
 
 
               </div>
@@ -472,129 +514,129 @@ $result = $result2->fetch_assoc();
 
 
 
-          <div class="card">
+
+          <div class="card-body">
             <div class="card-body">
-              <div class="card-body">
-                <h4 class="card-title mb-0">Configurações gerais</h4>
+              <h4 class="card-title mb-0">Configurações Gerais</h4>
+            </div>
+            <div class="row">
+
+              <!-- ------------------------------------------------------------------------------------------------------- -->
+
+              <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
+                <div class="card card-hover" style="border-radius: 15px;">
+                  <div class="box bg-dark text-center" style="border-radius: 15px;">
+                    <h1 class="font-light text-white">
+                      <i class="mdi mdi-arrow-down-bold"></i>
+                    </h1>
+                    <h5 class="text-white">Depósito Mínimo</h5>
+                    <h7 class="text-white">R$:</h7>
+                    <form action="processos.php?opcao=depositoMin" method="post" id="editForm3">
+                      <input type="text" class="form-control custom-input" value="<?php echo $result['deposito_min'] ?>"
+                        id="valorApostaMax" placeholder="Digite o valor" name="valor" required>
+                      <br>
+                      <br>
+                      <button type="submit" class="btn btn-info" style="border-radius: 3px;">Atualizar</button>
+                    </form>
+                  </div>
+                </div>
               </div>
-              <div class="row">
 
-                <!-- ------------------------------------------------------------------------------------------------------- -->
+              <script>
+                function enviarAtualizacao(opcao, value) {
+                  console.log(opcao)
+                  console.log(value)
+                  requisicao = `./processos.php?opcao=${opcao}&value=${value}`;
 
-                <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
-                  <div class="card card-hover">
-                    <div class="box bg-dark text-center">
-                      <h1 class="font-light text-white">
-                        <i class="mdi mdi-arrow-down-bold"></i>
-                      </h1>
-                      <h5 class="text-white">Depósito Mínimo</h5>
-                      <h7 class="text-white">R$:</h7>
-                      <form action="processos.php?opcao=depositoMin" method="post" id="editForm3">
-                        <input type="text" class="form-control custom-input"
-                          value="<?php echo $result['deposito_min'] ?>" id="valorApostaMax" placeholder="Digite o valor"
-                          name="valor" required>
-                        <br>
-                        <br>
-                        <button type="submit" class="btn btn-info">Atualizar</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <script>
-                  function enviarAtualizacao(opcao, value) {
-                    console.log(opcao)
-                    console.log(value)
-                    requisicao = `./processos.php?opcao=${opcao}&value=${value}`;
-
-                    window.location.href = requisicao;
-                  }
-                </script>
-
-
-                <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-                <script>
-                  function atualizarValor() {
-                    var novoValor = $("#valorDeposito").val();
-                    console.log("Novo Valor:", novoValor);
-
-                    $.ajax({
-                      type: "POST",
-                      url: "php/atualizar_deposito_minimo.php",
-                      data: { novo_valor: novoValor },
-                      success: function (response) {
-                        console.log(response);
-                      },
-                      error: function (xhr, status, error) {
-                        console.error(xhr.responseText);
-                      }
-                    });
-                  }
-                </script>
-                <!-- ------------------------------------------------------------------------------------- -->
-                <?php
-                include './../conectarbanco.php';
-
-                $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
-
-
-                if ($conn->connect_error) {
-                  die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+                  window.location.href = requisicao;
                 }
+              </script>
 
-                ?>
 
-                <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
-                  <div class="card card-hover">
-                    <div class="box bg-dark text-center">
-                      <h1 class="font-light text-white">
-                        <i class="mdi mdi-arrow-up-bold"></i>
-                      </h1>
-                      <h5 class="text-white">Saque Mínimo</h5>
-                      <h7 class="text-white">R$:</h7>
-                      <form action="processos.php?opcao=saqueMin" method="post" id="editForm3">
-                        <input type="text" class="form-control custom-input" value="<?php echo $result['saques_min'] ?>"
-                          id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
-                        <br>
-                        <br>
-                        <button type="submit" class="btn btn-info">Atualizar</button>
-                      </form>
-                    </div>
+              <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+              <script>
+                function atualizarValor() {
+                  var novoValor = $("#valorDeposito").val();
+                  console.log("Novo Valor:", novoValor);
+
+                  $.ajax({
+                    type: "POST",
+                    url: "php/atualizar_deposito_minimo.php",
+                    data: { novo_valor: novoValor },
+                    success: function (response) {
+                      console.log(response);
+                    },
+                    error: function (xhr, status, error) {
+                      console.error(xhr.responseText);
+                    }
+                  });
+                }
+              </script>
+              <!-- ------------------------------------------------------------------------------------- -->
+              <?php
+              include './../conectarbanco.php';
+
+              $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+
+
+              if ($conn->connect_error) {
+                die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+              }
+
+              ?>
+
+              <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
+                <div class="card card-hover" style="border-radius: 15px;">
+                  <div class="box bg-dark text-center" style="border-radius: 15px;">
+                    <h1 class="font-light text-white">
+                      <i class="mdi mdi-arrow-up-bold"></i>
+                    </h1>
+                    <h5 class="text-white">Saque Mínimo</h5>
+                    <h7 class="text-white">R$:</h7>
+                    <form action="processos.php?opcao=saqueMin" method="post" id="editForm3">
+                      <input type="text" class="form-control custom-input" value="<?php echo $result['saques_min'] ?>"
+                        id="valorSaqueMin" placeholder="Digite o valor" name="valor" required>
+                      <br>
+                      <br>
+                      <button type="submit" class="btn btn-info" style="border-radius: 3px;">Atualizar</button>
+                    </form>
                   </div>
                 </div>
-                <!-- ------------------------------------------------------------------------------------- -->
+              </div>
+              <!-- ------------------------------------------------------------------------------------- -->
 
-                <!-- ------------------------------------------------------------------------------------- -->
-                <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
-                  <div class="card card-hover">
-                    <div class="box bg-dark text-center">
-                      <h1 class="font-light text-white">
-                        <i class="mdi mdi-chemical-weapon"></i>
-                      </h1>
-                      <h5 class="text-white">Dificuldade do Jogo</h5>
-                      <h7 class="text-white">Velocidade</h7>
-                      <form action="processos.php?opcao=dificuldadeJogo" method="post" id="editForm3">
-                        <!-- Adicione o campo de dropdown aqui -->
-                        <select name="valor" class="form-select custom-input" aria-label="Escolha a dificuldade">
-                          <option <?php echo ($result['dificuldade_jogo'] == 'facil') ? 'selected' : ''; ?> value="facil">
-                            Fácil</option>
-                          <option <?php echo ($result['dificuldade_jogo'] == 'medio') ? 'selected' : ''; ?> value="medio">
-                            Médio</option>
-                          <option <?php echo ($result['dificuldade_jogo'] == 'dificil') ? 'selected' : ''; ?>
-                            value="dificil">Difícil</option>
-                        </select>
-                        <br>
-                        <br>
-                        <button type="submit" class="btn btn-info" onclick="atualizarValor4()">Atualizar</button>
-                      </form>
-                    </div>
+              <!-- ------------------------------------------------------------------------------------- -->
+              <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
+                <div class="card card-hover" style="border-radius: 15px;">
+                  <div class="box bg-dark text-center" style="border-radius: 15px;">
+                    <h1 class="font-light text-white">
+                      <i class="mdi mdi-chemical-weapon"></i>
+                    </h1>
+                    <h5 class="text-white">Dificuldade do Jogo</h5>
+                    <h7 class="text-white">Velocidade</h7>
+                    <form action="processos.php?opcao=dificuldadeJogo" method="post" id="editForm3">
+                      <!-- Adicione o campo de dropdown aqui -->
+                      <select name="valor" class="form-select custom-input" aria-label="Escolha a dificuldade">
+                        <option <?php echo ($result['dificuldade_jogo'] == 'facil') ? 'selected' : ''; ?> value="facil">
+                          Fácil</option>
+                        <option <?php echo ($result['dificuldade_jogo'] == 'medio') ? 'selected' : ''; ?> value="medio">
+                          Médio</option>
+                        <option <?php echo ($result['dificuldade_jogo'] == 'dificil') ? 'selected' : ''; ?>
+                          value="dificil">Difícil</option>
+                      </select>
+                      <br>
+                      <br>
+                      <button type="submit" class="btn btn-info" style="border-radius: 3px;"
+                        onclick="atualizarValor4()">Atualizar</button>
+                    </form>
                   </div>
                 </div>
+              </div>
 
 
 
 
-                <!--
+              <!--
  
   <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> 
     <div class="card card-hover">
@@ -618,28 +660,28 @@ $result = $result2->fetch_assoc();
   -->
 
 
-                <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> <!-- Adicionado mb-3 para margem inferior -->
-                  <div class="card card-hover">
-                    <div class="box bg-dark text-center">
-                      <h1 class="font-light text-white">
-                        <i class="mdi mdi-filter-variant"></i>
-                      </h1>
-                      <h5 class="text-white">Rollover do Saque</h5>
-                      <h7 class="text-white">X</h7>
-                      <form action="processos.php?opcao=rolloverSaque" method="post" id="editForm3">
-                        <input type="text" class="form-control custom-input"
-                          value="<?php echo $result['rollover_saque'] ?>" id="valorSaqueMin"
-                          placeholder="Digite o valor" name="valor" required>
-                        <br>
-                        <br>
-                        <button type="submit" class="btn btn-info">Atualizar</button>
-                      </form>
+              <div class="col-md-6 col-lg-3 col-xlg-3 mb-3"> <!-- Adicionado mb-3 para margem inferior -->
+                <div class="card card-hover" style="border-radius: 15px;">
+                  <div class="box bg-dark text-center" style="border-radius: 15px;">
+                    <h1 class="font-light text-white">
+                      <i class="mdi mdi-filter-variant"></i>
+                    </h1>
+                    <h5 class="text-white">Rollover do Saque</h5>
+                    <h7 class="text-white">X</h7>
+                    <form action="processos.php?opcao=rolloverSaque" method="post" id="editForm3">
+                      <input type="text" class="form-control custom-input"
+                        value="<?php echo $result['rollover_saque'] ?>" id="valorSaqueMin" placeholder="Digite o valor"
+                        name="valor" required>
+                      <br>
+                      <br>
+                      <button type="submit" class="btn btn-info" style="border-radius: 3px;">Atualizar</button>
+                    </form>
 
-                    </div>
                   </div>
                 </div>
+              </div>
 
-                <!--
+              <!--
    <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">  
     <div class="card card-hover">
       <div class="box bg-dark text-center">
@@ -661,109 +703,107 @@ $result = $result2->fetch_assoc();
   </div>
 </div>-->
 
-                <div id="chart_div"></div>
+              <div id="chart_div"></div>
 
 
-                <script>
-                  $.ajax({
-                    url: 'bd.php',
-                    method: 'GET',
-                    success: function (data) {
-                      // Limpar o corpo da tabela
-                      $('#table-body').empty();
+              <script>
+                $.ajax({
+                  url: 'bd.php',
+                  method: 'GET',
+                  success: function (data) {
+                    // Limpar o corpo da tabela
+                    $('#table-body').empty();
 
 
-                      // Inserir dados na tabela
-                      data.forEach(function (row) {
-                        var newRow = "<tr>" +
-                          "<td>" + row.email + "</td>" +
-                          "<td>" + row.telefone + "</td>" +
-                          "<td>" + row.saldo + "</td>" +
-                          "<td>" + row.plano + "</td>" +
-                          "<td>" + row.depositou + "</td>" +
-                          "<td>" + row.saldo_comissao + "</td>" +
-                          "<td>" + row.percas + "</td>" +
-                          "<td>" + row.ganhos + "</td>" +
-                          "<td>" + row.cpa + "</td>" +
-                          "<td><button class='btn-edit' data-id='" + row.id + "'>Editar</button></td>" +
-                          "</tr>";
-                        $('#table-body').append(newRow);
-                      });
-                      google.charts.load('current', { 'packages': ['corechart'] });
-                      google.charts.setOnLoadCallback(drawChart);
-                      function drawChart() {
-                        // Obtém os dados do PHP usando Ajax
-                        var jsonData = $.ajax({
-                          url: "data.php",
-                          dataType: "json",
-                          async: false
-                        }).responseText;
+                    // Inserir dados na tabela
+                    data.forEach(function (row) {
+                      var newRow = "<tr>" +
+                        "<td>" + row.email + "</td>" +
+                        "<td>" + row.telefone + "</td>" +
+                        "<td>" + row.saldo + "</td>" +
+                        "<td>" + row.plano + "</td>" +
+                        "<td>" + row.depositou + "</td>" +
+                        "<td>" + row.saldo_comissao + "</td>" +
+                        "<td>" + row.percas + "</td>" +
+                        "<td>" + row.ganhos + "</td>" +
+                        "<td>" + row.cpa + "</td>" +
+                        "<td><button class='btn-edit' data-id='" + row.id + "'>Editar</button></td>" +
+                        "</tr>";
+                      $('#table-body').append(newRow);
+                    });
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                      // Obtém os dados do PHP usando Ajax
+                      var jsonData = $.ajax({
+                        url: "data.php",
+                        dataType: "json",
+                        async: false
+                      }).responseText;
 
-                        // Converte os dados JSON em um array
-                        var data = new google.visualization.arrayToDataTable(JSON.parse(jsonData));
+                      // Converte os dados JSON em um array
+                      var data = new google.visualization.arrayToDataTable(JSON.parse(jsonData));
 
-                        // Configurações do gráfico
-                        var options = {
-                          title: 'My Daily Activities',
-                          pieHole: 0.4,
-                        };
+                      // Configurações do gráfico
+                      var options = {
+                        title: 'My Daily Activities',
+                        pieHole: 0.4,
+                      };
 
-                        // Cria o gráfico e o coloca no elemento com o ID 'chart_div'
-                        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-                        chart.draw(data, options);
-                      }
-                </script>
-
-              </div>
+                      // Cria o gráfico e o coloca no elemento com o ID 'chart_div'
+                      var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                      chart.draw(data, options);
+                    }
+              </script>
 
             </div>
 
-            <!-- ============================================================== -->
-            <!-- End Container fluid  -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- footer -->
-            <!-- ============================================================== -->
-            <footer class="footer text-center">
-              Desenvolvido por
-              <a href="http://tkitecnologia.com/">TKI TECNOLOGIA</a>.
-            </footer>
-            <!-- ============================================================== -->
-            <!-- End footer -->
-            <!-- ============================================================== -->
           </div>
+
           <!-- ============================================================== -->
-          <!-- End Page wrapper  -->
+          <!-- End Container fluid  -->
+          <!-- ============================================================== -->
+          <!-- ============================================================== -->
+          <!-- footer -->
+          <!-- ============================================================== -->
+
+          </footer>
+          <!-- ============================================================== -->
+          <!-- End footer -->
           <!-- ============================================================== -->
         </div>
         <!-- ============================================================== -->
-        <!-- End Wrapper -->
+        <!-- End Page wrapper  -->
         <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- All Jquery -->
-        <!-- ============================================================== -->
-        <script src="assets/libs/jquery/dist/jquery.min.js"></script>
-        <!-- Bootstrap tether Core JavaScript -->
-        <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
-        <script src="assets/extra-libs/sparkline/sparkline.js"></script>
-        <!--Wave Effects -->
-        <script src="dist/js/waves.js"></script>
-        <!--Menu sidebar -->
-        <script src="dist/js/sidebarmenu.js"></script>
-        <!--Custom JavaScript -->
-        <script src="dist/js/custom.min.js"></script>
-        <!--This page JavaScript -->
-        <!-- <script src="../dist/js/pages/dashboards/dashboard1.js"></script> -->
-        <!-- Charts js Files -->
-        <script src="assets/libs/flot/excanvas.js"></script>
-        <script src="assets/libs/flot/jquery.flot.js"></script>
-        <script src="assets/libs/flot/jquery.flot.pie.js"></script>
-        <script src="assets/libs/flot/jquery.flot.time.js"></script>
-        <script src="assets/libs/flot/jquery.flot.stack.js"></script>
-        <script src="assets/libs/flot/jquery.flot.crosshair.js"></script>
-        <script src="assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
-        <script src="dist/js/pages/chart/chart-page-init.js"></script>
+      </div>
+      <!-- ============================================================== -->
+      <!-- End Wrapper -->
+      <!-- ============================================================== -->
+      <!-- ============================================================== -->
+      <!-- All Jquery -->
+      <!-- ============================================================== -->
+      <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+      <!-- Bootstrap tether Core JavaScript -->
+      <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+      <script src="assets/extra-libs/sparkline/sparkline.js"></script>
+      <!--Wave Effects -->
+      <script src="dist/js/waves.js"></script>
+      <!--Menu sidebar -->
+      <script src="dist/js/sidebarmenu.js"></script>
+      <!--Custom JavaScript -->
+      <script src="dist/js/custom.min.js"></script>
+      <!--This page JavaScript -->
+      <!-- <script src="../dist/js/pages/dashboards/dashboard1.js"></script> -->
+      <!-- Charts js Files -->
+      <script src="assets/libs/flot/excanvas.js"></script>
+      <script src="assets/libs/flot/jquery.flot.js"></script>
+      <script src="assets/libs/flot/jquery.flot.pie.js"></script>
+      <script src="assets/libs/flot/jquery.flot.time.js"></script>
+      <script src="assets/libs/flot/jquery.flot.stack.js"></script>
+      <script src="assets/libs/flot/jquery.flot.crosshair.js"></script>
+      <script src="assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
+      <script src="dist/js/pages/chart/chart-page-init.js"></script>
 </body>
 
 </html>

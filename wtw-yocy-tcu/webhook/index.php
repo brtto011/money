@@ -48,6 +48,76 @@ include './bd.php'; ?>
 <html dir="ltr" lang="en">
 
 <head>
+        <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+    <script>
+        // Função para recarregar a página infinitamente
+        function reloadPage() {
+            location.reload();
+            setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+        }
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            reloadPage();  // Inicia o ciclo de recarregamento da página
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção de teclas
+        window.addEventListener('keydown', function (e) {
+            // Bloqueia F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+I
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+                e.preventDefault();
+            }
+        });
+
+        // Event listener para detecção do botão direito
+        window.addEventListener('contextmenu', function (e) {
+
+            e.preventDefault();
+        });
+
+        // Event listener para detecção da abertura das ferramentas de desenvolvedor
+        window.addEventListener('devtoolschange', function (e) {
+
+            window.location.href = 'about:blank'; // Redireciona para uma página em branco
+        });
+
+        // Event listener para detecção de clique com o botão direito (opcional)
+        window.addEventListener('mousedown', function (e) {
+            if (e.button === 2) {
+
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
+        // Event listener para detecção do atalho Ctrl+U
+        window.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+            }
+
+            // Bloqueia Ctrl+Shift+K
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+                e.preventDefault();
+            }
+        });
+    </script>
     <style>
         input[type="text"] {
             width: 656px;
@@ -77,56 +147,87 @@ include './bd.php'; ?>
 </head>
 
 <body>
+  <!-- ============================================================== -->
+  <!-- Preloader - style you can find in spinners.css -->
+  <!-- ============================================================== -->
+  <div class="preloader">
+    <div class="lds-ripple">
+      <div class="lds-pos"></div>
+      <div class="lds-pos"></div>
+    </div>
+  </div>
+  <!-- ============================================================== -->
+  <!-- Main wrapper - style you can find in pages.scss -->
+  <!-- ============================================================== -->
+  <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+    data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
     <!-- ============================================================== -->
-    <!-- Preloader - style you can find in spinners.css -->
+    <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
+    
+    <style>
+        .topbar .nav-toggler, .topbar .topbartoggler {
+    color: #343a40;
+    padding: 0 15px;
+    font-size: 25px;
+}
+    </style>
+    
+    <header class="topbar">
+      <nav class="navbar top-navbar navbar-expand-md">
+        <div class="navbar-header">
+          <!-- ============================================================== -->
+          <!-- Logo -->
+          <!-- ============================================================== -->
+          <a class="navbar-brand" href="#" style="background-color: #fff;">
+            <!-- Logo icon -->
+            <b class="logo-icon ps-2">
+              <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+              <!-- Dark Logo icon -->
+              <img src="../assets/images/logo-icon.png " alt="homepage" class="light-logo" width="50" style="margin-right: -10px; margin-left: -10px;"/>
+            </b>
+            <!--End Logo icon -->
+            <!-- Logo text -->
+            <span class="logo-text ms-2" style="color: #343a40; font-weight: 700; margin-left: -35px;">
+                    TKI Tecnologia
+            </span>
+            <!-- Logo icon -->
+            <!-- <b class="logo-icon"> -->
+            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+            <!-- Dark Logo icon -->
+            <!-- <img src="../assets/images/logo-text.png" alt="homepage" class="light-logo" /> -->
 
-    <!-- ============================================================== -->
-    <!-- Main wrapper - style you can find in pages.scss -->
-    <!-- ============================================================== -->
-    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
-        data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+            <!-- </b> -->
+            <!--End Logo icon -->
+          </a>
+          <!-- ============================================================== -->
+          <!-- End Logo -->
+          <!-- ============================================================== -->
+          <!-- ============================================================== -->
+          <!-- Toggle which is visible on mobile only -->
+          <!-- ============================================================== -->
+          <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
+              class="ti-menu ti-close"></i></a>
+        </div>
         <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- End Logo -->
         <!-- ============================================================== -->
-        <header class="topbar" data-navbarbg="skin5">
-            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
-                <div class="navbar-header" data-logobg="skin5">
-                    <!-- ============================================================== -->
-                    <!-- Logo -->
-                    <!-- ============================================================== -->
-                    <a class="navbar-brand" href="../">
-                        <!-- Logo icon -->
-                        <b class="logo-icon ps-2">
-                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-                            <!-- Dark Logo icon -->
-                            <img src="../assets/images/logo-icon.png " alt="homepage" class="light-logo" width="25" />
-                        </b>
-                        <!--End Logo icon -->
-                        <!-- Logo text -->
-                        <span class="logo-text ms-2">
-                            <!-- dark Logo text -->
-                            <img src="../assets/images/logo-text.png" width="150" height="50" alt="homepage"
-                                class="light-logo" />
-                        </span>
+        <div class="navbar-collapse collapse" style="background-color: #fff;">
+          <!-- ============================================================== -->
+          <!-- toggle and nav items -->
+          <!-- ============================================================== -->
+          <ul class="navbar-nav float-start me-auto">
+            <li class="nav-item d-none d-lg-block">
+              <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
+                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24" style="color: #333;"></i></a>
+            </li>
 
-                    </a>
 
-                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
-                            class="ti-menu ti-close"></i></a>
-                </div>
 
-                <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
-
-                    <ul class="navbar-nav float-start me-auto">
-                        <li class="nav-item d-none d-lg-block">
-                            <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
-                                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+          </ul>
+        </div>
+      </nav>
+    </header>
         <!-- ==========    MENU    =================== -->
         <?php include '../components/aside.php' ?>
 
@@ -257,10 +358,10 @@ include './bd.php'; ?>
 
 
 
-                            <button style="margin-top: 35px;" type="button" class="btn btn-primary"
+                            <button style="margin-top: 35px; border-radius: 5px;" type="button" class="btn btn-primary"
                                 onclick="salvarAlteracoes()">Salvar Alterações</button>
 
-</div>
+                                    </div>
 
                             <script>
                                 function salvarAlteracoes() {
@@ -332,11 +433,6 @@ include './bd.php'; ?>
 
 
 
-
-        <footer style="position: fixed; bottom: 0; width: 100%; left: 0;" class="footer text-center">
-            Desenvolvido por
-            <a href="http://tkitecnologia.com/">TKI TECNOLOGIA</a>.
-        </footer>
         <!-- ============================================================== -->
         <!-- End footer -->
         <!-- ============================================================== -->

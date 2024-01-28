@@ -1,5 +1,5 @@
 <?php
- include './../../conectarbanco.php';
+include './../../conectarbanco.php';
 
 $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
 
@@ -43,9 +43,9 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $requestData);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-   "Content-Type: application/json",
-        "ci: $client_id",
-        "cs: $client_secret"
+    "Content-Type: application/json",
+    "ci: $client_id",
+    "cs: $client_secret"
 ]);
 
 $response = curl_exec($ch);
@@ -61,4 +61,3 @@ if ($httpCode === 200) {
     http_response_code($httpCode);
     echo 'Erro ao aprovar o saque: ' . $response;
 }
-?>

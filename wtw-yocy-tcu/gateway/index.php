@@ -1,12 +1,11 @@
-
 <?php
 session_start();
 
 // Verificar se a sessão existe
 if (!isset($_SESSION['emailadm-378287423bkdfjhbb71ihudb'])) {
-    // Sessão não existe, redirecionar para outra página
-    header("Location: ../login");
-    exit();
+  // Sessão não existe, redirecionar para outra página
+  header("Location: ../login");
+  exit();
 }
 
 ?>
@@ -19,6 +18,76 @@ include './bd.php'; ?>
 <html dir="ltr" lang="en">
 
 <head>
+  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+
+  <script>
+    // Função para recarregar a página infinitamente
+    function reloadPage() {
+      location.reload();
+      setTimeout(reloadPage, 1000);  // Recarrega a página a cada segundo
+    }
+
+    // Event listener para detecção da abertura das ferramentas de desenvolvedor
+    window.addEventListener('devtoolschange', function (e) {
+
+      reloadPage();  // Inicia o ciclo de recarregamento da página
+    });
+  </script>
+
+  <script>
+    // Event listener para detecção de teclas
+    window.addEventListener('keydown', function (e) {
+      // Bloqueia F12
+      if (e.key === 'F12' || e.keyCode === 123) {
+
+        e.preventDefault();
+      }
+
+      // Bloqueia Ctrl+Shift+I
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+
+        e.preventDefault();
+      }
+    });
+
+    // Event listener para detecção do botão direito
+    window.addEventListener('contextmenu', function (e) {
+
+      e.preventDefault();
+    });
+
+    // Event listener para detecção da abertura das ferramentas de desenvolvedor
+    window.addEventListener('devtoolschange', function (e) {
+
+      window.location.href = 'about:blank'; // Redireciona para uma página em branco
+    });
+
+    // Event listener para detecção de clique com o botão direito (opcional)
+    window.addEventListener('mousedown', function (e) {
+      if (e.button === 2) {
+
+        e.preventDefault();
+      }
+    });
+  </script>
+
+  <script>
+    // Event listener para detecção do atalho Ctrl+U
+    window.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+        e.preventDefault();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+      }
+
+      // Bloqueia Ctrl+Shift+K
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'K') {
+        e.preventDefault();
+      }
+    });
+  </script>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -31,7 +100,7 @@ include './bd.php'; ?>
   <meta name="keywords" content="Admin Dashboard" />
   <meta name="description" content="Admin Dashboard" />
   <meta name="robots" content="noindex,nofollow" />
-  <title>Admin Dashboard</title>
+  <title>TKI Admin - Dashboard</title>
 
   <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png" />
   <!-- Custom CSS -->
@@ -69,7 +138,12 @@ include './bd.php'; ?>
   <!-- ============================================================== -->
   <!-- Preloader - style you can find in spinners.css -->
   <!-- ============================================================== -->
-
+  <div class="preloader">
+    <div class="lds-ripple">
+      <div class="lds-pos"></div>
+      <div class="lds-pos"></div>
+    </div>
+  </div>
   <!-- ============================================================== -->
   <!-- Main wrapper - style you can find in pages.scss -->
   <!-- ============================================================== -->
@@ -78,46 +152,75 @@ include './bd.php'; ?>
     <!-- ============================================================== -->
     <!-- Topbar header - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    <header class="topbar" data-navbarbg="skin5">
-      <nav class="navbar top-navbar navbar-expand-md navbar-dark">
-        <div class="navbar-header" data-logobg="skin5">
+
+    <style>
+      .topbar .nav-toggler,
+      .topbar .topbartoggler {
+        color: #343a40;
+        padding: 0 15px;
+        font-size: 25px;
+      }
+    </style>
+
+    <header class="topbar">
+      <nav class="navbar top-navbar navbar-expand-md">
+        <div class="navbar-header">
           <!-- ============================================================== -->
           <!-- Logo -->
           <!-- ============================================================== -->
-          <a class="navbar-brand" href="../">
+          <a class="navbar-brand" href="#" style="background-color: #fff;">
             <!-- Logo icon -->
             <b class="logo-icon ps-2">
               <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
               <!-- Dark Logo icon -->
-              <img src="../assets/images/logo-icon.png " alt="homepage" class="light-logo" width="25" />
+              <img src="../assets/images/logo-icon.png " alt="homepage" class="light-logo" width="50"
+                style="margin-right: -10px; margin-left: -10px;" />
             </b>
             <!--End Logo icon -->
             <!-- Logo text -->
-            <span class="logo-text ms-2">
-              <!-- dark Logo text -->
-              <img src="../assets/images/logo-text.png" width="150" height="50" alt="homepage" class="light-logo" />
+            <span class="logo-text ms-2" style="color: #343a40; font-weight: 700; margin-left: -35px;">
+              TKI Tecnologia
             </span>
+            <!-- Logo icon -->
+            <!-- <b class="logo-icon"> -->
+            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+            <!-- Dark Logo icon -->
+            <!-- <img src="../assets/images/logo-text.png" alt="homepage" class="light-logo" /> -->
 
+            <!-- </b> -->
+            <!--End Logo icon -->
           </a>
-
+          <!-- ============================================================== -->
+          <!-- End Logo -->
+          <!-- ============================================================== -->
+          <!-- ============================================================== -->
+          <!-- Toggle which is visible on mobile only -->
+          <!-- ============================================================== -->
           <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
               class="ti-menu ti-close"></i></a>
         </div>
-
-        <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
-
+        <!-- ============================================================== -->
+        <!-- End Logo -->
+        <!-- ============================================================== -->
+        <div class="navbar-collapse collapse" style="background-color: #fff;">
+          <!-- ============================================================== -->
+          <!-- toggle and nav items -->
+          <!-- ============================================================== -->
           <ul class="navbar-nav float-start me-auto">
             <li class="nav-item d-none d-lg-block">
               <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
-                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a>
+                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24" style="color: #333;"></i></a>
             </li>
+
+
+
           </ul>
         </div>
       </nav>
     </header>
     <!-- ==========    MENU    =================== -->
     <?php include '../components/aside.php' ?>
-    
+
     <div class="page-wrapper">
       <div class="card" style="margin-bottom: 100px;">
         <div class="card-body">
@@ -125,85 +228,83 @@ include './bd.php'; ?>
         </div>
         <h2 style="margin-left: 25px;">Configuração SuitPay</h1>
 
-        <style>
-          #card-title {
-            font-size: 25px;
-          }
+          <style>
+            #card-title {
+              font-size: 25px;
+            }
 
-          .input-id, .input-secret {
-            width: 100%;
-            min-width: 400px;
-            min-height: 40px;
-            background-color: #DCDCDC;
-            border: none;
-            border-radius: 15px;
-            padding-left: 15px;
-            padding-right: 15px;
-            box-sizing: border-box;
-          }
+            .input-id,
+            .input-secret {
+              width: 100%;
+              min-width: 400px;
+              min-height: 40px;
+              background-color: #e9ecef;
+              border: none;
+              border-radius: 15px;
+              padding-left: 15px;
+              padding-right: 15px;
+              box-sizing: border-box;
+            }
 
-          .card-id,
-          .card-secret {
-            border: none;
-            border-radius: 15px;
-            padding: 16px;
-            margin: 16px;
-            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-            width: 600px;
-            box-sizing: border-box;
-          }
+            .card-id,
+            .card-secret {
+              border: none;
+              border-radius: 15px;
+              padding: 16px;
+              margin: 16px;
+              box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+              width: 600px;
+              box-sizing: border-box;
+            }
 
-          .button-container {
-            margin-left: 20px;
-            margin-top: 25px;
-          }
+            .button-container {
+              margin-left: 20px;
+              margin-top: 25px;
+            }
 
-          #gateway-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 15px;
-            background-color: #27a9e3;
-            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-            color: white;
-            cursor: pointer;
-            outline: none;
-          }
-          
+            #gateway-btn {
+              padding: 10px 20px;
+              border: none;
+              border-radius: 15px;
+              background-color: #2255a4;
+              box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+              color: white;
+              cursor: pointer;
+              outline: none;
+            }
+          </style>
 
-          
-        </style>
+          <div class="card-container" style="display: flex;">
 
-        <div class="card-container" style="display: flex;">
-            
-          <form id="gateway-form">
-            <div class="card-id" id="card-gateway">
-              <p id="card-title"><strong>Client ID</strong></p>
-              <input id="input-id" class="input-id" type="text" placeholder="Digite seu Client ID...">
-              <br>
-              <br>
-              
-              <h5 id="atual-title">Client ID atual:</h5>
-              <input id="atual-id" class="input-id" type="text" disabled placeholder="<?php echo $client_id; ?>">
-             
-            </div>
+            <form id="gateway-form">
+              <div class="card-id" id="card-gateway">
+                <p id="card-title"><strong>Client ID</strong></p>
+                <input id="input-id" class="input-id" type="text" placeholder="Digite seu Client ID...">
+                <br>
+                <br>
 
-            <div class="card-secret" id="card-gateway">
-              <p id="card-title"><strong>Client Secret</strong></p>
-              <input id="input-secret" class="input-secret" type="text" placeholder="Digite seu Client Secret...">
-             
-            </div>
+                <h5 id="atual-title">Client ID atual:</h5>
+                <input id="atual-id" class="input-id" type="text" disabled placeholder="<?php echo $client_id; ?>">
 
-            <div class="button-container">
-              <button type="submit" id="gateway-btn"><strong>Salvar Alterações</strong></button>
-            </div>
-          </form>
-        </div>
+              </div>
+
+              <div class="card-secret" id="card-gateway">
+                <p id="card-title"><strong>Client Secret</strong></p>
+                <input id="input-secret" class="input-secret" type="text" placeholder="Digite seu Client Secret...">
+
+              </div>
+
+              <div class="button-container">
+                <button type="submit" id="gateway-btn"><strong>Salvar Alterações</strong></button>
+              </div>
+            </form>
+          </div>
       </div>
 
 
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
 
 
@@ -212,17 +313,13 @@ include './bd.php'; ?>
 
 
 
-    <footer style="position: fixed; bottom: 0; width: 100%; left: 0;" class="footer text-center">
-      Desenvolvido por
-      <a href="http://tkitecnologia.com/">TKI TECNOLOGIA</a>.
-    </footer>
+      <!-- ============================================================== -->
+      <!-- End footer -->
+      <!-- ============================================================== -->
+    </div>
     <!-- ============================================================== -->
-    <!-- End footer -->
+    <!-- End Page wrapper  -->
     <!-- ============================================================== -->
-  </div>
-  <!-- ============================================================== -->
-  <!-- End Page wrapper  -->
-  <!-- ============================================================== -->
   </div>
   <!-- ============================================================== -->
   <!-- End Wrapper -->

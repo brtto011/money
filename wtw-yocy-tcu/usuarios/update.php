@@ -78,7 +78,7 @@ $sql = sprintf(
     $form['bloqueado'],
     $form['saldo_comissao'],
     $form['percas'],
-    $form['ganhos'],    
+    $form['ganhos'],
     $form['cpa'],
     $form['cpafake'],
     $form['comissaofake'],
