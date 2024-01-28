@@ -606,6 +606,13 @@ $result = $result2->fetch_assoc();
               <!-- ------------------------------------------------------------------------------------- -->
 
               <!-- ------------------------------------------------------------------------------------- -->
+              
+              <style>
+                  option {
+                      color: #333;
+                  }
+              </style>
+              
               <div class="col-md-6 col-lg-3 col-xlg-3 mb-3">
                 <div class="card card-hover" style="border-radius: 15px;">
                   <div class="box bg-dark text-center" style="border-radius: 15px;">
