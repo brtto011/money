@@ -153,7 +153,7 @@
         }
     </script>
     <div id="message">
-        <h1>Loading</h1>
+        <h1>Subway Surfers</h1>
         <h1 class="dot one">.</h1>
         <h1 class="dot two">.</h1>
         <h1 class="dot three">.</h1>
