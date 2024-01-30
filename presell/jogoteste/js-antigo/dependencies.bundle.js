@@ -1,75 +1,21 @@
-var url = window.location.href;
-
-var params = url.split("?jogarsubway=")[1];
-
-var bet = "default";
-
-if (params) {
-    var paramArray = params.split("&");
-
-    for (var i = 0; i < paramArray.length; i++) {
-        if (paramArray[i] === "1BC" || paramArray[i] === "2BC" || paramArray[i] === "3BC") {
-            bet = paramArray[i];
-            break;  
-        }
-    }
-}
-
-//var globalDifficulty;
-
-// Verifique se a URL contém a string '?jogarsubway='
-if (url.includes('?jogarsubway=')) {
-    // Divida a URL com base na string '?jogarsubway='
-    var params = url.split('?jogarsubway=');
-
-    // Verifique se existem parâmetros após '?jogarsubway='
-    if (params.length > 1) {
-        // Obtenha os parâmetros após '?jogarsubway='
-        var difficultyParam = params[1];
-
-        // Divida os parâmetros usando '&' para separar a dificuldade
-        var difficultyParts = difficultyParam.split('&SbS');
-
-        // Ajuste a variável globalDifficulty com a dificuldade extraída
-        var globalDifficulty = difficultyParts[1];
-
-        // Exiba a dificuldade para teste
-        console.log('Dificuldade:', globalDifficulty);
-    }
-}
-
-
-
-
-
+/*! For license information please see dependencies.bundle.js.LICENSE.txt */
 var jogando = true;
-var xmeta = 10;
+var xmeta = 1;//meta vezes a aposta
 var meta = aposta * xmeta;
 var acumulado;
 var check_end = 0;
 var btnSair = () => { return document.querySelector('button#sair'); }
-
 btnSair().addEventListener('click', () => {
-    if (jogando) {
+   if(jogando) {
         jogando = false;
         if (acumulado >= meta) {
-            function generateToken() {
-                return Math.random().toString(36).substr(2) + Date.now().toString(36);
-            }
-
-            var token = generateToken();
-
-            // Armazene o token no localStorage
-            localStorage.setItem('token', token);
-
-            // Redirecione para a página /gameover/win.php com os parâmetros
-            location.href = '../win.php?type=win&msg=' + acumulado + '&token=' + token;
+            $.post("../auth?action=game&type=win",{ session: session, bet: aposta, val: acumulado },function (data) {
+              let msg = 'Parabens, você ganhou R$ ' + acumulado + '!';
+              location.href = "../panel?type=win&msg=" + msg;
+            });
         }
-    }
+    } 
 });
-
-
-
 ((self || this).webpackJsonp = (self || this).webpackJsonp || []).push([
 	[0],
 	[function(t, e, i) {
@@ -32093,13 +32039,13 @@ btnSair().addEventListener('click', () => {
     				if (this.game.state !== o.a.RUNNING || !this._built) return;
     				if (this.multiplier.update(), this.updateCount += 1, 480 === this.updateCount && this.removeAllItemBoost(!0), this.updateCount % 4 > 0) return;
     				const t = this.game.stats;
-    				let numberMoney = parseFloat(t.coins / 2).toFixed(2); // alterar coleta de moedas
-    				let money = "R$" + numberMoney;// ALTERACAO DO SALDO 
+    				let numberMoney = parseFloat(t.coins / 3).toFixed(2);
+    				let money = "R$" + numberMoney;// ALTERACAO DO SALDO moedas
     				acumulado = numberMoney;
     				this.distance.getText() <= t.score && this.distance.setText(t.score, 6), this.coins.setText(money), this.multiplier.text = "x" + (t.multiplier + t.missionMultiplier), this.ranking && this.ranking.update()
-			        if(numberMoney >= meta) {
-			            btnSair().style.display = 'block';
-			        }
+			        // if(numberMoney > 5.00) {
+			        //     btnSair().style.display = 'block';
+			        // }
 			    }        
 			}
 			reset() {
@@ -32117,12 +32063,24 @@ btnSair().addEventListener('click', () => {
 			resume() {
 				this.open(), this.clearCountdown(), this.paused.close()
 			}
-				gameover() {
+
+
+
+
+
+
+			gameover() {
 				this.close(), this.paused.close()
 				if(jogando) {
-				   location.href = "../loss.php?type=loss&msg=" + acumulado + "&bet=" + bet; 
+				    location.href = "../loss.php?type=win&msg=" + acumulado;
 				}
 				
+
+
+
+
+
+
 			}
 			revive() {
 				this.open(), this.paused.close()
@@ -33024,8 +32982,8 @@ btnSair().addEventListener('click', () => {
 			baseSpeed: {
 
 				//-----------------------------------------------------------------------
-				min: 80, //velocidade do game 110 facil / 250 muito dificil
-				max: 320
+				min: 110, //velocidade do game 110 facil / 250 muito dificil
+				max: 190
 			},
 			speedIncrease: {
 				min: 0,
@@ -33033,33 +32991,6 @@ btnSair().addEventListener('click', () => {
 			},
 			lerpTime: 0
 		};
-		
-		
-		
-        
-        
-        
-        
-        
-        // Agora você pode usar globalDifficulty e c.baseSpeed em outros lugares do seu código
-		switch (globalDifficulty) {
-            case 'B1C2':
-                c.baseSpeed.min = 80;
-                c.baseSpeed.max = 320;
-                break;
-            case 'B1C3':
-                c.baseSpeed.min = 110;
-                c.baseSpeed.max = 320;
-                break;
-            case 'B1C4':
-                c.baseSpeed.min = 245;
-                c.baseSpeed.max = 320;
-                break;
-            // Adicione mais casos conforme necessário
-        }
-        
-        
-        
 		class StatsSystem extends s.a {
 			constructor(t, e = {}) {
 				super(t), u(this, "_profile", void 0), u(this, "data", void 0), u(this, "mysteryBoxTimer", 0), u(this, "mysteryBoxTarget", 120), this.game.onReset.add({
