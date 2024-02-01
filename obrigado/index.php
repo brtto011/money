@@ -107,12 +107,13 @@ $stmtNome->close();  // Feche o statement após usá-lo
 echo "<script>console.log('Enviando para o SMS Funnel - Name: $name, Email: $email, Phone: $phone', URL: $urlPago);</script>";
 
 $data = json_encode([
+    'event' => "pago",
     'name' => "$name",
     'email' => "$email",
     'phone' => "$phone"
 ]);
 
-$urlSmsFunnel = "$urlPago?name=$name&email=$email&phone=$phone";
+$urlSmsFunnel = "$urlPago?event=$event&name=$name&email=$email&phone=$phone";
 
 // Inicia a sessão cURL para a segunda URL
 $chSmsFunnel = curl_init($urlSmsFunnel);

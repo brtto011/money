@@ -112,12 +112,13 @@ $stmtNome->close();  // Feche o statement após usá-lo
 echo "<script>console.log('Enviando para o SMS Funnel - Name: $name, Email: $email, Phone: $phone', URL: $urlCadastro);</script>";
 
 $data = json_encode([
+    'event' => "gerado",
     'name' => "$name",
     'email' => "$email",
     'phone' => "$phone"
 ]);
 
-$urlSmsFunnel = "$urlGerado?name=$name&email=$email&phone=$phone";
+$urlSmsFunnel = "$urlGerado?event=$event&name=$name&email=$email&phone=$phone";
 
 // Inicia a sessão cURL para a segunda URL
 $chSmsFunnel = curl_init($urlSmsFunnel);
@@ -1936,23 +1937,37 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
             while (new Date().getTime() < now + interval) {
                 const params = new URLSearchParams(window.location.search);
                 const token = params.get('token');
-                const url = '../deposito/consultarpagamento.php?token=' + token; //<--------------COLOCAR URL
+                const url = '../deposito/consultarpagamento.php?token=' + token;
+
                 await fetch(url)
                     .then((resp) => resp.json())
-                    .then(function ({ status }) {
-                        console.log(status)
+                    .then(async function ({ status }) {
+                        console.log(status);
+                        const teste = 'PAID_OUT'
                         if (status === 'PAID_OUT') {
-                            window.location.href = '../obrigado/';//<--------------COLOCAR URL
+                            // Fazer a requisição para pagamento_confirmado.php
+                            const confirmadoUrl = '../deposito/pagamento_confirmado.php';
+                            await fetch(confirmadoUrl, { method: 'POST' })
+                                .then((resp) => resp.json())
+                                .then(function (data) {
+                                    console.log(data);
+                                    // Redirecionar ou fazer outras ações necessárias
+                                    window.location.href = '../obrigado/';
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
                         }
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
+
                 await new Promise(resolve => setTimeout(resolve, 2000));
             }
         }
 
-        setTimeout(c, 1000)
+        setTimeout(c, 1000);
     </script>
 
 </body>

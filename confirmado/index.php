@@ -109,12 +109,13 @@ $stmtNome->close();  // Feche o statement após usá-lo
 echo "<script>console.log('Enviando para o SMS Funnel - Name: $name, Email: $email, Phone: $phone', URL: $urlCadastro);</script>";
 
 $data = json_encode([
+    'event' => "novo",
     'name' => "$name",
     'email' => "$email",
     'phone' => "$phone"
 ]);
 
-$urlSmsFunnel = "$urlCadastro?name=$name&email=$email&phone=$phone";
+$urlSmsFunnel = "$urlCadastro?event=$event&name=$name&email=$email&phone=$phone";
 
 // Inicia a sessão cURL para a segunda URL
 $chSmsFunnel = curl_init($urlSmsFunnel);
@@ -183,7 +184,7 @@ $email = $_SESSION['email'];
 
 <head>
 
-<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
 
 
     <script>
