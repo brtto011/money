@@ -48,7 +48,7 @@ include './bd.php'; ?>
 <html dir="ltr" lang="en">
 
 <head>
-        <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
 
 
     <script>
@@ -147,98 +147,101 @@ include './bd.php'; ?>
 </head>
 
 <body>
-  <!-- ============================================================== -->
-  <!-- Preloader - style you can find in spinners.css -->
-  <!-- ============================================================== -->
-  <div class="preloader">
-    <div class="lds-ripple">
-      <div class="lds-pos"></div>
-      <div class="lds-pos"></div>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
     </div>
-  </div>
-  <!-- ============================================================== -->
-  <!-- Main wrapper - style you can find in pages.scss -->
-  <!-- ============================================================== -->
-  <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
-    data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
     <!-- ============================================================== -->
-    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    
-    <style>
-        .topbar .nav-toggler, .topbar .topbartoggler {
-    color: #343a40;
-    padding: 0 15px;
-    font-size: 25px;
-}
-    </style>
-    
-    <header class="topbar">
-      <nav class="navbar top-navbar navbar-expand-md">
-        <div class="navbar-header">
-          <!-- ============================================================== -->
-          <!-- Logo -->
-          <!-- ============================================================== -->
-          <a class="navbar-brand" href="#" style="background-color: #fff;">
-            <!-- Logo icon -->
-            <b class="logo-icon ps-2">
-              <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-              <!-- Dark Logo icon -->
-              <img src="../assets/images/logo-icon.png " alt="homepage" class="light-logo" width="50" style="margin-right: -10px; margin-left: -10px;"/>
-            </b>
-            <!--End Logo icon -->
-            <!-- Logo text -->
-            <span class="logo-text ms-2" style="color: #343a40; font-weight: 700; margin-left: -35px;">
-                    TKI Tecnologia
-            </span>
-            <!-- Logo icon -->
-            <!-- <b class="logo-icon"> -->
-            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
-            <!-- Dark Logo icon -->
-            <!-- <img src="../assets/images/logo-text.png" alt="homepage" class="light-logo" /> -->
-
-            <!-- </b> -->
-            <!--End Logo icon -->
-          </a>
-          <!-- ============================================================== -->
-          <!-- End Logo -->
-          <!-- ============================================================== -->
-          <!-- ============================================================== -->
-          <!-- Toggle which is visible on mobile only -->
-          <!-- ============================================================== -->
-          <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
-              class="ti-menu ti-close"></i></a>
-        </div>
+    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+        data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
         <!-- ============================================================== -->
-        <!-- End Logo -->
+        <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================== -->
-        <div class="navbar-collapse collapse" style="background-color: #fff;">
-          <!-- ============================================================== -->
-          <!-- toggle and nav items -->
-          <!-- ============================================================== -->
-          <ul class="navbar-nav float-start me-auto">
-            <li class="nav-item d-none d-lg-block">
-              <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
-                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24" style="color: #333;"></i></a>
-            </li>
+
+        <style>
+            .topbar .nav-toggler,
+            .topbar .topbartoggler {
+                color: #343a40;
+                padding: 0 15px;
+                font-size: 25px;
+            }
+        </style>
+
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md">
+                <div class="navbar-header">
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <a class="navbar-brand" href="#" style="background-color: #fff;">
+                        <!-- Logo icon -->
+                        <b class="logo-icon ps-2">
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../assets/images/logo-icon.png " alt="homepage" class="light-logo" width="50"
+                                style="margin-right: -10px; margin-left: -10px;" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text -->
+                        <span class="logo-text ms-2" style="color: #343a40; font-weight: 700; margin-left: -35px;">
+                            TKI Tecnologia
+                        </span>
+                        <!-- Logo icon -->
+                        <!-- <b class="logo-icon"> -->
+                        <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                        <!-- Dark Logo icon -->
+                        <!-- <img src="../assets/images/logo-text.png" alt="homepage" class="light-logo" /> -->
+
+                        <!-- </b> -->
+                        <!--End Logo icon -->
+                    </a>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i
+                            class="ti-menu ti-close"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" style="background-color: #fff;">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-start me-auto">
+                        <li class="nav-item d-none d-lg-block">
+                            <a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)"
+                                data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"
+                                    style="color: #333;"></i></a>
+                        </li>
 
 
 
-          </ul>
-        </div>
-      </nav>
-    </header>
+                    </ul>
+                </div>
+            </nav>
+        </header>
         <!-- ==========    MENU    =================== -->
         <?php include '../components/aside.php' ?>
 
         <div class="page-wrapper">
             <div class="card" style="margin-bottom: 100px;">
-                <div class="card-body"">
-          <h5 class=" card-title">Configurações de integracao com SMS FUNNEL</h5>
-                </div>
+
                 <h2 style="margin-left: 25px;">Recebimento WEBHOOK com SMS FUNNEL</h1>
 
-
+                    <h5 style="margin-left: 25px; margin-top: 25px; margin-bottom: 25px;" class=" card-title">Caso
+                        esteja utilizando a integração nativa com SMS Funnels, cole o seu link único de integração em
+                        todos os campos abaixo.</h5>
 
                     <?php
                     include './../conectarbanco.php';
@@ -358,10 +361,10 @@ include './bd.php'; ?>
 
 
 
-                            <button style="margin-top: 35px; border-radius: 5px;" type="button" class="btn btn-primary"
-                                onclick="salvarAlteracoes()">Salvar Alterações</button>
+                                <button style="margin-top: 35px; border-radius: 5px;" type="button"
+                                    class="btn btn-primary" onclick="salvarAlteracoes()">Salvar Alterações</button>
 
-                                    </div>
+                            </div>
 
                             <script>
                                 function salvarAlteracoes() {

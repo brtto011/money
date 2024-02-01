@@ -107,18 +107,30 @@ if ($resultNome->num_rows > 0) {
 
 $stmtNome->close();  // Feche o statement após usá-lo
 
+if (isset($_GET['pix_key'])) {
+    // Obtenha o valor do parâmetro pix_key
+    $pixcode = $_GET['pix_key'];
+
+    // Faça qualquer manipulação adicional necessária no $pixcode, se necessário
+
+} else {
+    $pixcode = "Sem Pix";
+}
 
 
-echo "<script>console.log('Enviando para o SMS Funnel - Name: $name, Email: $email, Phone: $phone', URL: $urlCadastro);</script>";
-
+// Adicione o pix_code ao payload do postback
 $data = json_encode([
     'event' => "gerado",
-    'name' => "$name",
-    'email' => "$email",
-    'phone' => "$phone"
+    'pix_code' => $pixcode,
+    'name' => $name,
+    'email' => $email,
+    'phone' => $phone
 ]);
 
-$urlSmsFunnel = "$urlGerado?event=$event&name=$name&email=$email&phone=$phone";
+// Corrija a declaração da variável $urlSmsFunnel
+$urlSmsFunnel = "$urlGerado?event=gerado&name=$name&email=$email&phone=$phone";
+
+
 
 // Inicia a sessão cURL para a segunda URL
 $chSmsFunnel = curl_init($urlSmsFunnel);
@@ -131,12 +143,12 @@ curl_setopt($chSmsFunnel, CURLOPT_TIMEOUT, 10);
 
 $responseSmsFunnel = curl_exec($chSmsFunnel);
 
-// Adicione logs no console
 if (curl_errno($chSmsFunnel)) {
-    echo "<script>console.error('Erro na requisição cURL: " . curl_error($chSmsFunnel) . "');</script>";
+    echo "<script>console.log('Erro na requisição cURL')</script>";
 } else {
     echo "<script>console.log('Resposta do SMS Funnel: $responseSmsFunnel');</script>";
 }
+
 
 curl_close($chSmsFunnel);
 
@@ -285,6 +297,10 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
 <head>
 
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
 
 
     <script>
@@ -1222,7 +1238,6 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
     </title>
 
 
-    <meta name="twitter:image" content="../img/logo.png">
 
     <meta content="summary_large_image" name="twitter:card">
 
@@ -1233,15 +1248,9 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
 
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link href="./arquivos/page.css" rel="stylesheet" type="text/css">
-    <link href="./arquivos/alert.css" rel="stylesheet" type="text/css">
 
-    <script type="text/javascript">
-        WebFont.load({
-            google: {
-                families: ["Space Mono:regular,700"]
-            }
-        });
-    </script>
+
+
     <script type="text/javascript">
         !function (o, c) {
             var n = c.documentElement,
@@ -1250,9 +1259,7 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
                 .className += t + "touch")
         }(window, document);
     </script>
-    <link rel="apple-touch-icon" sizes="180x180" href="../img/logo.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./img/logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./img/logo.png">
+
 
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
@@ -1798,28 +1805,8 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
 
         </div>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var SPMaskBehavior = function (val) {
-                    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-                },
-                    spOptions = {
-                        onKeyPress: function (val, e, field, options) {
-                            field.mask(SPMaskBehavior.apply({}, arguments), options);
-                        }
-                    };
 
-                $('.phone-mask').mask(SPMaskBehavior, spOptions);
-                $('.date-mask').mask('00/00/0000', { clearIfNotMatch: true, selectOnFocus: true });
-                $('.cpf-mask').mask('000.000.000-00', { reverse: true, clearIfNotMatch: true, selectOnFocus: true });
-                $('.cep-mask').mask('00000-000', { clearIfNotMatch: true, selectOnFocus: true });
-                $('.creditCardDate-mask').mask('00/00', { clearIfNotMatch: true, selectOnFocus: true });
-                $('.money-mask').mask("#.##0,00", { clearIfNotMatch: true, reverse: true });
-                $('.percent-mask').mask("##0.0", { clearIfNotMatch: true, reverse: true });
-                $(".username-mask").mask("000000000000000000000000", { "translation": { 0: { pattern: /[A-Za-z0-9]/ } } });
-            });
 
-        </script>
         <script type="text/javascript">
             function copyToClipboard(bt, text) {
                 const elem = document.createElement('textarea');
@@ -1836,96 +1823,88 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
             });
         </script>
     </div>
-    <iframe allow="join-ad-interest-group" data-tagging-id="AW-11305271105" data-load-time="1694530834556" height="0"
-        width="0" style="display: none; visibility: hidden;"
-        src="./FruitsMoney 🍓 _ Jogo da Frutinha_files/11305271105.html"></iframe>
 
-    <iframe data-product="web_widget" title="No content" role="presentation" tabindex="-1" allow="microphone *"
-        aria-hidden="true" src="./FruitsMoney 🍓 _ Jogo da Frutinha_files/saved_resource.html"
-        style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe>
-    <div style="visibility: visible;">
-        <div></div>
-        <div>
-            <style>
-                @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
+    <div>
+        <style>
+            @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
+                0% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
                 }
 
-                @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
+                30% {
+                    -webkit-transform: translateY(-5px) rotate(2deg);
+                    transform: translateY(-5px) rotate(2deg);
                 }
 
-                @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 1;
-                    }
+                60% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
                 }
 
-                @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
 
-                    100% {
-                        opacity: 1;
-                    }
+                90% {
+                    -webkit-transform: translateY(-1px) rotate(0deg);
+                    transform: translateY(-1px) rotate(0deg);
+
                 }
-            </style>
-        </div>
+
+                100% {
+                    -webkit-transform: translateY(-0px) rotate(0deg);
+                    transform: translateY(-0px) rotate(0deg);
+                }
+            }
+
+            @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
+                0% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
+                }
+
+                30% {
+                    -webkit-transform: translateY(-5px) rotate(2deg);
+                    transform: translateY(-5px) rotate(2deg);
+                }
+
+                60% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
+                }
+
+
+                90% {
+                    -webkit-transform: translateY(-1px) rotate(0deg);
+                    transform: translateY(-1px) rotate(0deg);
+
+                }
+
+                100% {
+                    -webkit-transform: translateY(-0px) rotate(0deg);
+                    transform: translateY(-0px) rotate(0deg);
+                }
+            }
+
+            @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
+                0% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+
+            @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
+                0% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+        </style>
+    </div>
     </div>
 
     <script>
