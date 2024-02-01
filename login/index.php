@@ -241,7 +241,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         <style>
+          body {
+            user-select: none;
+          }
+
+          .all {
+
+            filter: blur(0px);
+            transition: filter 0.3s ease;
+          }
+        </style>
+
+
+
+
+        <style>
           .nav-bar {
+
+            margin-top: 80px;
             display: none;
             background-color: #333;
             /* Cor de fundo do menu */
@@ -254,7 +271,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             /* Fixa o menu na parte superior */
             top: 0;
             left: 0;
-            z-index: 1000;
+            z-index: 9999;
             /* Garante que o menu está acima de outros elementos */
           }
 
@@ -283,17 +300,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           document.addEventListener('DOMContentLoaded', function () {
             var menuButton = document.querySelector('.menu-button');
             var navBar = document.querySelector('.nav-bar');
+            var All = document.querySelector('.all');
 
             menuButton.addEventListener('click', function () {
               // Toggle the visibility of the navigation bar
               if (navBar.style.display === 'block') {
                 navBar.style.display = 'none';
+                All.style.filter = 'blur(0px)';
+                document.body.style.overflow = ''; /* Restaurar a rolagem após fechar o menu */
               } else {
                 navBar.style.display = 'block';
+                All.style.filter = 'blur(3px)';
+                navBar.style.filter = 'blur(0px)';
+                document.body.style.overflow = 'hidden'; /* Remover a rolagem enquanto o menu está aberto */
               }
             });
           });
         </script>
+
 
 
         <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0"
@@ -315,236 +339,241 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </a>
       <a href="../cadastrar/" class="button w-button">Cadastrar</a>
     </div>
-    <section id="hero" class="hero-section dark wf-section">
-      <div class="minting-container w-container">
-        <h2>LOGIN</h2>
-        <a href="../cadastrar/">
-          <p>Não possui conta? Clique aqui <br>
-          </p>
-        </a>
 
 
+    <div class="all">
 
-
-
-
-
-
-
-
-
-        <form method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
-
-
-          <div class="properties">
-            <h4 class="rarity-heading">E-mail</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="e-mail" class="large-input-field w-input" maxlength="256" name="email"
-                placeholder="seuemail@gmail.com" id="email" required="">
-            </div>
-            <h4 class="rarity-heading">Senha</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="password" class="large-input-field w-input" maxlength="256" name="senha" data-name="password"
-                placeholder="Sua senha" id="senha" required="">
-            </div><br>
-
-
-
-            <input type="checkbox" onclick="mostrarSenha()"> Mostrar senha
-          </div>
-
-
-          <script>
-            function mostrarSenha() {
-              var senhaInput = document.getElementById('senha');
-              if (senhaInput.type === 'password') {
-                senhaInput.type = 'text';
-              } else {
-                senhaInput.type = 'password';
-              }
-            }
-          </script>
-
-
-
-
-          <?php
-          if (!empty($errorMessage)) {
-            echo '<p class="login-error">' . $errorMessage . '</p>';
-          }
-          if (!empty($successMessage)) {
-            echo '<p class="login-success">' . $successMessage . '</p>';
-          }
-          ?>
-
-
-          <a href="recovery.php">
-            <p>Esqueceu sua senha? Clique aqui <br>
+      <section id="hero" class="hero-section dark wf-section">
+        <div class="minting-container w-container">
+          <h2>LOGIN</h2>
+          <a href="../cadastrar/">
+            <p>Não possui conta? Clique aqui <br>
             </p>
           </a>
-          <div class="">
-            <button class="primary-button w-button">Entrar</button><br><br>
-          </div>
-        </form>
 
 
 
 
 
-      </div>
-    </section>
-    <script type="text/javascript">
-      function myFunction() {
-        var x = document.getElementById("senha");
-        if (x.type === "password") {
-          x.type = "text";
-        } else {
-          x.type = "password";
+
+
+
+
+
+
+          <form method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+
+
+            <div class="properties">
+              <h4 class="rarity-heading">E-mail</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="e-mail" class="large-input-field w-input" maxlength="256" name="email"
+                  placeholder="seuemail@gmail.com" id="email" required="">
+              </div>
+              <h4 class="rarity-heading">Senha</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="password" class="large-input-field w-input" maxlength="256" name="senha"
+                  data-name="password" placeholder="Sua senha" id="senha" required="">
+              </div><br>
+
+
+
+              <input type="checkbox" onclick="mostrarSenha()"> Mostrar senha
+            </div>
+
+
+            <script>
+              function mostrarSenha() {
+                var senhaInput = document.getElementById('senha');
+                if (senhaInput.type === 'password') {
+                  senhaInput.type = 'text';
+                } else {
+                  senhaInput.type = 'password';
+                }
+              }
+            </script>
+
+
+
+
+            <?php
+            if (!empty($errorMessage)) {
+              echo '<p class="login-error">' . $errorMessage . '</p>';
+            }
+            if (!empty($successMessage)) {
+              echo '<p class="login-success">' . $successMessage . '</p>';
+            }
+            ?>
+
+
+            <a href="recovery.php">
+              <p>Esqueceu sua senha? Clique aqui <br>
+              </p>
+            </a>
+            <div class="">
+              <button class="primary-button w-button">Entrar</button><br><br>
+            </div>
+          </form>
+
+
+
+
+
+        </div>
+      </section>
+      <script type="text/javascript">
+        function myFunction() {
+          var x = document.getElementById("senha");
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
         }
-      }
-    </script>
+      </script>
 
 
 
-    <script>
-      // Ocultar a mensagem de sucesso após 3 segundos e redirecionar
-      setTimeout(function () {
-        var successMessage = document.querySelector(".login-success");
-        if (successMessage) {
-          successMessage.style.display = "none";
-          window.location.href = "../deposito"; // Redirecionar após 3 segundos
-        }
-      }, 3000);
-    </script>
+      <script>
 
-
-
+        setTimeout(function () {
+          var successMessage = document.querySelector(".login-success");
+          if (successMessage) {
+            successMessage.style.display = "none";
+            window.location.href = "../deposito"; // Redirecionar após 3 segundos
+          }
+        }, 1);
+      </script>
 
 
 
 
 
-    <div class="footer-section wf-section">
-      <div class="domo-text">
-        <?= $nomeUm ?> <br>
+
+
+
+      <div class="footer-section wf-section">
+        <div class="domo-text">
+          <?= $nomeUm ?> <br>
+        </div>
+        <div class="domo-text purple">
+          <?= $nomeDois ?> <br>
+        </div>
+        <div class="follow-test">© Copyright xlk Limited, with registered
+          offices at
+          Dr. M.L. King
+          Boulevard 117, accredited by license GLH-16289876512. </div>
+        <div class="follow-test">
+          <a href="../termos">
+            <strong class="bold-white-link">Termos de uso</strong>
+          </a>
+        </div>
+        <div class="follow-test">contato@
+          <?= $nomeUnico ?>.cloud
+        </div>
       </div>
-      <div class="domo-text purple">
-        <?= $nomeDois ?> <br>
-      </div>
-      <div class="follow-test">© Copyright xlk Limited, with registered
-        offices at
-        Dr. M.L. King
-        Boulevard 117, accredited by license GLH-16289876512. </div>
-      <div class="follow-test">
-        <a href="../termos">
-          <strong class="bold-white-link">Termos de uso</strong>
-        </a>
-      </div>
-      <div class="follow-test">contato@
-        <?= $nomeUnico ?>.cloud
+
+
+
+
+
+    </div>
+    <div id="imageDownloaderSidebarContainer">
+      <div class="image-downloader-ext-container">
+        <div tabindex="-1" class="b-sidebar-outer"><!---->
+          <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+            class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
+            <div class="b-sidebar-body">
+              <div></div>
+            </div><!---->
+          </div><!----><!---->
+        </div>
       </div>
     </div>
+    <div style="visibility: visible;">
+      <div></div>
+      <div>
+
+        <style>
+          @-webkit-keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-launcherOnOpen {
+            0% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
+
+            30% {
+              -webkit-transform: translateY(-5px) rotate(2deg);
+              transform: translateY(-5px) rotate(2deg);
+            }
+
+            60% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
 
 
+            90% {
+              -webkit-transform: translateY(-1px) rotate(0deg);
+              transform: translateY(-1px) rotate(0deg);
+
+            }
+
+            100% {
+              -webkit-transform: translateY(-0px) rotate(0deg);
+              transform: translateY(-0px) rotate(0deg);
+            }
+          }
+
+          @keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-launcherOnOpen {
+            0% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
+
+            30% {
+              -webkit-transform: translateY(-5px) rotate(2deg);
+              transform: translateY(-5px) rotate(2deg);
+            }
+
+            60% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
 
 
+            90% {
+              -webkit-transform: translateY(-1px) rotate(0deg);
+              transform: translateY(-1px) rotate(0deg);
 
-  </div>
-  <div id="imageDownloaderSidebarContainer">
-    <div class="image-downloader-ext-container">
-      <div tabindex="-1" class="b-sidebar-outer"><!---->
-        <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-          class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
-          <div class="b-sidebar-body">
-            <div></div>
-          </div><!---->
-        </div><!----><!---->
+            }
+
+            100% {
+              -webkit-transform: translateY(-0px) rotate(0deg);
+              transform: translateY(-0px) rotate(0deg);
+            }
+          }
+
+          @keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-widgetOnLoad {
+            0% {
+              opacity: 0;
+            }
+
+            100% {
+              opacity: 1;
+            }
+          }
+
+          @-webkit-keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-widgetOnLoad {
+            0% {
+              opacity: 0;
+            }
+
+            100% {
+              opacity: 1;
+            }
+          }
+        </style>
       </div>
-    </div>
-  </div>
-  <div style="visibility: visible;">
-    <div></div>
-    <div>
-
-      <style>
-        @-webkit-keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-launcherOnOpen {
-          0% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-          30% {
-            -webkit-transform: translateY(-5px) rotate(2deg);
-            transform: translateY(-5px) rotate(2deg);
-          }
-
-          60% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-
-          90% {
-            -webkit-transform: translateY(-1px) rotate(0deg);
-            transform: translateY(-1px) rotate(0deg);
-
-          }
-
-          100% {
-            -webkit-transform: translateY(-0px) rotate(0deg);
-            transform: translateY(-0px) rotate(0deg);
-          }
-        }
-
-        @keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-launcherOnOpen {
-          0% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-          30% {
-            -webkit-transform: translateY(-5px) rotate(2deg);
-            transform: translateY(-5px) rotate(2deg);
-          }
-
-          60% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-
-          90% {
-            -webkit-transform: translateY(-1px) rotate(0deg);
-            transform: translateY(-1px) rotate(0deg);
-
-          }
-
-          100% {
-            -webkit-transform: translateY(-0px) rotate(0deg);
-            transform: translateY(-0px) rotate(0deg);
-          }
-        }
-
-        @keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-widgetOnLoad {
-          0% {
-            opacity: 0;
-          }
-
-          100% {
-            opacity: 1;
-          }
-        }
-
-        @-webkit-keyframes ww-71e31c39-4e87-4264-930a-91d2465581f0-widgetOnLoad {
-          0% {
-            opacity: 0;
-          }
-
-          100% {
-            opacity: 1;
-          }
-        }
-      </style>
     </div>
   </div>
 </body>

@@ -143,9 +143,9 @@ if (isset($_SESSION['email'])) {
                 echo "Erro ao inserir o saque: " . $conn->error;
               }
             } else {
-              
+
               $mensagem_saque_erro = "Valor de saque inválido, saldo insuficiente ou abaixo do limite mínimo de saque.";
-      
+
             }
           }
         } else {
@@ -315,12 +315,29 @@ $conn->close();
 
 
 
-   
+
+
+
+
+        <style>
+          body {
+            user-select: none;
+          }
+
+          .all {
+
+            filter: blur(0px);
+            transition: filter 0.3s ease;
+          }
+        </style>
+
 
 
 
         <style>
           .nav-bar {
+
+            margin-top: 80px;
             display: none;
             background-color: #333;
             /* Cor de fundo do menu */
@@ -333,7 +350,7 @@ $conn->close();
             /* Fixa o menu na parte superior */
             top: 0;
             left: 0;
-            z-index: 1000;
+            z-index: 9999;
             /* Garante que o menu está acima de outros elementos */
           }
 
@@ -362,17 +379,27 @@ $conn->close();
           document.addEventListener('DOMContentLoaded', function () {
             var menuButton = document.querySelector('.menu-button');
             var navBar = document.querySelector('.nav-bar');
+            var All = document.querySelector('.all');
 
             menuButton.addEventListener('click', function () {
               // Toggle the visibility of the navigation bar
               if (navBar.style.display === 'block') {
                 navBar.style.display = 'none';
+                All.style.filter = 'blur(0px)';
+                document.body.style.overflow = ''; /* Restaurar a rolagem após fechar o menu */
               } else {
                 navBar.style.display = 'block';
+                All.style.filter = 'blur(3px)';
+                navBar.style.filter = 'blur(0px)';
+                document.body.style.overflow = 'hidden'; /* Remover a rolagem enquanto o menu está aberto */
               }
             });
           });
         </script>
+
+
+
+
 
 
 
@@ -388,11 +415,7 @@ $conn->close();
 
         <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0"
           aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-          <div class="" style="-webkit-user-select: text;">
 
-
-            <a href="../deposito/" class="menu-button2 w-nav-dep nav w-button">DEPOSITAR</a>
-          </div>
         </div>
         <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
           tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
@@ -420,60 +443,63 @@ $conn->close();
 
 
 
+    <div class="all">
+
+      <section id="hero" class="hero-section dark wf-section">
+        <div class="minting-container w-container">
+          <img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
+            alt="Roboto #6340" class="mint-card-image">
+          <h2>Saque</h2>
+          <p>PIX: saques instantâneos com muita praticidade. <br>
+          </p>
 
 
-    <section id="hero" class="hero-section dark wf-section">
-      <div class="minting-container w-container">
-        <img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
-          alt="Roboto #6340" class="mint-card-image">
-        <h2>Saque</h2>
-        <p>PIX: saques instantâneos com muita praticidade. <br>
-        </p>
 
 
 
-
-
-        <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form">
-          <div class="properties">
-            <h4 class="rarity-heading">Seu e-mail:</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
-                maxlength="256" placeholder="<?= $email ?>" disabled>
+          <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form">
+            <div class="properties">
+              <h4 class="rarity-heading">Seu e-mail:</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="text"
+                  class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
+                  maxlength="256" placeholder="<?= $email ?>" disabled>
+              </div>
+              <h4 class="rarity-heading">Nome do destinatário:</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="text"
+                  class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
+                  maxlength="256" name="withdrawName" placeholder="Nome do Destinatario" id="withdrawName" required="">
+              </div>
+              <h4 class="rarity-heading">Chave PIX CPF:</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="text"
+                  class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
+                  maxlength="256" name="withdrawCPF" placeholder="Seu número de CPF" id="withdrawCPF" required="">
+              </div>
+              <h4 class=" rarity-heading">Valor disponível para saque:</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="number" data-name="Valor de saque" placeholder="R$<?= $saldo ?>" disabled="">
+              </div>
             </div>
-            <h4 class="rarity-heading">Nome do destinatário:</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
-                maxlength="256" name="withdrawName" placeholder="Nome do Destinatario" id="withdrawName" required="">
+            <div class="">
+
+              <p id="saque-ok" style="color: green; display: <?php echo $mensagem_saque_ok ? 'block' : 'none'; ?>">
+                <?php echo $mensagem_saque_ok; ?>
+              </p>
+              <p id="saque-error" style="color: red; display: <?php echo $mensagem_saque_erro ? 'block' : 'none'; ?>">
+                <?php echo $mensagem_saque_erro; ?>
+              </p>
+
+              <input type="submit" value="Sacar" id="sacarpix" class="primary-button w-button"><br><br>
+
+              </p>
             </div>
-            <h4 class="rarity-heading">Chave PIX CPF:</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
-                maxlength="256" name="withdrawCPF" placeholder="Seu número de CPF" id="withdrawCPF" required="">
-            </div>
-            <h4 class=" rarity-heading">Valor disponível para saque:</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="number" data-name="Valor de saque" placeholder="R$<?= $saldo ?>" disabled="">
-            </div>
-          </div>
-          <div class="">
-
-            <p id="saque-ok" style="color: green; display: <?php echo $mensagem_saque_ok ? 'block' : 'none'; ?>">
-              <?php echo $mensagem_saque_ok; ?>
-            </p>
-            <p id="saque-error" style="color: red; display: <?php echo $mensagem_saque_erro ? 'block' : 'none'; ?>">
-              <?php echo $mensagem_saque_erro; ?>
-            </p>
-
-            <input type="submit" value="Sacar via PIX" id="sacarpix" class="primary-button w-button"><br><br>
-
-            </p>
-          </div>
 
 
-          <h4>Saque Mínimo: R$
-            <?= $saque_min_afiliado ?> <br>
-          </h4>
+            <h4>Saque Mínimo: R$
+              <?= $saque_min_afiliado ?> <br>
+            </h4>
 
 
 
@@ -484,7 +510,7 @@ $conn->close();
 
 
 
-        </form>
+          </form>
 
 
 
@@ -493,9 +519,9 @@ $conn->close();
 
 
 
-      </div>
-    </section>
-    <!-- <div class="intermission wf-section"></div>
+        </div>
+      </section>
+      <!-- <div class="intermission wf-section"></div>
     <div id="rarity" class="rarity-section wf-section">
       <div class="minting-container w-container">
         <img src="arquivos/money-cash.gif" loading="lazy" width="240" alt="Robopet 6340" class="mint-card-image">
@@ -514,11 +540,10 @@ $conn->close();
         <div class="w-layout-grid grid-2">
           <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340" class="mint-card-image v2">
           <div>
-            <h2>Indique um amigo e ganhe R$ no PIX</h2>
+            <h2>Indique um amigo e ganhe no PIX</h2>
             <h3>Como funciona?</h3>
-            <p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$5 por cada amigo que
-              se
-              inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar. Isso
+            <p>Convide seus amigos que ainda não estão na plataforma. Não há limite para quantos amigos você pode
+              convidar. Isso
               significa que também não há limite para quanto você pode ganhar!</p>
             <h3>Como recebo o dinheiro?</h3>
             <p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode sacar
@@ -651,6 +676,7 @@ $conn->close();
         }
       </style>
     </div>
+  </div>
   </div>
 </body>
 

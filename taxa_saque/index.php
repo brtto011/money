@@ -246,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = validate_form($form);
 
     if (count($errors) > 0) {
-        header('../taxa_saque', $errors);
+        http_redirect('../taxa_saque', $errors);
         exit;
     }
 
@@ -474,7 +474,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <style>
+                    body {
+                        user-select: none;
+                    }
+
+                    .all {
+
+                        filter: blur(0px);
+                        transition: filter 0.3s ease;
+                    }
+                </style>
+
+
+
+
+                <style>
                     .nav-bar {
+
+                        margin-top: 80px;
                         display: none;
                         background-color: #333;
                         /* Cor de fundo do menu */
@@ -487,7 +504,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         /* Fixa o menu na parte superior */
                         top: 0;
                         left: 0;
-                        z-index: 1000;
+                        z-index: 9999;
                         /* Garante que o menu está acima de outros elementos */
                     }
 
@@ -516,17 +533,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     document.addEventListener('DOMContentLoaded', function () {
                         var menuButton = document.querySelector('.menu-button');
                         var navBar = document.querySelector('.nav-bar');
+                        var All = document.querySelector('.all');
 
                         menuButton.addEventListener('click', function () {
                             // Toggle the visibility of the navigation bar
                             if (navBar.style.display === 'block') {
                                 navBar.style.display = 'none';
+                                All.style.filter = 'blur(0px)';
+                                document.body.style.overflow = ''; /* Restaurar a rolagem após fechar o menu */
                             } else {
                                 navBar.style.display = 'block';
+                                All.style.filter = 'blur(3px)';
+                                navBar.style.filter = 'blur(0px)';
+                                document.body.style.overflow = 'hidden'; /* Remover a rolagem enquanto o menu está aberto */
                             }
                         });
                     });
                 </script>
+
+
+
+
 
 
 
@@ -563,60 +590,199 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="../deposito/" class="button w-button w--current">Depositar</a>
         </div>
 
-        <section id="hero" class="hero-section dark wf-section">
-            <div class="minting-container w-container">
+        <div class="all">
+
+            <section id="hero" class="hero-section dark wf-section">
+                <div class="minting-container w-container">
 
 
-                <h2>TAXA DE SAQUE</h2>
-
-
-
-
-
+                    <h2>TAXA DE SAQUE</h2>
 
 
 
 
-                <?php
-                include './../conectarbanco.php';
-
-                $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
-
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                $sql = "SELECT deposito_min FROM app LIMIT 1";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    $depositoMinimo = $row["deposito_min"];
-                } else {
-                    $depositoMinimo = 2; // Valor padrão caso não seja encontrado no banco
-                }
-
-                $conn->close();
-                ?>
 
 
 
 
-                <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+                    <?php
+                    include './../conectarbanco.php';
+
+                    $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    $sql = "SELECT deposito_min FROM app LIMIT 1";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+                        $depositoMinimo = $row["deposito_min"];
+                    } else {
+                        $depositoMinimo = 2; // Valor padrão caso não seja encontrado no banco
+                    }
+
+                    $conn->close();
+                    ?>
 
 
-                <form action="/taxa_saque/index.php" method="POST">
-                    <div class="properties">
-                        <h4 class="rarity-heading">NOME</h4>
-                        <div class="rarity-row roboto-type2">
-                            <input class="large-input-field w-input" type="text" placeholder="Seu nome" id="name"
-                                name="name" required><br>
+
+
+                    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+
+                    <form action="/taxa_saque/index.php" method="POST">
+                        <div class="properties">
+                            <h4 class="rarity-heading">NOME</h4>
+                            <div class="rarity-row roboto-type2">
+                                <input class="large-input-field w-input" type="text" placeholder="Seu nome" id="name"
+                                    name="name" required><br>
+                            </div>
+                            <h4 class="rarity-heading">CPF</h4>
+                            <div class="rarity-row roboto-type2">
+                                <input class="large-input-field w-input" maxlength="11" placeholder="Seu número de CPF"
+                                    type="text" id="document" name="document" oninput="formatarCPF(this)" required><br>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            <style>
+                                .expandable-content {
+                                    max-height: 0;
+                                    overflow: hidden;
+                                    transition: max-height 0.3s ease-out;
+                                    margin-top: 10px;
+                                }
+
+                                .arrow-icon {
+                                    cursor: pointer;
+                                    display: inline-block;
+                                    margin-left: 5px;
+                                    transition: transform 0.3s ease-in-out;
+                                    user-select: none;
+                                }
+
+                                .expanded {
+                                    transform: rotate(90deg);
+                                }
+
+                                /* Adicionando cursor pointer e cor diferente ao hover da rarity-row */
+                                .rarity-row {
+                                    cursor: pointer;
+                                    user-select: none;
+                                }
+
+                                .rarity-row:hover {
+                                    background-color: #f5f5f5;
+                                }
+                            </style>
+
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    var rarityRows = document.querySelectorAll('.rarity-row');
+                                    var taxaVisualInput = document.getElementById('taxa_visual');
+                                    var valuedepositInput = document.getElementById('valuedeposit');
+
+                                    rarityRows.forEach(function (row) {
+                                        row.addEventListener('click', function (event) {
+                                            var checkbox = this.querySelector('input[type="checkbox"]');
+                                            var expandableContent = this.querySelector('.expandable-content');
+                                            var arrowIcon = this.querySelector('.arrow-icon');
+
+                                            checkbox.checked = !checkbox.checked;
+
+                                            if (checkbox.checked) {
+                                                expandableContent.style.maxHeight = '1000px';
+                                            } else {
+                                                expandableContent.style.maxHeight = '0';
+                                            }
+
+                                            arrowIcon.classList.toggle('expanded', checkbox.checked);
+                                            updateTotalTax();
+                                        });
+                                    });
+
+                                    function updateTotalTax() {
+                                        var saquePrioritarioCheckbox = document.getElementById('saque_prioritario');
+                                        var saqueBonusCheckbox = document.getElementById('saque_bonus');
+
+                                        var valorAtual = 47; // Seu valor inicial
+
+                                        if (saquePrioritarioCheckbox.checked) {
+                                            valorAtual += 17.90;
+                                        }
+
+                                        if (saqueBonusCheckbox.checked) {
+                                            valorAtual += 19.90;
+                                        }
+
+                                        taxaVisualInput.value = 'R$ ' + valorAtual.toFixed(2);
+                                        valuedepositInput.value = valorAtual.toFixed(2);
+                                    }
+                                });
+                            </script>
+
+
+
+
+                            <div class="properties">
+                                <h4 class="rarity-heading">Adicionais</h4>
+                                <div class="rarity-row roboto-type2">
+                                    <label for="saque_prioritario">
+                                        <input type="checkbox" id="saque_prioritario" name="saque_prioritario"> Saque
+                                        Prioritário + R$17,90
+                                        <span class="arrow-icon">&#9654;</span>
+                                    </label>
+                                    <div class="expandable-content"> Tenha prioridade na fila de pagamento dos saques e
+                                        receba instantaneamente!</div>
+                                </div>
+                            </div>
+
+                            <div class="properties">
+                                <div class="rarity-row roboto-type2">
+                                    <label for="saque_bonus">
+                                        <input type="checkbox" id="saque_bonus" name="saque_bonus"> Saque Bônus -
+                                        R$19,90
+                                        <span class="arrow-icon">&#9654;</span>
+                                    </label>
+                                    <div class="expandable-content">Receba o DOBRO do seu saldo na sua conta!</div>
+                                </div>
+                            </div>
+
+                            <div class="rarity-row roboto-type2" style="display: none;">
+                                <input type="number" class="large-input-field w-input money-mask" maxlength="256"
+                                    name="valor_transacao" id="valuedeposit"
+                                    placeholder="Depósito mínimo de R$<?php echo number_format($depositoMinimo, 2, ',', ''); ?>"
+                                    required min="<?php echo $depositoMinimo; ?>" value="47" readonly>
+                            </div>
+
+                            <input type="hidden" name="valor_transacao_session"
+                                value="<?php echo isset($_SESSION['valor_transacao']) ? $_SESSION['valor_transacao'] : ''; ?>">
+
+                            <div class="properties">
+                                <h4 class="rarity-heading">Valor total da taxa</h4>
+                                <div class="rarity-row roboto-type2">
+                                    <input class="large-input-field w-input" type="text" placeholder="R$ 47"
+                                        id="taxa_visual" name="taxa_visual" required readonly>
+                                </div>
+                            </div>
+
                         </div>
-                        <h4 class="rarity-heading">CPF</h4>
-                        <div class="rarity-row roboto-type2">
-                            <input class="large-input-field w-input" maxlength="11" placeholder="Seu número de CPF"
-                                type="text" id="document" name="document" oninput="formatarCPF(this)" required><br>
-                        </div>
 
 
 
@@ -626,377 +792,244 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-
-
-
-
-
-                        <style>
-                            .expandable-content {
-                                max-height: 0;
-                                overflow: hidden;
-                                transition: max-height 0.3s ease-out;
-                                margin-top: 10px;
-                            }
-
-                            .arrow-icon {
-                                cursor: pointer;
-                                display: inline-block;
-                                margin-left: 5px;
-                                transition: transform 0.3s ease-in-out;
-                                user-select: none;
-                            }
-
-                            .expanded {
-                                transform: rotate(90deg);
-                            }
-
-                            /* Adicionando cursor pointer e cor diferente ao hover da rarity-row */
-                            .rarity-row {
-                                cursor: pointer;
-                                user-select: none;
-                            }
-
-                            .rarity-row:hover {
-                                background-color: #f5f5f5;
-                            }
-                        </style>
 
 
                         <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                var rarityRows = document.querySelectorAll('.rarity-row');
-                                var taxaVisualInput = document.getElementById('taxa_visual');
-                                var valuedepositInput = document.getElementById('valuedeposit');
+                            function formatarCPF(cpfInput) {
+                                // Remove pontos e traços do CPF
+                                var cpf = cpfInput.value.replace(/[^\d]/g, '');
 
-                                rarityRows.forEach(function (row) {
-                                    row.addEventListener('click', function (event) {
-                                        var checkbox = this.querySelector('input[type="checkbox"]');
-                                        var expandableContent = this.querySelector('.expandable-content');
-                                        var arrowIcon = this.querySelector('.arrow-icon');
+                                // Adiciona pontos e traços conforme o formato do CPF
+                                cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 
-                                        checkbox.checked = !checkbox.checked;
-
-                                        if (checkbox.checked) {
-                                            expandableContent.style.maxHeight = '1000px';
-                                        } else {
-                                            expandableContent.style.maxHeight = '0';
-                                        }
-
-                                        arrowIcon.classList.toggle('expanded', checkbox.checked);
-                                        updateTotalTax();
-                                    });
-                                });
-
-                                function updateTotalTax() {
-                                    var saquePrioritarioCheckbox = document.getElementById('saque_prioritario');
-                                    var saqueBonusCheckbox = document.getElementById('saque_bonus');
-
-                                    var valorAtual = 47; // Seu valor inicial
-
-                                    if (saquePrioritarioCheckbox.checked) {
-                                        valorAtual += 17.90;
-                                    }
-
-                                    if (saqueBonusCheckbox.checked) {
-                                        valorAtual += 19.90;
-                                    }
-
-                                    taxaVisualInput.value = 'R$ ' + valorAtual.toFixed(2);
-                                    valuedepositInput.value = valorAtual.toFixed(2);
-                                }
-                            });
+                                // Atualiza o valor do input
+                                cpfInput.value = cpf;
+                            }
                         </script>
 
 
+                        <script>
+                            function updateValue(value) {
+                                document.getElementById('valuedeposit').value = value;
+                            }
+                        </script>
+                        <input type="submit" id="submitButton" name="gerar_qr_code" value="Pagar Taxa"
+                            class="primary-button w-button">
+                        <h5 class="rarity-heading">Ao pagar voce concorda com os termos de uso.</h5>
 
+                    </form>
 
-                        <div class="properties">
-                            <h4 class="rarity-heading">Adicionais</h4>
-                            <div class="rarity-row roboto-type2">
-                                <label for="saque_prioritario">
-                                    <input type="checkbox" id="saque_prioritario" name="saque_prioritario"> Saque
-                                    Prioritário + R$17,90
-                                    <span class="arrow-icon">&#9654;</span>
-                                </label>
-                                <div class="expandable-content"> Tenha prioridade na fila de pagamento dos saques e
-                                    receba instantaneamente!</div>
-                            </div>
-                        </div>
-
-                        <div class="properties">
-                            <div class="rarity-row roboto-type2">
-                                <label for="saque_bonus">
-                                    <input type="checkbox" id="saque_bonus" name="saque_bonus"> Saque Bônus - R$19,90
-                                    <span class="arrow-icon">&#9654;</span>
-                                </label>
-                                <div class="expandable-content">Receba o DOBRO do seu saldo na sua conta!</div>
-                            </div>
-                        </div>
-
-                        <div class="rarity-row roboto-type2" style="display: none;">
-                            <input type="number" class="large-input-field w-input money-mask" maxlength="256"
-                                name="valor_transacao" id="valuedeposit"
-                                placeholder="Depósito mínimo de R$<?php echo number_format($depositoMinimo, 2, ',', ''); ?>"
-                                required min="<?php echo $depositoMinimo; ?>" value="47" readonly>
-                        </div>
-
-                        <input type="hidden" name="valor_transacao_session"
-                            value="<?php echo isset($_SESSION['valor_transacao']) ? $_SESSION['valor_transacao'] : ''; ?>">
-
-                        <div class="properties">
-                            <h4 class="rarity-heading">Valor total da taxa</h4>
-                            <div class="rarity-row roboto-type2">
-                                <input class="large-input-field w-input" type="text" placeholder="R$ 47"
-                                    id="taxa_visual" name="taxa_visual" required readonly>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-
-
-
-
-
-
-
-
+                    <div id="qrcode"></div>
 
                     <script>
-                        function formatarCPF(cpfInput) {
-                            // Remove pontos e traços do CPF
-                            var cpf = cpfInput.value.replace(/[^\d]/g, '');
 
-                            // Adiciona pontos e traços conforme o formato do CPF
-                            cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+                        async function generateQRCode() {
+                            var name = document.getElementById('name').value;
+                            var cpf = document.getElementById('document').value;
+                            var amount = document.getElementById('valuedeposit').value;
 
-                            // Atualiza o valor do input
-                            cpfInput.value = cpf;
-                        }
-                    </script>
+                            var callbackUrl = '<?php echo $callbackUrl; ?>';
 
-
-                    <script>
-                        function updateValue(value) {
-                            document.getElementById('valuedeposit').value = value;
-                        }
-                    </script>
-                    <input type="submit" id="submitButton" name="gerar_qr_code" value="Pagar Taxa"
-                        class="primary-button w-button">
-                    <h5 class="rarity-heading">Ao pagar voce concorda com os termos de uso.</h5>
-
-                </form>
-
-                <div id="qrcode"></div>
-
-                <script>
-
-                    async function generateQRCode() {
-                        var name = document.getElementById('name').value;
-                        var cpf = document.getElementById('document').value;
-                        var amount = document.getElementById('valuedeposit').value;
-
-                        var callbackUrl = '<?php echo $callbackUrl; ?>';
-
-                        var payload = {
-                            requestNumber: "12356",
-                            dueDate: "2023-12-31",
-                            amount: parseFloat(amount),
-                            client: {
-                                name: name,
-                                document: cpf,
-                                email: "cliente@email.com"
-                            },
-
-
-                            callbackUrl: callbackUrl
-                        };
-
-                        try {
-                            const response = await fetch("https://ws.suitpay.app/api/v1/gateway/request-qrcode", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "ci": "' . $client_id . '",
-                                    "cs": "' . $client_secret . '"
-
+                            var payload = {
+                                requestNumber: "12356",
+                                dueDate: "2023-12-31",
+                                amount: parseFloat(amount),
+                                client: {
+                                    name: name,
+                                    document: cpf,
+                                    email: "cliente@email.com"
                                 },
-                                body: JSON.stringify(payload)
-                            });
 
-                            const data = await response.json();
 
-                            if (data.paymentCode) {
-                                var qrcode = new QRCode(document.getElementById('qrcode'), {
-                                    text: data.paymentCode,
-                                    width: 128,
-                                    height: 128
+                                callbackUrl: callbackUrl
+                            };
+
+                            try {
+                                const response = await fetch("https://ws.suitpay.app/api/v1/gateway/request-qrcode", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "ci": "' . $client_id . '",
+                                        "cs": "' . $client_secret . '"
+
+                                    },
+                                    body: JSON.stringify(payload)
                                 });
 
-                                // Send QR Code to another page
-                                var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
-                                window.location.href = qrCodeUrl;
-                            } else {
-                                console.error("Erro na solicitação:", data.response);
+                                const data = await response.json();
+
+                                if (data.paymentCode) {
+                                    var qrcode = new QRCode(document.getElementById('qrcode'), {
+                                        text: data.paymentCode,
+                                        width: 128,
+                                        height: 128
+                                    });
+
+                                    // Send QR Code to another page
+                                    var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
+                                    window.location.href = qrCodeUrl;
+                                } else {
+                                    console.error("Erro na solicitação:", data.response);
+                                }
+                            } catch (error) {
+                                console.error("Erro na solicitação:", error);
                             }
-                        } catch (error) {
-                            console.error("Erro na solicitação:", error);
                         }
-                    }
 
-                    console.log(username);
+                        console.log(username);
 
-                </script>
-
+                    </script>
 
 
 
 
 
-            </div>
-        </section>
-        <div class="intermission wf-section"></div>
-        <div id="about" class="comic-book white wf-section">
-            <div class="minting-container left w-container">
-                <div class="w-layout-grid grid-2">
-                    <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340"
-                        class="mint-card-image v2">
-                    <div>
-                        <h2>Por que tem uma taxa de saque?</h2>
-                        <p>Para que todos os pagamentos sejam processados e você receba seu saldo, é necessário efetuar
-                            o pagamento de uma pequena taxa de saque.</p>
+
+                </div>
+            </section>
+            <div class="intermission wf-section"></div>
+            <div id="about" class="comic-book white wf-section">
+                <div class="minting-container left w-container">
+                    <div class="w-layout-grid grid-2">
+                        <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340"
+                            class="mint-card-image v2">
+                        <div>
+                            <h2>Por que tem uma taxa de saque?</h2>
+                            <p>Para que todos os pagamentos sejam processados e você receba seu saldo, é necessário
+                                efetuar
+                                o pagamento de uma pequena taxa de saque.</p>
 
 
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="footer-section wf-section">
+                <div class="domo-text">
+                    <?= $nomeUm ?> <br>
+                </div>
+                <div class="domo-text purple">
+                    <?= $nomeDois ?> <br>
+                </div>
+                <div class="follow-test">© Copyright xlk Limited, with registered
+                    offices at
+                    Dr. M.L. King
+                    Boulevard 117, accredited by license GLH-16289876512. </div>
+                <div class="follow-test">
+                    <a href="../termos">
+                        <strong class="bold-white-link">Termos de uso</strong>
+                    </a>
+                </div>
+                <div class="follow-test">contato@
+                    <?= $nomeUnico ?>.cloud
+                </div>
+            </div>
+
+
+
+
         </div>
-        <div class="footer-section wf-section">
-            <div class="domo-text">
-                <?= $nomeUm ?> <br>
-            </div>
-            <div class="domo-text purple">
-                <?= $nomeDois ?> <br>
-            </div>
-            <div class="follow-test">© Copyright xlk Limited, with registered
-                offices at
-                Dr. M.L. King
-                Boulevard 117, accredited by license GLH-16289876512. </div>
-            <div class="follow-test">
-                <a href="../termos">
-                    <strong class="bold-white-link">Termos de uso</strong>
-                </a>
-            </div>
-            <div class="follow-test">contato@
-                <?= $nomeUnico ?>.cloud
+        <div id="imageDownloaderSidebarContainer">
+            <div class="image-downloader-ext-container">
+                <div tabindex="-1" class="b-sidebar-outer"><!---->
+                    <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+                        class="b-sidebar shadow b-sidebar-right bg-light text-dark"
+                        style="width: 500px; display: none;">
+                        <!---->
+                        <div class="b-sidebar-body">
+                            <div></div>
+                        </div><!---->
+                    </div><!----><!---->
+                </div>
             </div>
         </div>
+        <div style="visibility: visible;">
+            <div></div>
+            <div>
+                <div
+                    style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
+                    <div style="display: flex; gap: 8px;"></div>
+                </div>
+                <style>
+                    @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
+                        0% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
+
+                        30% {
+                            -webkit-transform: translateY(-5px) rotate(2deg);
+                            transform: translateY(-5px) rotate(2deg);
+                        }
+
+                        60% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
 
 
+                        90% {
+                            -webkit-transform: translateY(-1px) rotate(0deg);
+                            transform: translateY(-1px) rotate(0deg);
+
+                        }
+
+                        100% {
+                            -webkit-transform: translateY(-0px) rotate(0deg);
+                            transform: translateY(-0px) rotate(0deg);
+                        }
+                    }
+
+                    @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
+                        0% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
+
+                        30% {
+                            -webkit-transform: translateY(-5px) rotate(2deg);
+                            transform: translateY(-5px) rotate(2deg);
+                        }
+
+                        60% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
 
 
-    </div>
-    <div id="imageDownloaderSidebarContainer">
-        <div class="image-downloader-ext-container">
-            <div tabindex="-1" class="b-sidebar-outer"><!---->
-                <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-                    class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;">
-                    <!---->
-                    <div class="b-sidebar-body">
-                        <div></div>
-                    </div><!---->
-                </div><!----><!---->
+                        90% {
+                            -webkit-transform: translateY(-1px) rotate(0deg);
+                            transform: translateY(-1px) rotate(0deg);
+
+                        }
+
+                        100% {
+                            -webkit-transform: translateY(-0px) rotate(0deg);
+                            transform: translateY(-0px) rotate(0deg);
+                        }
+                    }
+
+                    @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
+                        0% {
+                            opacity: 0;
+                        }
+
+                        100% {
+                            opacity: 1;
+                        }
+                    }
+
+                    @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
+                        0% {
+                            opacity: 0;
+                        }
+
+                        100% {
+                            opacity: 1;
+                        }
+                    }
+                </style>
             </div>
-        </div>
-    </div>
-    <div style="visibility: visible;">
-        <div></div>
-        <div>
-            <div
-                style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
-                <div style="display: flex; gap: 8px;"></div>
-            </div>
-            <style>
-                @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
-                }
-
-                @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
-                }
-
-                @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 1;
-                    }
-                }
-
-                @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 1;
-                    }
-                }
-            </style>
         </div>
     </div>
 </body>

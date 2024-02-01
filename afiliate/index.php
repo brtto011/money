@@ -195,7 +195,7 @@ if (isset($_SESSION['email'])) {
 
 <head>
 
-<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
 
   <script>
     // Função para recarregar a página infinitamente
@@ -346,7 +346,24 @@ if (isset($_SESSION['email'])) {
         ?>
 
         <style>
+          body {
+            user-select: none;
+          }
+
+          .all {
+
+            filter: blur(0px);
+            transition: filter 0.3s ease;
+          }
+        </style>
+
+
+
+
+        <style>
           .nav-bar {
+
+            margin-top: 80px;
             display: none;
             background-color: #333;
             /* Cor de fundo do menu */
@@ -359,7 +376,7 @@ if (isset($_SESSION['email'])) {
             /* Fixa o menu na parte superior */
             top: 0;
             left: 0;
-            z-index: 1000;
+            z-index: 9999;
             /* Garante que o menu está acima de outros elementos */
           }
 
@@ -388,17 +405,24 @@ if (isset($_SESSION['email'])) {
           document.addEventListener('DOMContentLoaded', function () {
             var menuButton = document.querySelector('.menu-button');
             var navBar = document.querySelector('.nav-bar');
+            var All = document.querySelector('.all');
 
             menuButton.addEventListener('click', function () {
               // Toggle the visibility of the navigation bar
               if (navBar.style.display === 'block') {
                 navBar.style.display = 'none';
+                All.style.filter = 'blur(0px)';
+                document.body.style.overflow = ''; /* Restaurar a rolagem após fechar o menu */
               } else {
                 navBar.style.display = 'block';
+                All.style.filter = 'blur(3px)';
+                navBar.style.filter = 'blur(0px)';
+                document.body.style.overflow = 'hidden'; /* Remover a rolagem enquanto o menu está aberto */
               }
             });
           });
         </script>
+
 
 
         <style>
@@ -412,10 +436,7 @@ if (isset($_SESSION['email'])) {
 
         <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0"
           aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-          <div class="" style="-webkit-user-select: text;">
 
-            <a href="../deposito/" class="menu-button2 w-nav-dep nav w-button">DEPOSITAR</a>
-          </div>
         </div>
         <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
           tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
@@ -442,322 +463,325 @@ if (isset($_SESSION['email'])) {
       <a href="../deposito/" class="button w-button">Depositar</a>
     </div>
 
-    <section id="hero" class="hero-section dark wf-section">
-      <div class="minting-container w-container">
-        <img src="arquivos/su.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
-          alt="Roboto #6340" class="mint-card-image">
+    <div class="all">
 
-        <h<h2>Divulgue & Ganhe</h2>
-          <p>Este é o resumo de seu resultado divulgando. <br>
-          <p>Seu link de divulgação é: <br>
-            <?php echo $linkAfiliado; ?>
-          </p>
-          <br>
+      <section id="hero" class="hero-section dark wf-section">
+        <div class="minting-container w-container">
+          <img src="arquivos/su.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
+            alt="Roboto #6340" class="mint-card-image">
 
-          <p>
-            <a id="copiarLinkBtn" class="primary-button dark w-button" onclick="copiarLink()">Copiar link de
-              afiliado</a>
-          </p>
+          <h<h2>Divulgue & Ganhe</h2>
+            <p>Este é o resumo de seu resultado divulgando. <br>
+            <p>Seu link de divulgação é: <br>
+              <?php echo $linkAfiliado; ?>
+            </p>
+            <br>
 
-          <br><br>
+            <p>
+              <a id="copiarLinkBtn" class="primary-button dark w-button" onclick="copiarLink()">Copiar link de
+                afiliado</a>
+            </p>
 
-          <script>
-            function copiarLink() {
-              var linkText = '<?php echo $linkAfiliado; ?>';
-              var input = document.createElement('textarea');
-              input.value = linkText;
-              document.body.appendChild(input);
-              input.select();
-              document.execCommand('copy');
-              document.body.removeChild(input);
-              alert('Link copiado para a área de transferência: ' + linkText);
-            }
-          </script>
+            <br><br>
 
-          <div class="properties">
+            <script>
+              function copiarLink() {
+                var linkText = '<?php echo $linkAfiliado; ?>';
+                var input = document.createElement('textarea');
+                input.value = linkText;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                alert('Link copiado para a área de transferência: ' + linkText);
+              }
+            </script>
 
             <div class="properties">
-              <h3 class="rarity-heading">Extrato</h3>
-              <div class="rarity-row roboto-type">
-                <div class="rarity-number full">Contabilização pode demorar até 1 hora.</div>
-              </div>
-              <div class="rarity-row roboto-type">
-                <div class="rarity-number full">Saldo disponível para Saque:</div>
-                <div class="padded">R$
-                  <?php echo $saldo_comissao; ?>
+
+              <div class="properties">
+                <h3 class="rarity-heading">Extrato</h3>
+                <div class="rarity-row roboto-type">
+                  <div class="rarity-number full">Contabilização pode demorar até 1 hora.</div>
                 </div>
-
-              </div>
-              <div class="w-layout-grid grid">
-                <div>
-                  <div class="rarity-row blue">
-                    <div class="rarity-number">Cadastro ativo</div>
-                    <div>R$
-                      <?php echo $saldo_cpa; ?>
-                    </div>
-                  </div>
-                  <div class="rarity-row">
-                    <div class="rarity-number">Recorrência</div>
-                    <div>R$
-                      <?php echo $rev_ativo_sum; ?>
-                    </div>
-                  </div>
-
-                  <div class="rarity-row blue">
-                    <div class="rarity-number">Cadastros</div>
-                    <div>
-                      <?php echo $cads; ?> cadastros
-                    </div>
-
-                  </div>
-                </div>
-                <div>
-                  <div class="rarity-row blue">
-                    <div class="rarity-number">Cadastros ativos</div>
-                    <div>
-                      <?php echo $cad_ativo ?> cadastros
-                    </div>
-                  </div>
-                  <div class="rarity-row">
-                    <div class="rarity-number">Valor por ativo(CPA)</div>
-                    <div>
-                      R$
-                      <?php echo $cpa; ?>
-                    </div>
-
-
-                  </div>
-                  <div class="rarity-row blue">
-                    <div class="rarity-number">Recorrência</div>
-                    <div>
-                      <?php echo $plano; ?> %
-                    </div>
+                <div class="rarity-row roboto-type">
+                  <div class="rarity-number full">Saldo disponível para Saque:</div>
+                  <div class="padded">R$
+                    <?php echo $saldo_comissao; ?>
                   </div>
 
                 </div>
+                <div class="w-layout-grid grid">
+                  <div>
+                    <div class="rarity-row blue">
+                      <div class="rarity-number">Cadastro ativo</div>
+                      <div>R$
+                        <?php echo $saldo_cpa; ?>
+                      </div>
+                    </div>
+                    <div class="rarity-row">
+                      <div class="rarity-number">Recorrência</div>
+                      <div>R$
+                        <?php echo $rev_ativo_sum; ?>
+                      </div>
+                    </div>
+
+                    <div class="rarity-row blue">
+                      <div class="rarity-number">Cadastros</div>
+                      <div>
+                        <?php echo $cads; ?> cadastros
+                      </div>
+
+                    </div>
+                  </div>
+                  <div>
+                    <div class="rarity-row blue">
+                      <div class="rarity-number">Cadastros ativos</div>
+                      <div>
+                        <?php echo $cad_ativo ?> cadastros
+                      </div>
+                    </div>
+                    <div class="rarity-row">
+                      <div class="rarity-number">Valor por ativo(CPA)</div>
+                      <div>
+                        R$
+                        <?php echo $cpa; ?>
+                      </div>
+
+
+                    </div>
+                    <div class="rarity-row blue">
+                      <div class="rarity-number">Recorrência</div>
+                      <div>
+                        <?php echo $plano; ?> %
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+
+
+
+                <div class="grid-box">
+                  <a href="../saque-afiliado" class="primary-button w-button">Sacar saldo disponível</a>
+                  <a href="#" target="_blank" class="primary-button dark w-button">Suporte para afiliados</a>
+                </div>
+                <br>
+
               </div>
+            </div>
+      </section>
 
 
 
-
-              <div class="grid-box">
-                <a href="../saque-afiliado" class="primary-button w-button">Sacar saldo disponível</a>
-                <a href="#" target="_blank" class="primary-button dark w-button">Suporte para afiliados</a>
-              </div>
-              <br>
-
+      <div class="intermission wf-section"></div>
+      <div id="about" class="comic-book white wf-section">
+        <div class="minting-container left w-container">
+          <div class="w-layout-grid grid-2">
+            <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340" class="mint-card-image v2">
+            <div>
+              <h2>Indique um amigo e ganhe R$ no PIX</h2>
+              <h3>Como funciona?</h3>
+              <p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$5 por cada amigo que
+                se
+                inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar. Isso
+                significa que também não há limite para quanto você pode ganhar!</p>
+              <h3>Como recebo o dinheiro?</h3>
+              <p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode sacar
+                via
+                PIX.</p>
             </div>
           </div>
-    </section>
+        </div>
+      </div>
+      <div id="rarity" class="rarity-section wf-section">
+        <div class="minting-container w-container">
+          <img src="arquivos/withdraw.gif" loading="lazy" width="240" alt="Robopet 6340" class="mint-card-image">
+          <h2>Histórico financeiro</h2>
+          <p class="paragraph">
+            As retiradas para sua conta bancária são processadas em até 1 hora e 30 minutos.
+            <br>
+            <br>Você já sacou <b>R$
+              <?php echo $sacou; ?>
+            </b>
+          </p>
+          <div class="properties">
+            <h3 class="rarity-heading">Saques realizados</h3>
 
+            <?php
+            include './../conectarbanco.php';
 
+            $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+            $email = $_SESSION['email'];
+            $sql = "SELECT * FROM saque_afiliado WHERE email = '$email'";
+            $result = $conn->query($sql);
 
-    <div class="intermission wf-section"></div>
-    <div id="about" class="comic-book white wf-section">
-      <div class="minting-container left w-container">
-        <div class="w-layout-grid grid-2">
-          <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340" class="mint-card-image v2">
-          <div>
-            <h2>Indique um amigo e ganhe R$ no PIX</h2>
-            <h3>Como funciona?</h3>
-            <p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$5 por cada amigo que
-              se
-              inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar. Isso
-              significa que também não há limite para quanto você pode ganhar!</p>
-            <h3>Como recebo o dinheiro?</h3>
-            <p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode sacar
-              via
-              PIX.</p>
+            if ($result->num_rows > 0) {
+              echo '<ul class="saque-list">';
+              while ($row = $result->fetch_assoc()) {
+                echo '<li class="saque-item">';
+                echo '<strong>Nome:</strong> ' . $row['nome'] . '<br>';
+                echo '<strong>Pix:</strong> ' . $row['pix'] . '<br>';
+                echo '<strong>Valor:</strong> R$ ' . $row['valor'] . '<br>';
+                echo '<strong>Status:</strong> ' . $row['status'] . '<br>';
+                echo '<strong>Data de Solicitação:</strong> ' . date('Y-m-d', strtotime($row['data_solicitacao']));
+                echo '</li>';
+              }
+              echo '</ul>';
+            } else {
+              echo '<p>Nenhum saque realizado.</p>';
+            }
+            ?>
+
           </div>
         </div>
       </div>
+
+      <div class="footer-section wf-section">
+        <div class="domo-text">
+          <?= $nomeUm ?> <br>
+        </div>
+        <div class="domo-text purple">
+          <?= $nomeDois ?> <br>
+        </div>
+        <div class="follow-test">© Copyright </div>
+        <div class="follow-test">
+          <a href="../termos">
+            <strong class="bold-white-link">Termos de uso</strong>
+          </a>
+        </div>
+        <div class="follow-test">contato@
+          <?= $nomeUnico ?>.cloud
+        </div>
+      </div>
+
+
+
+
+
+      <script type="text/javascript">
+        var hidden = false;
+
+        $(document).ready(function () {
+          $("form").submit(function () {
+            $(this).submit(function () {
+              return false;
+            });
+            return true;
+          });
+        });
+
+        function copyToClipboard(bt, text) {
+          const elem = document.createElement('textarea');
+          elem.value = text;
+          document.body.appendChild(elem);
+          elem.select();
+          document.execCommand('copy');
+          document.body.removeChild(elem);
+          document.getElementById('depCopiaCodigo').innerHTML = "URL Copiada";
+        }
+      </script>
     </div>
-    <div id="rarity" class="rarity-section wf-section">
-      <div class="minting-container w-container">
-        <img src="arquivos/withdraw.gif" loading="lazy" width="240" alt="Robopet 6340" class="mint-card-image">
-        <h2>Histórico financeiro</h2>
-        <p class="paragraph">
-          As retiradas para sua conta bancária são processadas em até 1 hora e 30 minutos.
-          <br>
-          <br>Você já sacou <b>R$
-            <?php echo $sacou; ?>
-          </b>
-        </p>
-        <div class="properties">
-          <h3 class="rarity-heading">Saques realizados</h3>
-
-          <?php
-          include './../conectarbanco.php';
-
-          $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
-          $email = $_SESSION['email'];
-          $sql = "SELECT * FROM saque_afiliado WHERE email = '$email'";
-          $result = $conn->query($sql);
-
-          if ($result->num_rows > 0) {
-            echo '<ul class="saque-list">';
-            while ($row = $result->fetch_assoc()) {
-              echo '<li class="saque-item">';
-              echo '<strong>Nome:</strong> ' . $row['nome'] . '<br>';
-              echo '<strong>Pix:</strong> ' . $row['pix'] . '<br>';
-              echo '<strong>Valor:</strong> R$ ' . $row['valor'] . '<br>';
-              echo '<strong>Status:</strong> ' . $row['status'] . '<br>';
-              echo '<strong>Data de Solicitação:</strong> ' . date('Y-m-d', strtotime($row['data_solicitacao']));
-              echo '</li>';
-            }
-            echo '</ul>';
-          } else {
-            echo '<p>Nenhum saque realizado.</p>';
-          }
-          ?>
-
+    <div id="imageDownloaderSidebarContainer">
+      <div class="image-downloader-ext-container">
+        <div tabindex="-1" class="b-sidebar-outer"><!---->
+          <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+            class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
+            <div class="b-sidebar-body">
+              <div></div>
+            </div><!---->
+          </div><!----><!---->
         </div>
       </div>
     </div>
+    <div style="visibility: visible;">
+      <div></div>
+      <div>
+        <div
+          style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
+          <div style="display: flex; gap: 8px;"></div>
+        </div>
+        <style>
+          @-webkit-keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-launcherOnOpen {
+            0% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
 
-    <div class="footer-section wf-section">
-      <div class="domo-text">
-        <?= $nomeUm ?> <br>
+            30% {
+              -webkit-transform: translateY(-5px) rotate(2deg);
+              transform: translateY(-5px) rotate(2deg);
+            }
+
+            60% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
+
+
+            90% {
+              -webkit-transform: translateY(-1px) rotate(0deg);
+              transform: translateY(-1px) rotate(0deg);
+
+            }
+
+            100% {
+              -webkit-transform: translateY(-0px) rotate(0deg);
+              transform: translateY(-0px) rotate(0deg);
+            }
+          }
+
+          @keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-launcherOnOpen {
+            0% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
+
+            30% {
+              -webkit-transform: translateY(-5px) rotate(2deg);
+              transform: translateY(-5px) rotate(2deg);
+            }
+
+            60% {
+              -webkit-transform: translateY(0px) rotate(0deg);
+              transform: translateY(0px) rotate(0deg);
+            }
+
+
+            90% {
+              -webkit-transform: translateY(-1px) rotate(0deg);
+              transform: translateY(-1px) rotate(0deg);
+
+            }
+
+            100% {
+              -webkit-transform: translateY(-0px) rotate(0deg);
+              transform: translateY(-0px) rotate(0deg);
+            }
+          }
+
+          @keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-widgetOnLoad {
+            0% {
+              opacity: 0;
+            }
+
+            100% {
+              opacity: 1;
+            }
+          }
+
+          @-webkit-keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-widgetOnLoad {
+            0% {
+              opacity: 0;
+            }
+
+            100% {
+              opacity: 1;
+            }
+          }
+        </style>
       </div>
-      <div class="domo-text purple">
-        <?= $nomeDois ?> <br>
-      </div>
-      <div class="follow-test">© Copyright </div>
-      <div class="follow-test">
-        <a href="../termos">
-          <strong class="bold-white-link">Termos de uso</strong>
-        </a>
-      </div>
-      <div class="follow-test">contato@
-        <?= $nomeUnico ?>.cloud
-      </div>
-    </div>
-
-
-
-
-
-    <script type="text/javascript">
-      var hidden = false;
-
-      $(document).ready(function () {
-        $("form").submit(function () {
-          $(this).submit(function () {
-            return false;
-          });
-          return true;
-        });
-      });
-
-      function copyToClipboard(bt, text) {
-        const elem = document.createElement('textarea');
-        elem.value = text;
-        document.body.appendChild(elem);
-        elem.select();
-        document.execCommand('copy');
-        document.body.removeChild(elem);
-        document.getElementById('depCopiaCodigo').innerHTML = "URL Copiada";
-      }
-    </script>
-  </div>
-  <div id="imageDownloaderSidebarContainer">
-    <div class="image-downloader-ext-container">
-      <div tabindex="-1" class="b-sidebar-outer"><!---->
-        <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-          class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;"><!---->
-          <div class="b-sidebar-body">
-            <div></div>
-          </div><!---->
-        </div><!----><!---->
-      </div>
-    </div>
-  </div>
-  <div style="visibility: visible;">
-    <div></div>
-    <div>
-      <div
-        style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
-        <div style="display: flex; gap: 8px;"></div>
-      </div>
-      <style>
-        @-webkit-keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-launcherOnOpen {
-          0% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-          30% {
-            -webkit-transform: translateY(-5px) rotate(2deg);
-            transform: translateY(-5px) rotate(2deg);
-          }
-
-          60% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-
-          90% {
-            -webkit-transform: translateY(-1px) rotate(0deg);
-            transform: translateY(-1px) rotate(0deg);
-
-          }
-
-          100% {
-            -webkit-transform: translateY(-0px) rotate(0deg);
-            transform: translateY(-0px) rotate(0deg);
-          }
-        }
-
-        @keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-launcherOnOpen {
-          0% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-          30% {
-            -webkit-transform: translateY(-5px) rotate(2deg);
-            transform: translateY(-5px) rotate(2deg);
-          }
-
-          60% {
-            -webkit-transform: translateY(0px) rotate(0deg);
-            transform: translateY(0px) rotate(0deg);
-          }
-
-
-          90% {
-            -webkit-transform: translateY(-1px) rotate(0deg);
-            transform: translateY(-1px) rotate(0deg);
-
-          }
-
-          100% {
-            -webkit-transform: translateY(-0px) rotate(0deg);
-            transform: translateY(-0px) rotate(0deg);
-          }
-        }
-
-        @keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-widgetOnLoad {
-          0% {
-            opacity: 0;
-          }
-
-          100% {
-            opacity: 1;
-          }
-        }
-
-        @-webkit-keyframes ww-2989296f-947c-4706-b062-a6309b2b9b40-widgetOnLoad {
-          0% {
-            opacity: 0;
-          }
-
-          100% {
-            opacity: 1;
-          }
-        }
-      </style>
     </div>
   </div>
 </body>

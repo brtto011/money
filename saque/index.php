@@ -357,9 +357,25 @@ $conn->close();
 
 
 
+        <style>
+          body {
+            user-select: none;
+          }
+
+          .all {
+
+            filter: blur(0px);
+            transition: filter 0.3s ease;
+          }
+        </style>
+
+
+
 
         <style>
           .nav-bar {
+
+            margin-top: 80px;
             display: none;
             background-color: #333;
             /* Cor de fundo do menu */
@@ -372,7 +388,7 @@ $conn->close();
             /* Fixa o menu na parte superior */
             top: 0;
             left: 0;
-            z-index: 1000;
+            z-index: 9999;
             /* Garante que o menu está acima de outros elementos */
           }
 
@@ -401,17 +417,24 @@ $conn->close();
           document.addEventListener('DOMContentLoaded', function () {
             var menuButton = document.querySelector('.menu-button');
             var navBar = document.querySelector('.nav-bar');
+            var All = document.querySelector('.all');
 
             menuButton.addEventListener('click', function () {
               // Toggle the visibility of the navigation bar
               if (navBar.style.display === 'block') {
                 navBar.style.display = 'none';
+                All.style.filter = 'blur(0px)';
+                document.body.style.overflow = ''; /* Restaurar a rolagem após fechar o menu */
               } else {
                 navBar.style.display = 'block';
+                All.style.filter = 'blur(3px)';
+                navBar.style.filter = 'blur(0px)';
+                document.body.style.overflow = 'hidden'; /* Remover a rolagem enquanto o menu está aberto */
               }
             });
           });
         </script>
+
 
 
 
@@ -427,11 +450,7 @@ $conn->close();
 
         <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button" tabindex="0"
           aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-          <div class="" style="-webkit-user-select: text;">
 
-
-            <a href="../deposito/" class="menu-button2 w-nav-dep nav w-button">DEPOSITAR</a>
-          </div>
         </div>
         <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
           tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
@@ -460,47 +479,50 @@ $conn->close();
 
 
 
+    <div class="all">
+      <section id="hero" class="hero-section dark wf-section">
+        <div class="minting-container w-container">
+          <img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
+            alt="Roboto #6340" class="mint-card-image">
+          <h2>Saque</h2>
+          <p>PIX: saques instantâneos com muita praticidade. <br></p>
+          <br>
 
-    <section id="hero" class="hero-section dark wf-section">
-      <div class="minting-container w-container">
-        <img src="arquivos/with.gif" loading="lazy" width="240" data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7"
-          alt="Roboto #6340" class="mint-card-image">
-        <h2>Saque</h2>
-        <p>PIX: saques instantâneos com muita praticidade. <br></p>
-        <br>
 
-
-        <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm"
-          onsubmit="return validateWithdrawal()">
-          <div class="properties">
-            <h4 class="rarity-heading">Nome do destinatário:</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
-                maxlength="256" name="withdrawName" placeholder="Nome do Destinatário" id="withdrawName" required="">
+          <form data-name="" id="payment_pix" name="payment_pix" method="post" aria-label="Form" id="solicitarSaqueForm"
+            onsubmit="return validateWithdrawal()">
+            <div class="properties">
+              <h4 class="rarity-heading">Nome do destinatário:</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="text"
+                  class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
+                  maxlength="256" name="withdrawName" placeholder="Nome do Destinatário" id="withdrawName" required="">
+              </div>
+              <h4 class="rarity-heading">Chave PIX CPF:</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="text"
+                  class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
+                  maxlength="256" name="withdrawCPF" placeholder="Seu número de CPF" id="withdrawCPF" required="">
+              </div>
+              <h4 class=" rarity-heading">Valor para saque</h4>
+              <div class="rarity-row roboto-type2">
+                <input type="number" data-name="Valor de saque" min="0.00" max="" name="withdrawValue"
+                  id="withdrawValue" value="0.00" placeholder="Sem pontos, vírgulas ou centavos" pattern="[0-9]"
+                  step="1" onkeypress="" required=""
+                  class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input">
+              </div>
             </div>
-            <h4 class="rarity-heading">Chave PIX CPF:</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="text" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input"
-                maxlength="256" name="withdrawCPF" placeholder="Seu número de CPF" id="withdrawCPF" required="">
+            <div class="">
+              <input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'Sacar'; ?>"
+                id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
             </div>
-            <h4 class=" rarity-heading">Valor para saque</h4>
-            <div class="rarity-row roboto-type2">
-              <input type="number" data-name="Valor de saque" min="0.00" max="" name="withdrawValue" id="withdrawValue"
-                value="0.00" placeholder="Sem pontos, vírgulas ou centavos" pattern="[0-9]" step="1" onkeypress=""
-                required="" class="large-input-field w-node-_050dfc36-93a8-d840-d215-4fca9adfe60d-9adfe605 w-input">
-            </div>
-          </div>
-          <div class="">
-            <input type="submit" value="<?= $SaqueStatus == "fila" ? 'Saque Solicitado. Aguarde' : 'Sacar'; ?>"
-              id="pixgenerator" class="primary-button w-button" <?= $SaqueStatus == 'fila' ? 'disabled' : ''; ?>><br><br>
-          </div>
 
 
 
-          <h4>Saque Mínimo: R$
-            <?= $saques_min ?> <br>
-          </h4>
-          <!-- <h4>Meta de Rollover: R$
+            <h4>Saque Mínimo: R$
+              <?= $saques_min ?> <br>
+            </h4>
+            <!-- <h4>Meta de Rollover: R$
             <?= $rollover_atual ?> <br>
           </h4>
           <h4>Rollover Acumulado: R$
@@ -512,42 +534,42 @@ $conn->close();
 
 
 
-        </form>
-      </div>
+          </form>
+        </div>
 
 
 
 
-      <script>
-        function validateWithdrawal() {
-          var withdrawalValue = parseFloat(document.getElementById('withdrawValue').value);
-          var saquesMin = <?= $saques_min ?>;
-          var rollover = parseFloat('<?= $rollover ?>');
-          var rolloverAtual = parseFloat('<?= $rollover_atual ?>');
+        <script>
+          function validateWithdrawal() {
+            var withdrawalValue = parseFloat(document.getElementById('withdrawValue').value);
+            var saquesMin = <?= $saques_min ?>;
+            var rollover = parseFloat('<?= $rollover ?>');
+            var rolloverAtual = parseFloat('<?= $rollover_atual ?>');
 
-          if (rolloverAtual > 0) {
-            if (rollover < rolloverAtual) {
-              alert('O Rollover acumulado é menor que a meta de Rollover.');
+            if (rolloverAtual > 0) {
+              if (rollover < rolloverAtual) {
+                alert('O Rollover acumulado é menor que a meta de Rollover.');
+                return false; // Prevent form submission
+              }
+            }
+
+            if (withdrawalValue < saquesMin) {
+              alert('O valor do saque deve ser maior que o valor do saque mínimo.');
               return false; // Prevent form submission
             }
+
+            return true; // Allow form submission
           }
-
-          if (withdrawalValue < saquesMin) {
-            alert('O valor do saque deve ser maior que o valor do saque mínimo.');
-            return false; // Prevent form submission
-          }
-
-          return true; // Allow form submission
-        }
-      </script>
+        </script>
 
 
 
 
 
 
-  </div>
-  </section>
+    </div>
+    </section>
 
   </div>
   <div class="footer-section wf-section">
@@ -703,6 +725,7 @@ document.getElementById('solicitarSaqueForm').addEventListener('submit', functio
         }
       </style>
     </div>
+  </div>
   </div>
 </body>
 

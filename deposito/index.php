@@ -26,6 +26,61 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
 
+<?php
+
+function redirecionarParaPix($slug)
+{
+    header("Location: ../deposito/pix.php?pix_key=" . urlencode($slug));
+    exit;
+}
+
+function apagarRegistro($conn, $slug)
+{
+    $sqlDelete = "DELETE FROM deposito_gerado WHERE slug = '" . mysqli_real_escape_string($conn, $slug) . "'";
+    $conn->query($sqlDelete);
+}
+
+try {
+    include './../conectarbanco.php';
+
+    $conn = new mysqli($config['db_host'], $config['db_user'], $config['db_pass'], $config['db_name']);
+
+    if ($conn->connect_error) {
+        die("Conexão falhou: " . $conn->connect_error);
+    }
+
+    $brtTimeZone = new DateTimeZone('America/Sao_Paulo');
+    $dateTimeAtual = new DateTime('now', $brtTimeZone);
+
+    $sqlSelect = "SELECT slug, data FROM deposito_gerado";
+    $result = $conn->query($sqlSelect);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $dataDeposito = DateTime::createFromFormat('d/m/Y H:i', $row['data'], $brtTimeZone);
+            $diferenca = $dateTimeAtual->diff($dataDeposito);
+            $minutosDiferenca = $diferenca->i;
+
+            if ($minutosDiferenca > 5) {
+                // Mais de 5 minutos, apaga o registro
+                apagarRegistro($conn, $row['slug']);
+            } else {
+                // Menos de 5 minutos, redireciona para pix.php
+                redirecionarParaPix($row['slug']);
+            }
+        }
+    }
+
+    $conn->close();
+} catch (Exception $ex) {
+    var_dump($ex);
+    http_response_code(200);
+    exit;
+}
+?>
+
+
+
 
 <?php
 // Conectar ao banco de dados
@@ -273,6 +328,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dateTime = new DateTime('now', $brtTimeZone);
             $userDate = $dateTime->format('d/m/Y H:i');
 
+            $paymentCode = $res['paymentCode'];
+
+            $slugValue = $paymentCode . '&token=' . $res['idTransaction'];
+
             $sql = sprintf(
                 "INSERT INTO confirmar_deposito (email, valor, externalreference, status, data) VALUES ('%s', '%s', '%s', '%s', '%s')",
                 $email,
@@ -283,6 +342,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
 
             $conn->query($sql);
+
+            // Segundo INSERT para a tabela 'deposito_gerado'
+            $sqlDepositoGerado = sprintf(
+                "INSERT INTO deposito_gerado (slug, data) VALUES ('%s', '%s')",
+                $conn->real_escape_string($slugValue), // Evita injeção de SQL
+                $userDate
+            );
+
+            $conn->query($sqlDepositoGerado);
             $conn->close();
         } catch (Exception $ex) {
             var_dump($ex);
@@ -290,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $paymentCode = $res['paymentCode'];
+
         // Send QR Code to another page
         // var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
         header("Location: ../deposito/pix.php?pix_key=" . $paymentCode . '&token=' . $res['idTransaction']);
@@ -472,9 +540,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </nav>
 
 
+                <style>
+                    body {
+                        user-select: none;
+                    }
+
+                    .all {
+
+                        filter: blur(0px);
+                        transition: filter 0.3s ease;
+                    }
+                </style>
+
+
+
 
                 <style>
                     .nav-bar {
+
+                        margin-top: 80px;
                         display: none;
                         background-color: #333;
                         /* Cor de fundo do menu */
@@ -487,7 +571,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         /* Fixa o menu na parte superior */
                         top: 0;
                         left: 0;
-                        z-index: 1000;
+                        z-index: 9999;
                         /* Garante que o menu está acima de outros elementos */
                     }
 
@@ -516,17 +600,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     document.addEventListener('DOMContentLoaded', function () {
                         var menuButton = document.querySelector('.menu-button');
                         var navBar = document.querySelector('.nav-bar');
+                        var All = document.querySelector('.all');
 
                         menuButton.addEventListener('click', function () {
                             // Toggle the visibility of the navigation bar
                             if (navBar.style.display === 'block') {
                                 navBar.style.display = 'none';
+                                All.style.filter = 'blur(0px)';
+                                document.body.style.overflow = ''; /* Restaurar a rolagem após fechar o menu */
                             } else {
                                 navBar.style.display = 'block';
+                                All.style.filter = 'blur(3px)';
+                                navBar.style.filter = 'blur(0px)';
+                                document.body.style.overflow = 'hidden'; /* Remover a rolagem enquanto o menu está aberto */
                             }
                         });
                     });
                 </script>
+
 
 
 
@@ -563,13 +654,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="../deposito/" class="button w-button w--current">Depositar</a>
         </div>
 
-        <section id="hero" class="hero-section dark wf-section">
-            <div class="minting-container w-container">
-                <img src="arquivos/deposit.gif" loading="lazy" width="240"
-                    data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7" alt="Roboto #6340" class="mint-card-image">
-                <h2>Depósito</h2>
-                <p>PIX: depósitos instantâneos com uma pitada de diversão e muita praticidade. <br>
-                </p>
+        <div class="all">
+
+            <section id="hero" class="hero-section dark wf-section">
+                <div class="minting-container w-container">
+                    <img src="arquivos/deposit.gif" loading="lazy" width="240"
+                        data-w-id="6449f730-ebd9-23f2-b6ad-c6fbce8937f7" alt="Roboto #6340" class="mint-card-image">
+                    <h2>Depósito</h2>
+                    <p>PIX: depósitos instantâneos com uma pitada de diversão e muita praticidade. <br>
+                    </p>
 
 
 
@@ -577,349 +670,356 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-                <?php
-                include './../conectarbanco.php';
+                    <?php
+                    include './../conectarbanco.php';
 
-                $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
+                    $conn = new mysqli('localhost', $config['db_user'], $config['db_pass'], $config['db_name']);
 
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                $sql = "SELECT deposito_min FROM app LIMIT 1";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-                    $depositoMinimo = $row["deposito_min"];
-                } else {
-                    $depositoMinimo = 2; // Valor padrão caso não seja encontrado no banco
-                }
-
-                $conn->close();
-                ?>
-
-
-
-
-                <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-
-
-                <form action="/deposito/index.php" method="POST">
-                    <div class="properties">
-                        <h4 class="rarity-heading">NOME</h4>
-                        <div class="rarity-row roboto-type2">
-                            <input class="large-input-field w-input" type="text" placeholder="Seu nome" id="name"
-                                name="name" required><br>
-                        </div>
-                        <h4 class="rarity-heading">CPF</h4>
-                        <div class="rarity-row roboto-type2">
-                            <input class="large-input-field w-input" maxlength="11" placeholder="Seu número de CPF"
-                                type="text" id="document" name="document" oninput="formatarCPF(this)" required><br>
-                        </div>
-                        <h4 class="rarity-heading">Valor para depósito</h4>
-                        <div class="rarity-row roboto-type2">
-                            <input type="number" class="large-input-field w-input money-mask" maxlength="256"
-                                name="valor_transacao" id="valuedeposit"
-                                placeholder="Depósito mínimo de R$<?php echo number_format($depositoMinimo, 2, ',', ''); ?>"
-                                required min="<?php echo $depositoMinimo; ?>">
-                        </div>
-                    </div>
-
-                    <input type="hidden" name="valor_transacao_session"
-                        value="<?php echo isset($_SESSION['valor_transacao']) ? $_SESSION['valor_transacao'] : ''; ?>">
-
-
-                    <div class="button-container">
-                        <button type="button" class="button nav w-button" onclick="updateValue(25)">R$25<br>R$40
-                            BÔNUS</button>
-                        <button type="button" class="button nav w-button" onclick="updateValue(30)">R$30<br>R$80
-                            BÔNUS</button>
-                        <br><br>
-                        <button type="button" class="button nav w-button" onclick="updateValue(50)">R$50<br>R$150
-                            BÔNUS</button>
-                        <button type="button" class="button nav w-button" onclick="updateValue(100)">R$100<br>R$250
-                            BÔNUS</button>
-                        <br><br>
-                    </div>
-                    
-                    
-                       <div id="loadingSpinner" class="loading-spinner"></div>
-
-
-                    <script>
-                        function formatarCPF(cpfInput) {
-                            // Remove pontos e traços do CPF
-                            var cpf = cpfInput.value.replace(/[^\d]/g, '');
-
-                            // Adiciona pontos e traços conforme o formato do CPF
-                            cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-
-                            // Atualiza o valor do input
-                            cpfInput.value = cpf;
-                        }
-                    </script>
-
-
-                    <script>
-                        function updateValue(value) {
-                            document.getElementById('valuedeposit').value = value;
-                        }
-                    </script>
-                    <input type="submit" id="submitButton" name="gerar_qr_code" value="Depositar via PIX"
-                        class="primary-button w-button">
-                </form>
-                
-                
-                   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-                <script>
-                    $(document).ready(function() {
-                        $('form').submit(function() {
-                            // Mostrar o spinner quando o formulário é enviado
-                            $('#loadingSpinner').show();
-                        });
-                    });
-                </script>
-                
-                <style>
-                    .loading-spinner {
-                        display: none;
-                        width: 5rem;
-                        height: 5rem;
-                        border: 1rem solid rgba(255, 255, 255, 0.3);
-                        border-radius: 50%;
-                        border-top: 1rem solid #3498db;
-                        animation: spin 1s linear infinite;
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
                     }
-            
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
+
+                    $sql = "SELECT deposito_min FROM app LIMIT 1";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+                        $depositoMinimo = $row["deposito_min"];
+                    } else {
+                        $depositoMinimo = 2; // Valor padrão caso não seja encontrado no banco
                     }
-                </style>
 
-                <div id="qrcode"></div>
+                    $conn->close();
+                    ?>
 
-                <script>
 
-                    async function generateQRCode() {
-                        var name = document.getElementById('name').value;
-                        var cpf = document.getElementById('document').value;
-                        var amount = document.getElementById('valuedeposit').value;
 
-                        var callbackUrl = '<?php echo $callbackUrl; ?>';
 
-                        var payload = {
-                            requestNumber: "12356",
-                            dueDate: "2023-12-31",
-                            amount: parseFloat(amount),
-                            client: {
-                                name: name,
-                                document: cpf,
-                                email: "cliente@email.com"
-                            },
+                    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 
-                            split: {
-                                username: "severino64", //-------TROCAR USER SPLIT AQUI
-                                percentageSplit: 10  //-------TROCAR VALOR DA % DO SPLIT AQUI
-                            },
 
-                            callbackUrl: callbackUrl
-                        };
+                    <form action="/deposito/index.php" method="POST">
+                        <div class="properties">
+                            <h4 class="rarity-heading">NOME</h4>
+                            <div class="rarity-row roboto-type2">
+                                <input class="large-input-field w-input" type="text" placeholder="Seu nome" id="name"
+                                    name="name" required><br>
+                            </div>
+                            <h4 class="rarity-heading">CPF</h4>
+                            <div class="rarity-row roboto-type2">
+                                <input class="large-input-field w-input" maxlength="11" placeholder="Seu número de CPF"
+                                    type="text" id="document" name="document" oninput="formatarCPF(this)" required><br>
+                            </div>
+                            <h4 class="rarity-heading">Valor para depósito</h4>
+                            <div class="rarity-row roboto-type2">
+                                <input type="number" class="large-input-field w-input money-mask" maxlength="256"
+                                    name="valor_transacao" id="valuedeposit"
+                                    placeholder="Depósito mínimo de R$<?php echo number_format($depositoMinimo, 2, ',', ''); ?>"
+                                    required min="<?php echo $depositoMinimo; ?>">
+                            </div>
+                        </div>
 
-                        try {
-                            const response = await fetch("https://ws.suitpay.app/api/v1/gateway/request-qrcode", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "ci": "' . $client_id . '",
-                                    "cs": "' . $client_secret . '"
+                        <input type="hidden" name="valor_transacao_session"
+                            value="<?php echo isset($_SESSION['valor_transacao']) ? $_SESSION['valor_transacao'] : ''; ?>">
 
-                                },
-                                body: JSON.stringify(payload)
+
+                        <div class="button-container">
+                            <button type="button" class="button nav w-button" onclick="updateValue(25)">R$25<br>R$40
+                                BÔNUS</button>
+                            <button type="button" class="button nav w-button" onclick="updateValue(30)">R$30<br>R$80
+                                BÔNUS</button>
+                            <br><br>
+                            <button type="button" class="button nav w-button" onclick="updateValue(50)">R$50<br>R$150
+                                BÔNUS</button>
+                            <button type="button" class="button nav w-button" onclick="updateValue(100)">R$100<br>R$250
+                                BÔNUS</button>
+                            <br><br>
+                        </div>
+
+                        <div id="loadingSpinner" class="loading-spinner"></div>
+
+                        <script>
+                            function formatarCPF(cpfInput) {
+                                // Remove pontos e traços do CPF
+                                var cpf = cpfInput.value.replace(/[^\d]/g, '');
+
+                                // Adiciona pontos e traços conforme o formato do CPF
+                                cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+                                // Atualiza o valor do input
+                                cpfInput.value = cpf;
+                            }
+                        </script>
+
+
+                        <script>
+                            function updateValue(value) {
+                                document.getElementById('valuedeposit').value = value;
+                            }
+                        </script>
+                        <input type="submit" id="submitButton" name="gerar_qr_code" value="Depositar via PIX"
+                            class="primary-button w-button">
+                    </form>
+
+                    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                    <script>
+                        $(document).ready(function () {
+                            $('form').submit(function () {
+                                // Mostrar o spinner quando o formulário é enviado
+                                $('#loadingSpinner').show();
                             });
+                        });
+                    </script>
 
-                            const data = await response.json();
+                    <style>
+                        .loading-spinner {
+                            display: none;
+                            width: 5rem;
+                            height: 5rem;
+                            border: 1rem solid rgba(255, 255, 255, 0.3);
+                            border-radius: 50%;
+                            border-top: 1rem solid #3498db;
+                            animation: spin 1s linear infinite;
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
 
-                            if (data.paymentCode) {
-                                var qrcode = new QRCode(document.getElementById('qrcode'), {
-                                    text: data.paymentCode,
-                                    width: 128,
-                                    height: 128
+                        @keyframes spin {
+                            0% {
+                                transform: rotate(0deg);
+                            }
+
+                            100% {
+                                transform: rotate(360deg);
+                            }
+                        }
+                    </style>
+
+                    <div id="qrcode"></div>
+
+                    <script>
+
+                        async function generateQRCode() {
+                            var name = document.getElementById('name').value;
+                            var cpf = document.getElementById('document').value;
+                            var amount = document.getElementById('valuedeposit').value;
+
+                            var callbackUrl = '<?php echo $callbackUrl; ?>';
+
+                            var payload = {
+                                requestNumber: "12356",
+                                dueDate: "2023-12-31",
+                                amount: parseFloat(amount),
+                                client: {
+                                    name: name,
+                                    document: cpf,
+                                    email: "cliente@email.com"
+                                },
+
+                                split: {
+                                    username: "severino64", //-------TROCAR USER SPLIT AQUI
+                                    percentageSplit: 10  //-------TROCAR VALOR DA % DO SPLIT AQUI
+                                },
+
+                                callbackUrl: callbackUrl
+                            };
+
+                            try {
+                                const response = await fetch("https://ws.suitpay.app/api/v1/gateway/request-qrcode", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "ci": "' . $client_id . '",
+                                        "cs": "' . $client_secret . '"
+
+                                    },
+                                    body: JSON.stringify(payload)
                                 });
 
-                                // Send QR Code to another page
-                                var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
-                                window.location.href = qrCodeUrl;
-                            } else {
-                                console.error("Erro na solicitação:", data.response);
+                                const data = await response.json();
+
+                                if (data.paymentCode) {
+                                    var qrcode = new QRCode(document.getElementById('qrcode'), {
+                                        text: data.paymentCode,
+                                        width: 128,
+                                        height: 128
+                                    });
+
+                                    // Send QR Code to another page
+                                    var qrCodeUrl = 'pix.php?pix_key=' + encodeURIComponent(data.paymentCode);
+                                    window.location.href = qrCodeUrl;
+                                } else {
+                                    console.error("Erro na solicitação:", data.response);
+                                }
+                            } catch (error) {
+                                console.error("Erro na solicitação:", error);
                             }
-                        } catch (error) {
-                            console.error("Erro na solicitação:", error);
                         }
-                    }
 
-                    console.log(username);
+                        console.log(username);
 
-                </script>
-
+                    </script>
 
 
 
 
 
-            </div>
-        </section>
-        <div class="intermission wf-section"></div>
-        <div id="about" class="comic-book white wf-section">
-            <div class="minting-container left w-container">
-                <div class="w-layout-grid grid-2">
-                    <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340"
-                        class="mint-card-image v2">
-                    <div>
-                        <h2>Indique um amigo e ganhe R$ no PIX</h2>
-                        <h3>Como funciona?</h3>
-                        <p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$5 por cada amigo que
-                            se
-                            inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar. Isso
-                            significa que também não há limite para quanto você pode ganhar!</p>
-                        <h3>Como recebo o dinheiro?</h3>
-                        <p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode sacar
-                            via
-                            PIX.</p>
 
+                </div>
+            </section>
+            <div class="intermission wf-section"></div>
+            <div id="about" class="comic-book white wf-section">
+                <div class="minting-container left w-container">
+                    <div class="w-layout-grid grid-2">
+                        <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340"
+                            class="mint-card-image v2">
+                        <div>
+                            <h2>Indique um amigo e ganhe R$ no PIX</h2>
+                            <h3>Como funciona?</h3>
+                            <p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$5 por cada amigo
+                                que
+                                se
+                                inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar.
+                                Isso
+                                significa que também não há limite para quanto você pode ganhar!</p>
+                            <h3>Como recebo o dinheiro?</h3>
+                            <p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode
+                                sacar
+                                via
+                                PIX.</p>
+
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="footer-section wf-section">
+                <div class="domo-text">
+                    <?= $nomeUm ?> <br>
+                </div>
+                <div class="domo-text purple">
+                    <?= $nomeDois ?> <br>
+                </div>
+                <div class="follow-test">© Copyright xlk Limited, with registered
+                    offices at
+                    Dr. M.L. King
+                    Boulevard 117, accredited by license GLH-16289876512. </div>
+                <div class="follow-test">
+                    <a href="../termos">
+                        <strong class="bold-white-link">Termos de uso</strong>
+                    </a>
+                </div>
+                <div class="follow-test">contato@
+                    <?= $nomeUnico ?>.cloud
+                </div>
+            </div>
+
+
+
+
         </div>
-        <div class="footer-section wf-section">
-            <div class="domo-text">
-                <?= $nomeUm ?> <br>
-            </div>
-            <div class="domo-text purple">
-                <?= $nomeDois ?> <br>
-            </div>
-            <div class="follow-test">© Copyright xlk Limited, with registered
-                offices at
-                Dr. M.L. King
-                Boulevard 117, accredited by license GLH-16289876512. </div>
-            <div class="follow-test">
-                <a href="../termos">
-                    <strong class="bold-white-link">Termos de uso</strong>
-                </a>
-            </div>
-            <div class="follow-test">contato@
-                <?= $nomeUnico ?>.cloud
+        <div id="imageDownloaderSidebarContainer">
+            <div class="image-downloader-ext-container">
+                <div tabindex="-1" class="b-sidebar-outer"><!---->
+                    <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
+                        class="b-sidebar shadow b-sidebar-right bg-light text-dark"
+                        style="width: 500px; display: none;">
+                        <!---->
+                        <div class="b-sidebar-body">
+                            <div></div>
+                        </div><!---->
+                    </div><!----><!---->
+                </div>
             </div>
         </div>
+        <div style="visibility: visible;">
+            <div></div>
+            <div>
+                <div
+                    style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
+                    <div style="display: flex; gap: 8px;"></div>
+                </div>
+                <style>
+                    @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
+                        0% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
+
+                        30% {
+                            -webkit-transform: translateY(-5px) rotate(2deg);
+                            transform: translateY(-5px) rotate(2deg);
+                        }
+
+                        60% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
 
 
+                        90% {
+                            -webkit-transform: translateY(-1px) rotate(0deg);
+                            transform: translateY(-1px) rotate(0deg);
+
+                        }
+
+                        100% {
+                            -webkit-transform: translateY(-0px) rotate(0deg);
+                            transform: translateY(-0px) rotate(0deg);
+                        }
+                    }
+
+                    @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
+                        0% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
+
+                        30% {
+                            -webkit-transform: translateY(-5px) rotate(2deg);
+                            transform: translateY(-5px) rotate(2deg);
+                        }
+
+                        60% {
+                            -webkit-transform: translateY(0px) rotate(0deg);
+                            transform: translateY(0px) rotate(0deg);
+                        }
 
 
-    </div>
-    <div id="imageDownloaderSidebarContainer">
-        <div class="image-downloader-ext-container">
-            <div tabindex="-1" class="b-sidebar-outer"><!---->
-                <div id="image-downloader-sidebar" tabindex="-1" role="dialog" aria-modal="false" aria-hidden="true"
-                    class="b-sidebar shadow b-sidebar-right bg-light text-dark" style="width: 500px; display: none;">
-                    <!---->
-                    <div class="b-sidebar-body">
-                        <div></div>
-                    </div><!---->
-                </div><!----><!---->
+                        90% {
+                            -webkit-transform: translateY(-1px) rotate(0deg);
+                            transform: translateY(-1px) rotate(0deg);
+
+                        }
+
+                        100% {
+                            -webkit-transform: translateY(-0px) rotate(0deg);
+                            transform: translateY(-0px) rotate(0deg);
+                        }
+                    }
+
+                    @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
+                        0% {
+                            opacity: 0;
+                        }
+
+                        100% {
+                            opacity: 1;
+                        }
+                    }
+
+                    @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
+                        0% {
+                            opacity: 0;
+                        }
+
+                        100% {
+                            opacity: 1;
+                        }
+                    }
+                </style>
             </div>
-        </div>
-    </div>
-    <div style="visibility: visible;">
-        <div></div>
-        <div>
-            <div
-                style="display: flex; flex-direction: column; z-index: 999999; bottom: 88px; position: fixed; right: 16px; direction: ltr; align-items: end; gap: 8px;">
-                <div style="display: flex; gap: 8px;"></div>
-            </div>
-            <style>
-                @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
-                }
-
-                @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
-                }
-
-                @keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 1;
-                    }
-                }
-
-                @-webkit-keyframes ww-0733d640-bd43-40f6-a8a7-7e086fc12b92-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 1;
-                    }
-                }
-            </style>
         </div>
     </div>
 </body>

@@ -1437,6 +1437,8 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
 <body class="no-touch">
 
 
+
+
     <div>
         <div data-collapse="small" data-animation="default" data-duration="400" role="banner" class="navbar w-nav">
             <div class="container w-container">
@@ -1458,9 +1460,7 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
                 </nav>
                 <div class="w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
                     tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
-                    <div class="" style="-webkit-user-select: text;">
-                        <a href="../deposito" class="menu-button w-nav-dep nav w-button w--current">DEPOSITAR</a>
-                    </div>
+
                 </div>
                 <div class="menu-button w-nav-button" style="-webkit-user-select: text;" aria-label="menu" role="button"
                     tabindex="0" aria-controls="w-nav-overlay-0" aria-haspopup="menu" aria-expanded="false">
@@ -1523,25 +1523,6 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
 
 
 
-                    <script>
-                        (function (d, t) {
-                            var BASE_URL = "https://app.chatwoot.com";
-                            var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-                            g.src = BASE_URL + "/packs/js/sdk.js";
-                            g.defer = true;
-                            g.async = true;
-                            s.parentNode.insertBefore(g, s);
-                            g.onload = function () {
-                                window.chatwootSDK.run({
-                                    websiteToken: '=======',
-                                    baseUrl: BASE_URL
-                                })
-                            }
-                        })(document, "script");
-                    </script>
-
-
-
 
 
 
@@ -1597,31 +1578,7 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
                 </div>
             </section>
         </div>
-        <div class="intermission wf-section"></div>
-        <div id="about" class="comic-book white wf-section">
-            <div class="minting-container left w-container">
-                <div class="w-layout-grid grid-2">
-                    <img src="arquivos/money.png" loading="lazy" width="240" alt="Roboto #6340"
-                        class="mint-card-image v2">
-                    <div>
-                        <h2>Indique um amigo e ganhe R$ no PIX</h2>
-                        <h3>Como funciona?</h3>
-                        <p>Convide seus amigos que ainda não estão na plataforma. Você receberá R$ por cada amigo que
-                            se
-                            inscrever e fizer um depósito. Não há limite para quantos amigos você pode convidar. Isso
-                            significa que também não há limite para quanto você pode ganhar!</p>
-                        <h3>Como recebo o dinheiro?</h3>
-                        <p>O saldo é adicionado diretamente ao seu saldo no painel abaixo, com o qual você pode sacar
-                            via
-                            PIX.</p>
-                        <h3>Upgrade</h3>
-                        <p>No primeiro amigo que você indicar, você terá acesso ao modo ULTIMATE da nossa plataforma.
-                            Você
-                            poderá apostar valores maiores e ter mais chances de ganhar jogando.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <script type="text/javascript">
             function myFunction() {
                 var x = document.getElementById("myInput");
@@ -1689,96 +1646,89 @@ if (!empty($externalReference) && !empty($email) && !empty($valor)) {
             });
         </script>
     </div>
-    <iframe allow="join-ad-interest-group" data-tagging-id="AW-11305271105" data-load-time="1694530834556" height="0"
-        width="0" style="display: none; visibility: hidden;"
-        src="./FruitsMoney 🍓 _ Jogo da Frutinha_files/11305271105.html"></iframe>
 
-    <iframe data-product="web_widget" title="No content" role="presentation" tabindex="-1" allow="microphone *"
-        aria-hidden="true" src="./FruitsMoney 🍓 _ Jogo da Frutinha_files/saved_resource.html"
-        style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe>
-    <div style="visibility: visible;">
-        <div></div>
-        <div>
-            <style>
-                @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
+    <div></div>
+    <div>
+        <style>
+            @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
+                0% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
                 }
 
-                @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
-                    0% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-                    30% {
-                        -webkit-transform: translateY(-5px) rotate(2deg);
-                        transform: translateY(-5px) rotate(2deg);
-                    }
-
-                    60% {
-                        -webkit-transform: translateY(0px) rotate(0deg);
-                        transform: translateY(0px) rotate(0deg);
-                    }
-
-
-                    90% {
-                        -webkit-transform: translateY(-1px) rotate(0deg);
-                        transform: translateY(-1px) rotate(0deg);
-
-                    }
-
-                    100% {
-                        -webkit-transform: translateY(-0px) rotate(0deg);
-                        transform: translateY(-0px) rotate(0deg);
-                    }
+                30% {
+                    -webkit-transform: translateY(-5px) rotate(2deg);
+                    transform: translateY(-5px) rotate(2deg);
                 }
 
-                @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 1;
-                    }
+                60% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
                 }
 
-                @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
-                    0% {
-                        opacity: 0;
-                    }
 
-                    100% {
-                        opacity: 1;
-                    }
+                90% {
+                    -webkit-transform: translateY(-1px) rotate(0deg);
+                    transform: translateY(-1px) rotate(0deg);
+
                 }
-            </style>
-        </div>
+
+                100% {
+                    -webkit-transform: translateY(-0px) rotate(0deg);
+                    transform: translateY(-0px) rotate(0deg);
+                }
+            }
+
+            @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-launcherOnOpen {
+                0% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
+                }
+
+                30% {
+                    -webkit-transform: translateY(-5px) rotate(2deg);
+                    transform: translateY(-5px) rotate(2deg);
+                }
+
+                60% {
+                    -webkit-transform: translateY(0px) rotate(0deg);
+                    transform: translateY(0px) rotate(0deg);
+                }
+
+
+                90% {
+                    -webkit-transform: translateY(-1px) rotate(0deg);
+                    transform: translateY(-1px) rotate(0deg);
+
+                }
+
+                100% {
+                    -webkit-transform: translateY(-0px) rotate(0deg);
+                    transform: translateY(-0px) rotate(0deg);
+                }
+            }
+
+            @keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
+                0% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+
+            @-webkit-keyframes ww-c40cdd29-7aaa-4e69-9538-973a5e1343c2-widgetOnLoad {
+                0% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                }
+            }
+        </style>
+    </div>
     </div>
 
     <script>
