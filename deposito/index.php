@@ -36,7 +36,8 @@ function redirecionarParaPix($slug)
 
 function apagarRegistro($conn, $slug)
 {
-    $sqlDelete = "DELETE FROM deposito_gerado WHERE slug = '" . mysqli_real_escape_string($conn, $slug) . "'";
+    $email = $_SESSION['email'];
+    $sqlDelete = "DELETE FROM deposito_gerado WHERE email = '$email' AND slug = '$slug'";
     $conn->query($sqlDelete);
 }
 
@@ -48,11 +49,12 @@ try {
     if ($conn->connect_error) {
         die("Conexão falhou: " . $conn->connect_error);
     }
-
+    session_start();
+    
+    $email = $_SESSION['email'];
     $brtTimeZone = new DateTimeZone('America/Sao_Paulo');
     $dateTimeAtual = new DateTime('now', $brtTimeZone);
-
-    $sqlSelect = "SELECT slug, data FROM deposito_gerado";
+    $sqlSelect = "SELECT slug, data, email FROM deposito_gerado WHERE email = '$email'";
     $result = $conn->query($sqlSelect);
 
     if ($result->num_rows > 0) {
@@ -345,9 +347,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Segundo INSERT para a tabela 'deposito_gerado'
             $sqlDepositoGerado = sprintf(
-                "INSERT INTO deposito_gerado (slug, data) VALUES ('%s', '%s')",
+                "INSERT INTO deposito_gerado (slug, data, email) VALUES ('%s', '%s', '%s')",
                 $conn->real_escape_string($slugValue), // Evita injeção de SQL
-                $userDate
+                $userDate,
+                $email
             );
 
             $conn->query($sqlDepositoGerado);
