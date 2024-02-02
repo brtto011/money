@@ -208,6 +208,7 @@ CREATE TABLE extrato_saque_afiliado (
 
 CREATE TABLE deposito_gerado (
     slug VARCHAR(255),
+    data VARCHAR(255),
     data VARCHAR(255)
 );
 
