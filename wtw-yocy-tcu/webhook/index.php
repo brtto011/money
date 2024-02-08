@@ -237,7 +237,7 @@ include './bd.php'; ?>
         <div class="page-wrapper">
             <div class="card" style="margin-bottom: 100px;">
 
-                <h2 style="margin-left: 25px;">Recebimento WEBHOOK com SMS FUNNEL</h1>
+                <h2 style="margin-left: 25px;">Recebimento WEBHOOK com <a href="https://gosite.cc/free8484" target="_blank">SMS FUNNEL</a></h1>
 
                     <h5 style="margin-left: 25px; margin-top: 25px; margin-bottom: 25px;" class=" card-title">Caso
                         esteja utilizando a integração nativa com SMS Funnels, cole o seu link único de integração em
@@ -356,7 +356,8 @@ include './bd.php'; ?>
                                             placeholder="Insira sua URL da Lista de Pix Pago" />
                                     </div>
                                 </div>
-
+                                
+                                
 
 
 
@@ -365,6 +366,10 @@ include './bd.php'; ?>
                                     class="btn btn-primary" onclick="salvarAlteracoes()">Salvar Alterações</button>
 
                             </div>
+                            
+                         
+                                 <label class="col-md-4">Não tem conta na SMS FUNNEL? crie sua conta e receba bônus <a href="https://gosite.cc/free8484" target="_blank">CLICANDO AQUI</a> </label>
+                          
 
                             <script>
                                 function salvarAlteracoes() {
